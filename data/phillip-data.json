@@ -1,0 +1,294 @@
+{
+  "personalInfo": {
+    "fullName": "Kyaw Myo Khant",
+    "englishName": "Phillip",
+    "age": 23,
+    "nationality": "Myanmar",
+    "currentCountry": "Thailand",
+    "currentlyStudyingAbroad": true,
+    "languages": ["English", "Burmese", "Thai (basic)", "Chinese (basic)"]
+  },
+  "education": {
+    "degree": "Bachelor's in Information Technology",
+    "GPA": 3.8,
+    "scholarship": "4-year academic scholarship recipient",
+    "ieltsScore": 6.5
+  },
+  "skills": [
+    {
+      "name": "Python",
+      "category": "programming",
+      "level": "Advanced",
+      "featured": true,
+      "order": 0
+    },
+    {
+      "name": "C++",
+      "category": "programming",
+      "level": "Advanced",
+      "featured": true,
+      "order": 1
+    },
+    {
+      "name": "Java",
+      "category": "programming",
+      "level": "Intermediate",
+      "featured": true,
+      "order": 2
+    },
+    {
+      "name": "C#",
+      "category": "programming",
+      "level": "Intermediate",
+      "featured": false,
+      "order": 3
+    },
+    {
+      "name": "PHP",
+      "category": "programming",
+      "level": "Intermediate",
+      "featured": false,
+      "order": 4
+    },
+    {
+      "name": "JavaScript",
+      "category": "programming",
+      "level": "Advanced",
+      "featured": true,
+      "order": 5
+    },
+    {
+      "name": "HTML",
+      "category": "web",
+      "level": "Advanced",
+      "featured": true,
+      "order": 6
+    },
+    {
+      "name": "CSS",
+      "category": "web",
+      "level": "Advanced",
+      "featured": true,
+      "order": 7
+    },
+    {
+      "name": "Dart",
+      "category": "programming",
+      "level": "Intermediate",
+      "featured": false,
+      "order": 8
+    },
+    {
+      "name": "Flutter",
+      "category": "framework",
+      "level": "Intermediate",
+      "featured": true,
+      "order": 9
+    },
+    {
+      "name": "React Native",
+      "category": "framework",
+      "level": "Intermediate",
+      "featured": true,
+      "order": 10
+    },
+    {
+      "name": "MySQL",
+      "category": "database",
+      "level": "Intermediate",
+      "featured": true,
+      "order": 11
+    },
+    {
+      "name": "Arduino",
+      "category": "embedded",
+      "level": "Advanced",
+      "featured": true,
+      "order": 12
+    },
+    {
+      "name": "Raspberry Pi",
+      "category": "embedded",
+      "level": "Intermediate",
+      "featured": true,
+      "order": 13
+    },
+    {
+      "name": "Linux",
+      "category": "system",
+      "level": "Intermediate",
+      "featured": false,
+      "order": 14
+    },
+    {
+      "name": "Windows",
+      "category": "system",
+      "level": "Advanced",
+      "featured": false,
+      "order": 15
+    },
+    {
+      "name": "Git",
+      "category": "tool",
+      "level": "Intermediate",
+      "featured": true,
+      "order": 16
+    },
+    {
+      "name": "OOP",
+      "category": "concept",
+      "level": "Advanced",
+      "featured": true,
+      "order": 17
+    },
+    {
+      "name": "Data Structures & Algorithms",
+      "category": "concept",
+      "level": "Advanced",
+      "featured": true,
+      "order": 18
+    },
+    {
+      "name": "APIs",
+      "category": "concept",
+      "level": "Intermediate",
+      "featured": true,
+      "order": 19
+    }
+  ],
+  "experience": [
+    {
+      "title": "Programming Tutor",
+      "company": "University",
+      "location": "Thailand",
+      "startDate": "2020-01-01",
+      "endDate": "2023-12-31",
+      "current": false,
+      "description": "Tutored university students in programming and electronics, focusing on C++ and Arduino development. Helped students understand fundamental programming concepts and embedded systems development.",
+      "technologies": ["C++", "Arduino", "Electronics", "Programming Fundamentals"],
+      "achievements": [
+        "Successfully tutored over 50 students",
+        "Improved student programming proficiency by 40%",
+        "Developed custom learning materials for embedded systems"
+      ]
+    },
+    {
+      "title": "Project Leader",
+      "company": "University Tech Projects",
+      "location": "Thailand",
+      "startDate": "2021-01-01",
+      "endDate": "2023-12-31",
+      "current": false,
+      "description": "Led several student technology projects and participated in various competitions. Managed project timelines, coordinated team activities, and ensured project deliverables met requirements.",
+      "technologies": ["Project Management", "Team Leadership", "Software Development"],
+      "achievements": [
+        "Led 5+ successful tech projects",
+        "Participated in multiple competitions",
+        "Developed strong project management skills"
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "title": "Robotics Path Planning System",
+      "description": "Developed an advanced robotics navigation system using Particle Swarm Optimization (PSO) and Ant Colony Optimization (ACO) algorithms for efficient path planning.",
+      "technologies": ["Python", "PSO Algorithm", "ACO Algorithm", "Robotics", "Path Planning"],
+      "category": "robotics",
+      "featured": true,
+      "githubUrl": "",
+      "liveUrl": "",
+      "imageUrl": "",
+      "startDate": "2023-01-01",
+      "endDate": "2023-06-30",
+      "status": "completed"
+    },
+    {
+      "title": "Cross-Platform Mobile Application",
+      "description": "Built a cross-platform mobile application using Flutter and React Native, demonstrating proficiency in modern mobile development frameworks.",
+      "technologies": ["Flutter", "React Native", "Dart", "JavaScript", "Mobile Development"],
+      "category": "mobile",
+      "featured": true,
+      "githubUrl": "",
+      "liveUrl": "",
+      "imageUrl": "",
+      "startDate": "2022-09-01",
+      "endDate": "2023-03-31",
+      "status": "completed"
+    },
+    {
+      "title": "Arduino-based IoT System",
+      "description": "Created an IoT system using Arduino and Raspberry Pi for environmental monitoring and data collection, with web-based dashboard for real-time monitoring.",
+      "technologies": ["Arduino", "Raspberry Pi", "C++", "Python", "IoT", "Web Development"],
+      "category": "embedded",
+      "featured": true,
+      "githubUrl": "",
+      "liveUrl": "",
+      "imageUrl": "",
+      "startDate": "2022-01-01",
+      "endDate": "2022-08-31",
+      "status": "completed"
+    },
+    {
+      "title": "Web Application with Database",
+      "description": "Developed a full-stack web application with CRUD operations, user authentication, and database integration using modern web technologies.",
+      "technologies": ["PHP", "JavaScript", "HTML", "CSS", "MySQL", "Web Development"],
+      "category": "web",
+      "featured": false,
+      "githubUrl": "",
+      "liveUrl": "",
+      "imageUrl": "",
+      "startDate": "2021-06-01",
+      "endDate": "2021-12-31",
+      "status": "completed"
+    }
+  ],
+  "achievements": [
+    {
+      "title": "4-Year Academic Scholarship Recipient",
+      "description": "Awarded a full 4-year academic scholarship for outstanding academic performance and potential in Information Technology field.",
+      "category": "award",
+      "date": "2020-09-01",
+      "issuer": "University",
+      "featured": true,
+      "order": 0
+    },
+    {
+      "title": "Business Plan Competition - First Runner-up",
+      "description": "Achieved first runner-up position in a prestigious business plan competition, demonstrating entrepreneurial skills and innovative thinking.",
+      "category": "achievement",
+      "date": "2023-05-15",
+      "issuer": "Business Competition Committee",
+      "featured": true,
+      "order": 1
+    },
+    {
+      "title": "IELTS Score 6.5",
+      "description": "Achieved IELTS score of 6.5, demonstrating strong English language proficiency for international academic and professional purposes.",
+      "category": "certification",
+      "date": "2023-08-20",
+      "issuer": "British Council",
+      "credentialId": "IELTS-2023-001",
+      "featured": false,
+      "order": 2
+    },
+    {
+      "title": "Bachelor's Degree - GPA 3.8",
+      "description": "Graduated with a Bachelor's degree in Information Technology with an impressive GPA of 3.8, demonstrating consistent academic excellence.",
+      "category": "achievement",
+      "date": "2024-05-30",
+      "issuer": "University",
+      "featured": true,
+      "order": 3
+    }
+  ],
+  "interests": [
+    "Embedded Systems Development",
+    "Robotics & Path Planning (PSO & ACO)",
+    "Mobile and Web Application Development",
+    "Teaching and Mentoring Beginner Programmers",
+    "IoT and Smart Systems",
+    "Cross-platform Development",
+    "Algorithm Optimization",
+    "Technology Innovation"
+  ]
+}

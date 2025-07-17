@@ -1,0 +1,7 @@
+<!-- Simple SVG placeholder for profile image -->
+<svg xmlns="http://www.w3.org/2000/svg" width="320" height="320" viewBox="0 0 320 320">
+  <rect width="320" height="320" fill="#f3f4f6"/>
+  <circle cx="160" cy="120" r="50" fill="#d1d5db"/>
+  <path d="M80 280 C80 240 115 210 160 210 C205 210 240 240 240 280 Z" fill="#d1d5db"/>
+  <text x="160" y="300" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#6b7280">Profile Photo</text>
+</svg>
