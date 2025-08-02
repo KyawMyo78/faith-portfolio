@@ -1,6 +1,11 @@
 # Phillip Portfolio
 
-A modern, minimalist portfolio website for Kyaw Myo Khant (Phillip), built with Next.js 14, TypeScript, Tailwind CSS, and Firebase.
+A modern, minimalist portfolio website for Kyaw Myo Khant (Phillip), built with Ne6. **Run the development server**
+   ```bash
+   npm run dev
+   ```
+
+7. **Open your browser**14, TypeScript, Tailwind CSS, and Firebase.
 
 ## Features
 
@@ -34,6 +39,7 @@ A modern, minimalist portfolio website for Kyaw Myo Khant (Phillip), built with 
 - **Database**: Firebase Firestore
 - **Storage**: Firebase Storage
 - **Authentication**: NextAuth.js with custom providers
+- **Analytics**: Google Analytics 4 with custom event tracking
 - **Icons**: Lucide React
 - **Deployment**: Ready for Vercel/Azure deployment
 
@@ -82,6 +88,9 @@ A modern, minimalist portfolio website for Kyaw Myo Khant (Phillip), built with 
    ADMIN_EMAIL=phillip@example.com
    ADMIN_PASSWORD_HASH=$2a$12$hashed_password_here
 
+   # Google Analytics (Optional)
+   NEXT_PUBLIC_GA_ID=G-XXXXXXXXXX
+
    # Site Configuration
    SITE_URL=http://localhost:3000
    SITE_NAME="Phillip - Portfolio"
@@ -94,7 +103,13 @@ A modern, minimalist portfolio website for Kyaw Myo Khant (Phillip), built with 
    - Create a service account and download the credentials
    - Update the environment variables with your Firebase config
 
-5. **Run the development server**
+5. **Set up Google Analytics (Optional)**
+   - Go to [Google Analytics](https://analytics.google.com/)
+   - Create a new property for your website
+   - Get your Measurement ID (format: G-XXXXXXXXXX)
+   - Add it to your `.env.local` as `NEXT_PUBLIC_GA_ID`
+
+6. **Run the development server**
    ```bash
    npm run dev
    ```
@@ -165,6 +180,14 @@ my_portfolio/
 - Interactive hover effects
 - Loading states
 
+### 📊 Analytics & Tracking
+- Google Analytics 4 integration
+- Custom event tracking for user interactions
+- Contact form conversion tracking
+- Project engagement metrics
+- Scroll depth and time on site tracking
+- Admin dashboard usage analytics
+
 ## Admin Panel Access
 
 To access the admin panel:
@@ -203,6 +226,7 @@ To access the admin panel:
 | `NEXTAUTH_SECRET` | NextAuth Secret | Yes |
 | `ADMIN_EMAIL` | Admin Login Email | Yes |
 | `ADMIN_PASSWORD_HASH` | Hashed Admin Password | Yes |
+| `NEXT_PUBLIC_GA_ID` | Google Analytics Tracking ID | No |
 
 ## Contributing
 

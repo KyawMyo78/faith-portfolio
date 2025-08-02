@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import { ExternalLink, Github, Play, Filter, Search } from 'lucide-react';
 import Image from 'next/image';
+import { analytics } from '@/lib/analytics';
 
 interface Project {
   id: string;
@@ -278,6 +279,7 @@ function ProjectCard({ project, featured, index }: ProjectCardProps) {
               href={project.githubUrl}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() => analytics.projectLinkClick(project.title, 'github')}
               className="w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center text-primary-600 hover:bg-white transition-colors"
             >
               <Github size={18} />
@@ -288,6 +290,7 @@ function ProjectCard({ project, featured, index }: ProjectCardProps) {
               href={project.liveUrl}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() => analytics.projectLinkClick(project.title, 'live')}
               className="w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center text-primary-600 hover:bg-white transition-colors"
             >
               <ExternalLink size={18} />
@@ -298,6 +301,7 @@ function ProjectCard({ project, featured, index }: ProjectCardProps) {
               href={project.downloadUrl}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() => analytics.projectLinkClick(project.title, 'demo')}
               className="w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center text-primary-600 hover:bg-white transition-colors"
             >
               <Play size={18} />

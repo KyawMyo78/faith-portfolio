@@ -7,6 +7,7 @@ import { Mail, Lock, LogIn, Eye, EyeOff } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import Link from 'next/link';
+import { analytics } from '@/lib/analytics';
 
 interface LoginForm {
   email: string;
@@ -35,6 +36,7 @@ export default function AdminLogin() {
       const result = await response.json();
 
       if (result.success) {
+        analytics.adminLogin();
         toast.success('Login successful!');
         // Add a small delay to ensure cookie is set, then do a full page reload
         setTimeout(() => {

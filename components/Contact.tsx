@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 import { Send, Mail, Phone, MapPin, Clock, CheckCircle } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
+import { analytics } from '@/lib/analytics';
 
 interface ContactForm {
   name: string;
@@ -78,6 +79,7 @@ export default function Contact() {
 
   const onSubmit = async (data: ContactForm) => {
     setIsSubmitting(true);
+    analytics.contactFormSubmit();
     
     try {
       const response = await fetch('/api/portfolio/contacts', {
@@ -91,13 +93,16 @@ export default function Contact() {
       const result = await response.json();
 
       if (result.success) {
+        analytics.contactFormSuccess();
         toast.success('Message sent successfully! I\'ll get back to you soon.');
         reset();
       } else {
+        analytics.contactFormError(result.error || 'API Error');
         toast.error(result.error || 'Failed to send message. Please try again.');
       }
     } catch (error) {
       console.error('Error sending message:', error);
+      analytics.contactFormError('Network Error');
       toast.error('Failed to send message. Please try again.');
     } finally {
       setIsSubmitting(false);
