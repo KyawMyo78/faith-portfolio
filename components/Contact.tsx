@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Send, Mail, Phone, MapPin, Clock, CheckCircle } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
@@ -14,36 +14,67 @@ interface ContactForm {
   message: string;
 }
 
-const contactInfo = [
-  {
-    icon: Mail,
-    title: 'Email',
-    value: 'kyawmk787@gmail.com',
-    link: 'mailto:kyawmk787@gmail.com'
-  },
-  {
-    icon: Phone,
-    title: 'Phone',
-    value: '+66 XX XXX XXXX',
-    link: 'tel:+66xxxxxxxxx'
-  },
-  {
-    icon: MapPin,
-    title: 'Location',
-    value: 'Thailand',
-    link: null
-  },
-  {
-    icon: Clock,
-    title: 'Response Time',
-    value: 'Within 24 hours',
-    link: null
-  }
-];
+interface ProfileData {
+  email: string;
+  phone?: string;
+  location: string;
+}
 
 export default function Contact() {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [profile, setProfile] = useState<ProfileData>({
+    email: 'kyawmk787@gmail.com',
+    phone: '+66628602714',
+    location: 'Thailand'
+  });
   const { register, handleSubmit, reset, formState: { errors } } = useForm<ContactForm>();
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const response = await fetch('/api/profile');
+        const result = await response.json();
+        if (result.success) {
+          setProfile({
+            email: result.data.email || 'kyawmk787@gmail.com',
+            phone: result.data.phone || '+66628602714',
+            location: result.data.location || 'Thailand'
+          });
+        }
+      } catch (error) {
+        console.error('Error fetching profile:', error);
+      }
+    };
+
+    fetchProfile();
+  }, []);
+
+  const contactInfo = [
+    {
+      icon: Mail,
+      title: 'Email',
+      value: profile.email,
+      link: `mailto:${profile.email}`
+    },
+    {
+      icon: Phone,
+      title: 'Phone',
+      value: profile.phone || '+66628602714',
+      link: `tel:${profile.phone || '+66628602714'}`
+    },
+    {
+      icon: MapPin,
+      title: 'Location',
+      value: profile.location,
+      link: null
+    },
+    {
+      icon: Clock,
+      title: 'Response Time',
+      value: 'Within 24 hours',
+      link: null
+    }
+  ];
 
   const onSubmit = async (data: ContactForm) => {
     setIsSubmitting(true);
@@ -102,7 +133,7 @@ export default function Contact() {
             transition={{ duration: 0.6, delay: 0.2 }}
           >
             <h3 className="text-2xl font-bold text-gray-900 mb-6">Get in Touch</h3>
-            <p className="text-gray-600 mb-8 leading-relaxed">
+            <p className="text-gray-600 mb-8 leading-relaxed text-justify">
               I'm always excited to discuss new opportunities, innovative projects, or just chat about technology. 
               Whether you have a specific project in mind or want to explore possibilities, I'd love to hear from you.
             </p>
@@ -214,7 +245,7 @@ export default function Contact() {
                     className={`w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 transition-colors ${
                       errors.email ? 'border-red-500' : 'border-gray-300'
                     }`}
-                    placeholder="your.email@example.com"
+                    placeholder="kyawmk787@gmail.com"
                   />
                   {errors.email && (
                     <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>
@@ -231,7 +262,7 @@ export default function Contact() {
                     id="phone"
                     {...register('phone')}
                     className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 transition-colors"
-                    placeholder="+66 XX XXX XXXX"
+                    placeholder="+66628602714"
                   />
                 </div>
 
@@ -313,7 +344,7 @@ export default function Contact() {
           className="text-center mt-16 p-8 bg-gradient-to-r from-primary-500 to-primary-600 rounded-3xl text-white"
         >
           <h3 className="text-2xl font-bold mb-4">Ready to Start Your Project?</h3>
-          <p className="text-primary-100 mb-6 max-w-2xl mx-auto">
+          <p className="text-primary-100 mb-6 max-w-2xl mx-auto text-justify">
             From concept to completion, I'm here to help bring your vision to life with innovative solutions and expert craftsmanship.
           </p>
           <div className="flex flex-wrap justify-center gap-4">

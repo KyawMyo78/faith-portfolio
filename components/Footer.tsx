@@ -4,23 +4,11 @@ import { motion } from 'framer-motion';
 import { Heart, Github, Linkedin, Mail, ArrowUp } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
-const socialLinks = [
-  {
-    name: 'GitHub',
-    url: 'https://github.com/KyawMyo78',
-    icon: Github
-  },
-  {
-    name: 'LinkedIn',
-    url: 'https://linkedin.com',
-    icon: Linkedin
-  },
-  {
-    name: 'Email',
-    url: 'mailto:kyawmk787@gmail.com',
-    icon: Mail
-  }
-];
+interface ProfileData {
+  email: string;
+  github: string;
+  linkedin: string;
+}
 
 const quickLinks = [
   { name: 'About', href: '#about' },
@@ -32,6 +20,49 @@ const quickLinks = [
 
 export default function Footer() {
   const [showScrollTop, setShowScrollTop] = useState(false);
+  const [profile, setProfile] = useState<ProfileData>({
+    email: 'kyawmk787@gmail.com',
+    github: 'https://github.com/KyawMyo78',
+    linkedin: 'https://linkedin.com'
+  });
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const response = await fetch('/api/profile');
+        const result = await response.json();
+        if (result.success) {
+          setProfile({
+            email: result.data.email || 'kyawmk787@gmail.com',
+            github: result.data.github || 'https://github.com/KyawMyo78',
+            linkedin: result.data.linkedin || 'https://linkedin.com'
+          });
+        }
+      } catch (error) {
+        console.error('Error fetching profile:', error);
+      }
+    };
+
+    fetchProfile();
+  }, []);
+
+  const socialLinks = [
+    {
+      name: 'GitHub',
+      url: profile.github,
+      icon: Github
+    },
+    {
+      name: 'LinkedIn',
+      url: profile.linkedin,
+      icon: Linkedin
+    },
+    {
+      name: 'Email',
+      url: `mailto:${profile.email}`,
+      icon: Mail
+    }
+  ];
 
   useEffect(() => {
     const handleScroll = () => {
@@ -75,7 +106,7 @@ export default function Footer() {
               className="lg:col-span-2"
             >
               <h3 className="text-2xl font-bold mb-4">Kyaw Myo Khant (Phillip)</h3>
-              <p className="text-primary-200 mb-6 leading-relaxed max-w-md">
+              <p className="text-primary-200 mb-6 leading-relaxed max-w-md text-justify">
                 A passionate IT student and developer from Myanmar, specializing in 
                 embedded systems, mobile development, and innovative technology solutions.
               </p>

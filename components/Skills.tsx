@@ -151,7 +151,7 @@ export default function Skills() {
               My <span className="text-gradient">Skills</span>
             </h2>
             <div className="w-24 h-1 bg-gradient-primary mx-auto mb-6"></div>
-            <p className="text-xl text-primary-600 max-w-3xl mx-auto mb-8">
+            <p className="text-xl text-primary-600 max-w-3xl mx-auto mb-8 text-justify">
               Constantly learning and evolving in the world of technology.
             </p>
             <div className="text-center py-12">

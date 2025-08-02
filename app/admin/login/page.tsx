@@ -6,6 +6,7 @@ import { motion } from 'framer-motion';
 import { Mail, Lock, LogIn, Eye, EyeOff } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
+import Link from 'next/link';
 
 interface LoginForm {
   email: string;
@@ -81,11 +82,11 @@ export default function AdminLogin() {
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             {/* Email Field */}
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-primary-900 mb-2">
+              <label htmlFor="email" className="block text-sm font-medium text-gray-800 mb-2">
                 Email Address
               </label>
               <div className="relative">
-                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-primary-400" size={20} />
+                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
                 <input
                   type="email"
                   id="email"
@@ -96,10 +97,10 @@ export default function AdminLogin() {
                       message: 'Please enter a valid email address'
                     }
                   })}
-                  className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all ${
-                    errors.email ? 'border-red-300' : 'border-primary-200'
+                  className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-gray-900 bg-white ${
+                    errors.email ? 'border-red-300' : 'border-gray-300'
                   }`}
-                  placeholder="admin@example.com"
+                  placeholder="kyawmk787@gmail.com"
                 />
               </div>
               {errors.email && (
@@ -109,11 +110,11 @@ export default function AdminLogin() {
 
             {/* Password Field */}
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-primary-900 mb-2">
+              <label htmlFor="password" className="block text-sm font-medium text-gray-800 mb-2">
                 Password
               </label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-primary-400" size={20} />
+                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
                 <input
                   type={showPassword ? 'text' : 'password'}
                   id="password"
@@ -124,15 +125,15 @@ export default function AdminLogin() {
                       message: 'Password must be at least 6 characters'
                     }
                   })}
-                  className={`w-full pl-10 pr-12 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all ${
-                    errors.password ? 'border-red-300' : 'border-primary-200'
+                  className={`w-full pl-10 pr-12 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-gray-900 bg-white ${
+                    errors.password ? 'border-red-300' : 'border-gray-300'
                   }`}
                   placeholder="Enter your password"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-primary-400 hover:text-primary-600"
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
                 >
                   {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                 </button>
@@ -146,7 +147,7 @@ export default function AdminLogin() {
             <button
               type="submit"
               disabled={isLoading}
-              className={`w-full bg-primary-600 hover:bg-primary-700 text-white font-medium py-3 px-4 rounded-lg transition-all duration-200 flex items-center justify-center space-x-2 ${
+              className={`w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg transition-all duration-200 flex items-center justify-center space-x-2 ${
                 isLoading ? 'opacity-70 cursor-not-allowed' : 'hover:shadow-lg'
               }`}
             >
@@ -164,12 +165,22 @@ export default function AdminLogin() {
             </button>
           </form>
 
+          {/* Forgot Password Link */}
+          <div className="text-center mt-4">
+            <Link
+              href="/admin/forgot-password"
+              className="inline-block text-blue-600 hover:text-blue-800 underline hover:no-underline transition-colors text-sm font-medium py-2 px-4 hover:bg-blue-50 rounded-md"
+            >
+              Forgot your password?
+            </Link>
+          </div>
+
           {/* Demo Credentials */}
-          <div className="mt-6 p-4 bg-primary-50 rounded-lg border border-primary-200">
-            <h4 className="text-sm font-semibold text-primary-900 mb-2">Demo Credentials:</h4>
-            <p className="text-sm text-primary-600 mb-1">Email: phillip@example.com</p>
-            <p className="text-sm text-primary-600">Password: admin123</p>
-            <p className="text-xs text-primary-500 mt-2">
+          <div className="mt-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
+            <h4 className="text-sm font-semibold text-gray-800 mb-2">Demo Credentials:</h4>
+            <p className="text-sm text-gray-600 mb-1">Email: kyawmk787@gmail.com</p>
+            <p className="text-sm text-gray-600">Password: admin123</p>
+            <p className="text-xs text-gray-500 mt-2">
               Note: Update these in your environment variables for production use.
             </p>
           </div>

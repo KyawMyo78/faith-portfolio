@@ -130,7 +130,7 @@ export default function Experience() {
       </div>
 
       {/* Description */}
-      <p className="text-gray-700 mb-4 leading-relaxed">{experience.description}</p>
+      <p className="text-gray-700 mb-4 leading-relaxed text-justify">{experience.description}</p>
 
       {/* Responsibilities */}
       {experience.responsibilities && experience.responsibilities.length > 0 && (
@@ -208,7 +208,7 @@ export default function Experience() {
               Work <span className="text-gradient">Experience</span>
             </h2>
             <div className="w-24 h-1 bg-gradient-primary mx-auto mb-6"></div>
-            <p className="text-xl text-primary-600 max-w-3xl mx-auto mb-8">
+            <p className="text-xl text-primary-600 max-w-3xl mx-auto mb-8 text-justify">
               Building expertise through hands-on experience and continuous learning.
             </p>
             <div className="text-center py-12">

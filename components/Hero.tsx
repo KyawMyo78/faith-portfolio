@@ -140,7 +140,7 @@ export default function Hero() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6 }}
-              className="text-lg text-primary-600 mb-8 max-w-2xl"
+              className="text-lg text-primary-600 mb-8 max-w-2xl text-justify"
             >
               {profile?.description || 'A passionate 23-year-old Myanmar student studying IT in Thailand. I love creating innovative solutions through programming, embedded systems, and mobile development while mentoring others in their coding journey.'}
             </motion.p>

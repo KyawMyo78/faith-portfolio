@@ -12,6 +12,7 @@ interface ProfileData {
   description: string;
   location: string;
   email: string;
+  phone: string;
   github: string;
   linkedin: string;
   profileImage: string;
@@ -27,6 +28,7 @@ export default function ProfileManager() {
     description: 'A passionate 23-year-old Myanmar student studying IT in Thailand. I love creating innovative solutions through programming, embedded systems, and mobile development while mentoring others in their coding journey.',
     location: 'Thailand • Myanmar Native',
     email: 'kyawmyokhant78@gmail.com',
+    phone: '+66628602714',
     github: 'https://github.com/KyawMyo78',
     linkedin: 'https://linkedin.com',
     profileImage: '/profile.jpg',
@@ -330,7 +332,7 @@ export default function ProfileManager() {
         <div className="bg-white p-6 rounded-lg shadow-md lg:col-span-2">
           <h2 className="text-lg font-semibold text-gray-900 mb-4">Contact & Social Links</h2>
           
-          <div className="grid md:grid-cols-3 gap-4">
+          <div className="grid md:grid-cols-2 gap-4 mb-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Email
@@ -344,6 +346,22 @@ export default function ProfileManager() {
               />
             </div>
 
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Phone Number
+              </label>
+              <input
+                type="tel"
+                name="phone"
+                value={profile.phone}
+                onChange={handleInputChange}
+                placeholder="+66628602714"
+                className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+            </div>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 GitHub URL

@@ -1,6 +1,35 @@
 import { NextRequest, NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import { adminDb } from '../../../lib/firebase-admin';
+
+// Get admin credentials (check Firebase first, then environment)
+async function getAdminCredentials() {
+  try {
+    // Try to get credentials from Firebase first
+    const credentialsDoc = await adminDb.collection('admin-settings').doc('credentials').get();
+    
+    if (credentialsDoc.exists) {
+      const data = credentialsDoc.data();
+      console.log('✅ Using credentials from Firebase');
+      return {
+        email: data?.email,
+        passwordHash: data?.passwordHash,
+        source: 'firebase'
+      };
+    }
+  } catch (error) {
+    console.log('⚠️ Firebase credentials not available, falling back to environment');
+  }
+
+  // Fall back to environment variables
+  console.log('📝 Using credentials from environment variables');
+  return {
+    email: process.env.ADMIN_EMAIL,
+    passwordHash: process.env.ADMIN_PASSWORD_HASH,
+    source: 'environment'
+  };
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -9,22 +38,22 @@ export async function POST(request: NextRequest) {
     console.log('=== AUTH DEBUG ===');
     console.log('Login attempt with:', { email, passwordLength: password?.length });
 
-    // Get credentials from environment variables
-    const adminEmail = process.env.ADMIN_EMAIL;
-    const adminPasswordHash = process.env.ADMIN_PASSWORD_HASH;
+    // Get admin credentials
+    const credentials = await getAdminCredentials();
+    const { email: adminEmail, passwordHash: adminPasswordHash, source } = credentials;
     
-    console.log('Using environment credentials');
-    console.log('Admin email from env:', adminEmail);
+    console.log(`Using ${source} credentials`);
+    console.log('Admin email:', adminEmail);
     console.log('Password hash exists:', !!adminPasswordHash);
     console.log('Password hash length:', adminPasswordHash?.length);
     console.log('Password hash preview:', adminPasswordHash?.substring(0, 20) + '...');
 
     if (!adminEmail || !adminPasswordHash) {
-      console.log('❌ Missing environment variables');
-      console.log('Environment check:', {
-        hasAdminEmail: !!process.env.ADMIN_EMAIL,
-        hasPasswordHash: !!process.env.ADMIN_PASSWORD_HASH,
-        allEnvKeys: Object.keys(process.env).filter(key => key.includes('ADMIN'))
+      console.log('❌ Missing credentials');
+      console.log('Credentials check:', {
+        hasAdminEmail: !!adminEmail,
+        hasPasswordHash: !!adminPasswordHash,
+        source: source
       });
       return NextResponse.json(
         { success: false, error: 'Server configuration error' },

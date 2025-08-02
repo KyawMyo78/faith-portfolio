@@ -1,7 +1,11 @@
 {
-  "name": "phillip-portfolio",
-  "version": "0.1.0",
+  "name": "portfolio-template",
+  "version": "1.0.0",
+  "description": "A modern portfolio website template built with Next.js 14, TypeScript, and Firebase",
   "private": true,
+  "keywords": ["portfolio", "nextjs", "typescript", "firebase", "tailwind", "template"],
+  "author": "Portfolio Template",
+  "license": "MIT",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -39,5 +43,8 @@
     "eslint": "^8.56.0",
     "eslint-config-next": "14.0.4",
     "typescript": "^5.3.3"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   }
 }

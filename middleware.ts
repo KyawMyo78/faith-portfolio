@@ -3,9 +3,11 @@ import { NextRequest, NextResponse } from 'next/server';
 export function middleware(request: NextRequest) {
   console.log('Middleware: Checking path:', request.nextUrl.pathname);
   
-  // Check if it's an admin route (except login)
+  // Check if it's an admin route (except login, forgot-password, and reset-password)
   if (request.nextUrl.pathname.startsWith('/admin') && 
-      !request.nextUrl.pathname.startsWith('/admin/login')) {
+      !request.nextUrl.pathname.startsWith('/admin/login') &&
+      !request.nextUrl.pathname.startsWith('/admin/forgot-password') &&
+      !request.nextUrl.pathname.startsWith('/admin/reset-password')) {
     
     // Check for auth token in cookies
     const token = request.cookies.get('admin-token');

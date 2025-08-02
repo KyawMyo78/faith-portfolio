@@ -99,7 +99,7 @@ export default function Projects() {
               My <span className="text-gradient">Projects</span>
             </h2>
             <div className="w-24 h-1 bg-gradient-primary mx-auto mb-6"></div>
-            <p className="text-xl text-primary-600 max-w-3xl mx-auto mb-8">
+            <p className="text-xl text-primary-600 max-w-3xl mx-auto mb-8 text-justify">
               Exploring innovative solutions across web development, mobile apps, embedded systems, and AI technologies.
             </p>
             <div className="text-center py-12">
@@ -309,7 +309,7 @@ function ProjectCard({ project, featured, index }: ProjectCardProps) {
       {/* Project Content */}
       <div className="p-6">
         <h3 className="text-xl font-bold text-primary-800 mb-2">{project.title}</h3>
-        <p className="text-primary-600 mb-4 leading-relaxed">
+        <p className="text-primary-600 mb-4 leading-relaxed text-justify">
           {isExpanded ? project.longDescription || project.description : project.description}
         </p>
 

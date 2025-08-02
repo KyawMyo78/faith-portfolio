@@ -61,7 +61,7 @@ export default function About() {
             <h3 className="text-2xl font-bold text-primary-900 mb-6">
               Hello! I'm Kyaw Myo Khant (Phillip)
             </h3>
-            <div className="space-y-4 text-primary-600 leading-relaxed">
+            <div className="space-y-4 text-primary-600 leading-relaxed text-justify">
               <p>
                 I'm a 23-year-old Myanmar student passionate about technology and innovation. 
                 Currently pursuing my Bachelor's in Information Technology in Thailand, 
@@ -150,7 +150,7 @@ export default function About() {
                 <highlight.icon className="w-8 h-8 text-white" />
               </div>
               <h4 className="text-xl font-bold text-primary-900 mb-3">{highlight.title}</h4>
-              <p className="text-primary-600 leading-relaxed">{highlight.description}</p>
+              <p className="text-primary-600 leading-relaxed text-justify">{highlight.description}</p>
             </motion.div>
           ))}
         </motion.div>
