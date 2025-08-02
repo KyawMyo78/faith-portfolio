@@ -13,7 +13,22 @@ import {
   Database,
   Globe,
   Smartphone,
-  Cpu
+  Cpu,
+  Monitor,
+  Server,
+  Layers,
+  Terminal,
+  Zap,
+  Settings,
+  Palette,
+  Shield,
+  Cloud,
+  BookOpen,
+  Wrench,
+  GitBranch,
+  Package,
+  Brain,
+  Lightbulb
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
@@ -27,6 +42,39 @@ interface Skill {
   order: number;
   yearsOfExperience?: number;
 }
+
+interface SkillIconConfig {
+  key: string;
+  icon: any;
+  label: string;
+}
+
+const skillIcons: SkillIconConfig[] = [
+  { key: 'code', icon: Code, label: 'Code' },
+  { key: 'database', icon: Database, label: 'Database' },
+  { key: 'globe', icon: Globe, label: 'Web' },
+  { key: 'smartphone', icon: Smartphone, label: 'Mobile' },
+  { key: 'cpu', icon: Cpu, label: 'Hardware' },
+  { key: 'monitor', icon: Monitor, label: 'Frontend' },
+  { key: 'server', icon: Server, label: 'Backend' },
+  { key: 'layers', icon: Layers, label: 'Framework' },
+  { key: 'terminal', icon: Terminal, label: 'Terminal' },
+  { key: 'zap', icon: Zap, label: 'Performance' },
+  { key: 'settings', icon: Settings, label: 'Tools' },
+  { key: 'palette', icon: Palette, label: 'Design' },
+  { key: 'shield', icon: Shield, label: 'Security' },
+  { key: 'cloud', icon: Cloud, label: 'Cloud' },
+  { key: 'book', icon: BookOpen, label: 'Learning' },
+  { key: 'wrench', icon: Wrench, label: 'DevOps' },
+  { key: 'git', icon: GitBranch, label: 'Version Control' },
+  { key: 'package', icon: Package, label: 'Library' },
+  { key: 'brain', icon: Brain, label: 'AI/ML' },
+  { key: 'lightbulb', icon: Lightbulb, label: 'Innovation' }
+];
+
+const getSkillIcon = (iconKey: string) => {
+  return skillIcons.find(icon => icon.key === iconKey) || skillIcons.find(icon => icon.key === 'code');
+};
 
 const categories = [
   { id: 'frontend', name: 'Frontend Development', icon: Globe },
@@ -51,10 +99,20 @@ export default function SkillsManagement() {
   const [editingSkill, setEditingSkill] = useState<Skill | null>(null);
   const [isSaving, setIsSaving] = useState(false);
   const [activeCategory, setActiveCategory] = useState('all');
+  const [showCustomCategory, setShowCustomCategory] = useState(false);
+  const [customCategories, setCustomCategories] = useState<string[]>([]);
 
   useEffect(() => {
     loadSkills();
   }, []);
+
+  useEffect(() => {
+    // Extract custom categories from existing skills
+    const existingCategories = skills.map(skill => skill.category);
+    const predefinedCategoryIds = categories.map(cat => cat.id);
+    const customCats = Array.from(new Set(existingCategories.filter(cat => !predefinedCategoryIds.includes(cat))));
+    setCustomCategories(customCats);
+  }, [skills]);
 
   const loadSkills = async () => {
     try {
@@ -77,15 +135,20 @@ export default function SkillsManagement() {
   const openModal = (skill?: Skill) => {
     if (skill) {
       setEditingSkill(skill);
+      // Check if the skill has a custom category
+      const isCustomCategory = !categories.some(cat => cat.id === skill.category);
+      setShowCustomCategory(isCustomCategory);
     } else {
       setEditingSkill({
         name: '',
         category: 'frontend',
         level: 3,
         description: '',
+        icon: 'code',
         order: skills.length,
         yearsOfExperience: 1
       });
+      setShowCustomCategory(false);
     }
     setIsModalOpen(true);
   };
@@ -93,6 +156,7 @@ export default function SkillsManagement() {
   const closeModal = () => {
     setIsModalOpen(false);
     setEditingSkill(null);
+    setShowCustomCategory(false);
   };
 
   const handleSave = async () => {
@@ -101,6 +165,11 @@ export default function SkillsManagement() {
     // Validation
     if (!editingSkill.name.trim()) {
       toast.error('Skill name is required');
+      return;
+    }
+
+    if (!editingSkill.category.trim()) {
+      toast.error('Category is required');
       return;
     }
 
@@ -226,6 +295,21 @@ export default function SkillsManagement() {
             {category.name} ({groupedSkills[category.id]?.length || 0})
           </button>
         ))}
+        {/* Custom Category Filters */}
+        {customCategories.map(category => (
+          <button
+            key={category}
+            onClick={() => setActiveCategory(category)}
+            className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
+              activeCategory === category
+                ? 'bg-primary-600 text-white'
+                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+            }`}
+          >
+            <Code size={16} />
+            {category} ({skills.filter(skill => skill.category === category).length})
+          </button>
+        ))}
       </div>
 
       {/* Skills Grid */}
@@ -234,6 +318,11 @@ export default function SkillsManagement() {
           {filteredSkills.map((skill, index) => {
             const categoryInfo = categories.find(c => c.id === skill.category);
             const levelInfo = skillLevels.find(l => l.value === skill.level);
+            const isCustomCategory = !categoryInfo;
+            
+            // Get skill icon - use custom icon if available, otherwise fallback to category icon
+            const skillIconConfig = skill.icon ? getSkillIcon(skill.icon) : null;
+            const IconComponent = skillIconConfig?.icon || categoryInfo?.icon || Code;
             
             return (
               <motion.div
@@ -245,7 +334,7 @@ export default function SkillsManagement() {
               >
                 <div className="flex justify-between items-start mb-3">
                   <div className="flex items-center gap-2">
-                    {categoryInfo && <categoryInfo.icon size={20} className="text-primary-600" />}
+                    <IconComponent size={20} className="text-primary-600" />
                     <h3 className="font-semibold text-gray-900">{skill.name}</h3>
                   </div>
                   <div className="flex gap-1">
@@ -300,7 +389,7 @@ export default function SkillsManagement() {
                 {/* Category Badge */}
                 <div className="mt-3">
                   <span className="text-xs px-2 py-1 bg-primary-100 text-primary-700 rounded">
-                    {categoryInfo?.name}
+                    {categoryInfo?.name || skill.category}
                   </span>
                 </div>
               </motion.div>
@@ -360,15 +449,90 @@ export default function SkillsManagement() {
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Category
                   </label>
-                  <select
-                    value={editingSkill.category}
-                    onChange={(e) => updateEditingSkill('category', e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
-                  >
-                    {categories.map(cat => (
-                      <option key={cat.id} value={cat.id}>{cat.name}</option>
-                    ))}
-                  </select>
+                  <div className="space-y-2">
+                    {!showCustomCategory ? (
+                      <div className="space-y-2">
+                        <select
+                          value={editingSkill.category}
+                          onChange={(e) => {
+                            if (e.target.value === 'custom') {
+                              setShowCustomCategory(true);
+                              updateEditingSkill('category', '');
+                            } else {
+                              updateEditingSkill('category', e.target.value);
+                            }
+                          }}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                        >
+                          <option value="">Select a category</option>
+                          {/* Predefined categories */}
+                          {categories.map(cat => (
+                            <option key={cat.id} value={cat.id}>{cat.name}</option>
+                          ))}
+                          {/* Custom categories */}
+                          {customCategories.map(cat => (
+                            <option key={cat} value={cat}>{cat}</option>
+                          ))}
+                          <option value="custom">+ Add Custom Category</option>
+                        </select>
+                      </div>
+                    ) : (
+                      <div className="flex space-x-2">
+                        <input
+                          type="text"
+                          value={editingSkill.category}
+                          onChange={(e) => updateEditingSkill('category', e.target.value)}
+                          placeholder="Enter custom category name"
+                          className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setShowCustomCategory(false);
+                            updateEditingSkill('category', 'frontend');
+                          }}
+                          className="px-3 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                          title="Use predefined categories"
+                        >
+                          <X size={16} />
+                        </button>
+                      </div>
+                    )}
+                    <p className="text-xs text-gray-500">
+                      You can choose from existing categories or create a custom one
+                    </p>
+                  </div>
+                </div>
+
+                {/* Icon Selection */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Icon
+                  </label>
+                  <div className="grid grid-cols-6 sm:grid-cols-8 gap-2">
+                    {skillIcons.map((iconConfig) => {
+                      const IconComponent = iconConfig.icon;
+                      const isSelected = editingSkill.icon === iconConfig.key;
+                      return (
+                        <button
+                          key={iconConfig.key}
+                          type="button"
+                          onClick={() => updateEditingSkill('icon', iconConfig.key)}
+                          className={`p-2 rounded-lg border-2 transition-colors ${
+                            isSelected
+                              ? 'border-primary-500 bg-primary-50 text-primary-600'
+                              : 'border-gray-200 hover:border-gray-300 text-gray-600'
+                          }`}
+                          title={iconConfig.label}
+                        >
+                          <IconComponent size={20} />
+                        </button>
+                      );
+                    })}
+                  </div>
+                  <p className="text-xs text-gray-500 mt-1">
+                    Choose an icon that represents this skill
+                  </p>
                 </div>
 
                 {/* Proficiency Level */}

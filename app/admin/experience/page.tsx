@@ -63,7 +63,10 @@ export default function ExperienceManagement() {
 
   const openModal = (experience?: Experience) => {
     if (experience) {
-      setEditingExperience(experience);
+      setEditingExperience({
+        ...experience,
+        current: experience.current || false // Ensure current is always a boolean
+      });
     } else {
       setEditingExperience({
         title: '',
@@ -107,12 +110,20 @@ export default function ExperienceManagement() {
       
       const method = editingExperience.id ? 'PUT' : 'POST';
       
+      // Prepare data for submission
+      const submissionData = { ...editingExperience };
+      
+      // If this is a current job, remove endDate completely
+      if (submissionData.current) {
+        delete submissionData.endDate;
+      }
+      
       const response = await fetch(url, {
         method,
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(editingExperience),
+        body: JSON.stringify(submissionData),
       });
 
       const data = await response.json();
@@ -282,7 +293,7 @@ export default function ExperienceManagement() {
                         {formatDate(experience.startDate)} - {experience.current ? 'Present' : (experience.endDate ? formatDate(experience.endDate) : 'Present')}
                       </span>
                       <span className="text-sm text-gray-500">
-                        ({calculateDuration(experience.startDate, experience.endDate)})
+                        ({calculateDuration(experience.startDate, experience.current ? undefined : experience.endDate)})
                       </span>
                     </div>
                   </div>
@@ -460,37 +471,50 @@ export default function ExperienceManagement() {
                     />
                   </div>
 
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      End Date
-                    </label>
-                    <input
-                      type="date"
-                      value={editingExperience.endDate || ''}
-                      onChange={(e) => updateEditingExperience('endDate', e.target.value || undefined)}
-                      disabled={editingExperience.current}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 disabled:bg-gray-100"
-                    />
-                  </div>
+                  {!editingExperience.current && (
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        End Date
+                      </label>
+                      <input
+                        type="date"
+                        value={editingExperience.endDate || ''}
+                        onChange={(e) => updateEditingExperience('endDate', e.target.value || undefined)}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                      />
+                    </div>
+                  )}
                 </div>
 
                 {/* Current Job Toggle */}
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
                   <input
                     type="checkbox"
                     id="current"
-                    checked={editingExperience.current}
+                    checked={!!editingExperience.current}
                     onChange={(e) => {
-                      updateEditingExperience('current', e.target.checked);
-                      if (e.target.checked) {
-                        updateEditingExperience('endDate', undefined);
-                      }
+                      const isCurrentJob = e.target.checked;
+                      
+                      setEditingExperience(prev => {
+                        if (!prev) return prev;
+                        const updated = {
+                          ...prev,
+                          current: isCurrentJob,
+                          endDate: isCurrentJob ? undefined : prev.endDate
+                        };
+                        return updated;
+                      });
                     }}
-                    className="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                    className="w-4 h-4 text-primary-600 bg-white border-gray-300 rounded focus:ring-primary-500 focus:ring-2 cursor-pointer"
                   />
-                  <label htmlFor="current" className="text-sm font-medium text-gray-700">
+                  <label htmlFor="current" className="text-sm font-medium text-gray-700 cursor-pointer">
                     I currently work here
                   </label>
+                  {editingExperience.current && (
+                    <span className="text-xs text-green-600 ml-2">
+                      End date will not be required
+                    </span>
+                  )}
                 </div>
 
                 {/* Description */}

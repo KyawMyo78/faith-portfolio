@@ -3,11 +3,13 @@
 import { motion } from 'framer-motion';
 import { Heart, Github, Linkedin, Mail, ArrowUp } from 'lucide-react';
 import { useState, useEffect } from 'react';
+import { getSocialIcon, SocialLink } from '../lib/socialIcons';
 
 interface ProfileData {
   email: string;
   github: string;
   linkedin: string;
+  socialLinks?: SocialLink[];
 }
 
 const quickLinks = [
@@ -29,13 +31,16 @@ export default function Footer() {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const response = await fetch('/api/profile');
+        // Add cache busting parameter
+        const timestamp = new Date().getTime();
+        const response = await fetch(`/api/profile?t=${timestamp}`);
         const result = await response.json();
         if (result.success) {
           setProfile({
             email: result.data.email || 'kyawmk787@gmail.com',
             github: result.data.github || 'https://github.com/KyawMyo78',
-            linkedin: result.data.linkedin || 'https://linkedin.com'
+            linkedin: result.data.linkedin || 'https://linkedin.com/in/kyaw-myo-khant',
+            socialLinks: result.data.socialLinks || []
           });
         }
       } catch (error) {
@@ -46,23 +51,54 @@ export default function Footer() {
     fetchProfile();
   }, []);
 
-  const socialLinks = [
-    {
-      name: 'GitHub',
-      url: profile.github,
-      icon: Github
-    },
-    {
-      name: 'LinkedIn',
-      url: profile.linkedin,
-      icon: Linkedin
-    },
-    {
+  // Build social links array from profile data
+  const getSocialLinks = () => {
+    const links = [];
+    
+    // Add custom social links
+    if (profile.socialLinks && profile.socialLinks.length > 0) {
+      profile.socialLinks.forEach(link => {
+        const iconConfig = getSocialIcon(link.icon);
+        links.push({
+          name: link.name,
+          url: link.url,
+          icon: iconConfig?.icon || Github
+        });
+      });
+    }
+    
+    // Add email link
+    links.push({
       name: 'Email',
       url: `mailto:${profile.email}`,
       icon: Mail
+    });
+    
+    // Add legacy links if not already included in custom links
+    if (!profile.socialLinks || !profile.socialLinks.some(link => link.url.includes('github.com'))) {
+      if (profile.github) {
+        links.push({
+          name: 'GitHub',
+          url: profile.github,
+          icon: Github
+        });
+      }
     }
-  ];
+    
+    if (!profile.socialLinks || !profile.socialLinks.some(link => link.url.includes('linkedin.com'))) {
+      if (profile.linkedin) {
+        links.push({
+          name: 'LinkedIn',
+          url: profile.linkedin,
+          icon: Linkedin
+        });
+      }
+    }
+    
+    return links;
+  };
+
+  const socialLinks = getSocialLinks();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -111,19 +147,23 @@ export default function Footer() {
                 embedded systems, mobile development, and innovative technology solutions.
               </p>
               <div className="flex space-x-4">
-                {socialLinks.map((link) => (
-                  <motion.a
-                    key={link.name}
-                    href={link.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="w-10 h-10 bg-primary-800 rounded-lg flex items-center justify-center hover:bg-primary-700 transition-colors"
-                  >
-                    <link.icon size={20} />
-                  </motion.a>
-                ))}
+                {socialLinks.map((link) => {
+                  const IconComponent = link.icon;
+                  return (
+                    <motion.a
+                      key={link.name}
+                      href={link.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="w-10 h-10 bg-primary-800 rounded-lg flex items-center justify-center hover:bg-primary-700 transition-colors"
+                      title={link.name}
+                    >
+                      <IconComponent size={20} />
+                    </motion.a>
+                  );
+                })}
               </div>
             </motion.div>
 

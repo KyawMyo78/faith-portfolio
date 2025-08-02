@@ -67,13 +67,12 @@ export async function POST(request: NextRequest) {
     const experienceId = `exp_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 
     // Prepare experience object
-    const newExperience = {
+    const newExperience: any = {
       id: experienceId,
       title: experienceData.title.trim(),
       company: experienceData.company.trim(),
       location: experienceData.location?.trim() || '',
       startDate: experienceData.startDate,
-      endDate: experienceData.current ? null : experienceData.endDate,
       current: Boolean(experienceData.current),
       description: experienceData.description?.trim() || '',
       responsibilities: Array.isArray(experienceData.responsibilities) 
@@ -85,11 +84,20 @@ export async function POST(request: NextRequest) {
       technologies: Array.isArray(experienceData.technologies) 
         ? experienceData.technologies.filter((item: string) => item.trim()) 
         : [],
-      companyUrl: experienceData.companyUrl?.trim() || null,
       order: Number(experienceData.order) || 0,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     };
+
+    // Add endDate only if not current job and endDate exists
+    if (!experienceData.current && experienceData.endDate) {
+      newExperience.endDate = experienceData.endDate;
+    }
+
+    // Add companyUrl only if it exists
+    if (experienceData.companyUrl?.trim()) {
+      newExperience.companyUrl = experienceData.companyUrl.trim();
+    }
 
     // Get current portfolio data
     const portfolioRef = adminDb.collection('portfolio').doc('data');

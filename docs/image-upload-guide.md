@@ -42,14 +42,15 @@ Your portfolio now has a complete image upload and management system! Here's how
 
 ### **File Organization:**
 ```
-public/
-├── profile.jpg                 # Your profile picture
-├── profile-placeholder.svg     # Fallback if no profile image
-├── projects/                   # Project images
-│   ├── project-1.jpg
-│   ├── project-2.jpg
-│   └── ...
-└── uploads/                    # General uploads
+Firebase Storage Structure:
+├── images/
+│   ├── profile.jpg             # Your profile picture
+│   └── projects/               # Project images
+│       ├── project-1.jpg
+│       ├── project-2.jpg
+│       └── ...
+└── documents/                  # Documents like CV
+    ├── cv-timestamp.pdf
     └── ...
 ```
 
@@ -58,13 +59,14 @@ public/
 ### **Image Optimization:**
 - Use high-quality images (recommended: 1920x1080 for projects)
 - Profile picture should be square (400x400 minimum)
-- Keep file sizes under 2MB for faster loading
+- Keep file sizes under 5MB for faster loading
 - Use JPG for photos, PNG for graphics with transparency
 
 ### **File Naming:**
 - Profile image automatically named `profile.jpg`
 - Project images auto-named with timestamp
-- You can replace images by uploading with same name
+- Documents auto-named with timestamp
+- All files stored securely in Firebase Storage
 
 ### **Mobile Responsiveness:**
 - All uploaded images automatically responsive
@@ -74,22 +76,28 @@ public/
 ## 🔧 **Technical Features:**
 
 ### **Upload API** (`/api/upload`)
-- Handles all file uploads
+- Handles all file uploads to Firebase Storage
 - Validates file types and sizes
-- Creates directories automatically
-- Returns public URLs for immediate use
+- Creates public URLs automatically
+- Returns secure Firebase Storage URLs
+
+### **Storage Integration:**
+- **Firebase Storage**: Secure, scalable cloud storage
+- **Public URLs**: Direct access to uploaded files
+- **Metadata**: Upload information stored with each file
+- **Auto-naming**: Automatic file naming with timestamps
 
 ### **Security:**
 - File type validation
 - Size limits enforced
-- Secure file handling
-- No script execution in uploads
+- Secure Firebase Storage
+- Public read access only
 
 ### **Error Handling:**
 - Invalid file type warnings
 - File size limit notifications
 - Upload failure recovery
-- Fallback images when needed
+- Detailed error messages
 
 ## 🎨 **UI Features:**
 

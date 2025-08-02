@@ -1,7 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { writeFile, readFile, mkdir } from 'fs/promises';
-import { existsSync } from 'fs';
-import path from 'path';
+import { initializeApp, getApps, cert } from 'firebase-admin/app';
+import { getFirestore } from 'firebase-admin/firestore';
+
+// Initialize Firebase Admin SDK
+if (!getApps().length) {
+  initializeApp({
+    credential: cert({
+      projectId: process.env.FIREBASE_PROJECT_ID,
+      clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+      privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
+    }),
+  });
+}
+
+const db = getFirestore();
 
 // Default profile data
 const defaultProfile = {
@@ -15,39 +27,35 @@ const defaultProfile = {
   github: 'https://github.com/KyawMyo78',
   linkedin: 'https://linkedin.com',
   profileImage: '/profile.jpg',
-  cvUrl: ''
+  cvUrl: '',
+  socialLinks: []
 };
-
-const dataDir = path.join(process.cwd(), 'data');
-const profileFile = path.join(dataDir, 'profile.json');
-
-async function ensureDataDir() {
-  if (!existsSync(dataDir)) {
-    await mkdir(dataDir, { recursive: true });
-  }
-}
 
 async function getProfile() {
   try {
-    await ensureDataDir();
-    if (existsSync(profileFile)) {
-      const data = await readFile(profileFile, 'utf8');
-      return JSON.parse(data);
+    const docRef = db.collection('profile').doc('main');
+    const doc = await docRef.get();
+    
+    if (doc.exists) {
+      return doc.data();
+    } else {
+      // Create the default profile if it doesn't exist
+      await docRef.set(defaultProfile);
+      return defaultProfile;
     }
-    return defaultProfile;
   } catch (error) {
-    console.error('Error reading profile:', error);
+    console.error('Error reading profile from Firestore:', error);
     return defaultProfile;
   }
 }
 
 async function saveProfile(profileData: any) {
   try {
-    await ensureDataDir();
-    await writeFile(profileFile, JSON.stringify(profileData, null, 2));
+    const docRef = db.collection('profile').doc('main');
+    await docRef.set(profileData, { merge: true });
     return true;
   } catch (error) {
-    console.error('Error saving profile:', error);
+    console.error('Error saving profile to Firestore:', error);
     return false;
   }
 }

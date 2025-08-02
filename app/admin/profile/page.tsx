@@ -1,8 +1,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { User, Camera, Save, Eye, FileText } from 'lucide-react';
+import { User, Camera, Save, Eye, FileText, Plus, X, ExternalLink } from 'lucide-react';
 import FileUpload from '../../../components/FileUpload';
+import { socialIcons, getSocialIcon, SocialLink } from '../../../lib/socialIcons';
 
 interface ProfileData {
   name: string;
@@ -17,6 +18,7 @@ interface ProfileData {
   linkedin: string;
   profileImage: string;
   cvUrl: string;
+  socialLinks?: SocialLink[];
 }
 
 export default function ProfileManager() {
@@ -32,12 +34,19 @@ export default function ProfileManager() {
     github: 'https://github.com/KyawMyo78',
     linkedin: 'https://linkedin.com',
     profileImage: '/profile.jpg',
-    cvUrl: ''
+    cvUrl: '',
+    socialLinks: []
   });
 
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
+  const [newSocialLink, setNewSocialLink] = useState<SocialLink>({
+    id: '',
+    name: '',
+    url: '',
+    icon: 'external'
+  });
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -69,6 +78,35 @@ export default function ProfileManager() {
     setProfile(prev => ({
       ...prev,
       profileImage: url
+    }));
+  };
+
+  const handleAddSocialLink = () => {
+    if (newSocialLink.name && newSocialLink.url) {
+      const linkWithId = {
+        ...newSocialLink,
+        id: Date.now().toString()
+      };
+      setProfile(prev => ({
+        ...prev,
+        socialLinks: [...(prev.socialLinks || []), linkWithId]
+      }));
+      setNewSocialLink({ id: '', name: '', url: '', icon: 'external' });
+    }
+  };
+
+  const handleRemoveSocialLink = (id: string) => {
+    setProfile(prev => ({
+      ...prev,
+      socialLinks: prev.socialLinks?.filter(link => link.id !== id) || []
+    }));
+  };
+
+  const handleSocialLinkChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setNewSocialLink(prev => ({
+      ...prev,
+      [name]: value
     }));
   };
 
@@ -252,6 +290,33 @@ export default function ProfileManager() {
                 className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
             </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Email
+              </label>
+              <input
+                type="email"
+                name="email"
+                value={profile.email}
+                onChange={handleInputChange}
+                className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Phone Number
+              </label>
+              <input
+                type="tel"
+                name="phone"
+                value={profile.phone}
+                onChange={handleInputChange}
+                placeholder="+66628602714"
+                className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+            </div>
           </div>
         </div>
 
@@ -267,6 +332,119 @@ export default function ProfileManager() {
             className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             placeholder="Write about yourself..."
           />
+        </div>
+
+        {/* Social Links */}
+        <div className="bg-white p-6 rounded-lg shadow-md lg:col-span-2">
+          <div className="flex items-center space-x-2 mb-4">
+            <ExternalLink className="h-5 w-5 text-gray-600" />
+            <h2 className="text-lg font-semibold text-gray-900">Social & Contact Links</h2>
+          </div>
+          
+          <div className="space-y-4">
+            {/* Add New Social Link */}
+            <div className="grid grid-cols-1 gap-4 p-4 bg-gray-50 rounded-lg">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Platform Name
+                  </label>
+                  <input
+                    type="text"
+                    name="name"
+                    value={newSocialLink.name}
+                    onChange={handleSocialLinkChange}
+                    placeholder="e.g., Twitter, Instagram, Portfolio"
+                    className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    URL
+                  </label>
+                  <input
+                    type="url"
+                    name="url"
+                    value={newSocialLink.url}
+                    onChange={handleSocialLinkChange}
+                    placeholder="https://..."
+                    className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Icon
+                  </label>
+                  <select
+                    name="icon"
+                    value={newSocialLink.icon}
+                    onChange={(e) => setNewSocialLink(prev => ({ ...prev, icon: e.target.value }))}
+                    className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  >
+                    {socialIcons.map((iconOption) => (
+                      <option key={iconOption.key} value={iconOption.key}>
+                        {iconOption.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+              <div className="flex justify-end">
+                <button
+                  type="button"
+                  onClick={handleAddSocialLink}
+                  disabled={!newSocialLink.name || !newSocialLink.url}
+                  className="px-6 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
+                >
+                  <Plus className="h-4 w-4 mr-2" />
+                  Add Link
+                </button>
+              </div>
+            </div>
+
+            {/* Existing Social Links */}
+            {profile.socialLinks && profile.socialLinks.length > 0 && (
+              <div className="space-y-3">
+                <h3 className="text-md font-medium text-gray-800">Current Links</h3>
+                {profile.socialLinks.map((link) => {
+                  const iconConfig = getSocialIcon(link.icon);
+                  const IconComponent = iconConfig?.icon || ExternalLink;
+                  return (
+                    <div key={link.id} className="flex items-center justify-between bg-white p-4 rounded-lg border border-gray-200">
+                      <div className="flex items-center space-x-4">
+                        <div className="p-2 bg-gray-100 rounded-lg">
+                          <IconComponent className="h-5 w-5 text-gray-600" />
+                        </div>
+                        <div>
+                          <p className="font-medium text-gray-900">{link.name}</p>
+                          <p className="text-sm text-gray-600 truncate max-w-md">{link.url}</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <a
+                          href={link.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                          title="Open link"
+                        >
+                          <ExternalLink className="h-4 w-4" />
+                        </a>
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveSocialLink(link.id)}
+                          className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                          title="Remove link"
+                        >
+                          <X className="h-4 w-4" />
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
         </div>
 
         {/* CV Link */}
@@ -325,68 +503,6 @@ export default function ProfileManager() {
               <li>Copy the public/shareable link and paste it above</li>
               <li>For Google Drive: Right-click → Share → Copy link (make sure "Anyone with link" can view)</li>
             </ul>
-          </div>
-        </div>
-
-        {/* Contact Information */}
-        <div className="bg-white p-6 rounded-lg shadow-md lg:col-span-2">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Contact & Social Links</h2>
-          
-          <div className="grid md:grid-cols-2 gap-4 mb-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Email
-              </label>
-              <input
-                type="email"
-                name="email"
-                value={profile.email}
-                onChange={handleInputChange}
-                className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Phone Number
-              </label>
-              <input
-                type="tel"
-                name="phone"
-                value={profile.phone}
-                onChange={handleInputChange}
-                placeholder="+66628602714"
-                className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              />
-            </div>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                GitHub URL
-              </label>
-              <input
-                type="url"
-                name="github"
-                value={profile.github}
-                onChange={handleInputChange}
-                className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                LinkedIn URL
-              </label>
-              <input
-                type="url"
-                name="linkedin"
-                value={profile.linkedin}
-                onChange={handleInputChange}
-                className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              />
-            </div>
           </div>
         </div>
       </div>

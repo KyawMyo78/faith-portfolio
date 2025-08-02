@@ -1,10 +1,27 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { writeFile, mkdir } from 'fs/promises';
-import { existsSync } from 'fs';
-import path from 'path';
+import { initializeApp, getApps, cert } from 'firebase-admin/app';
+import { getStorage } from 'firebase-admin/storage';
+
+// Initialize Firebase Admin SDK
+if (!getApps().length) {
+  const storageBucket = process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET;
+  
+  initializeApp({
+    credential: cert({
+      projectId: process.env.FIREBASE_PROJECT_ID,
+      clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+      privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
+    }),
+    storageBucket: storageBucket,
+  });
+}
+
+// Get storage instance
+const storage = getStorage();
 
 export async function POST(request: NextRequest) {
   try {
+    const bucketName = process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET;
     const data = await request.formData();
     const file: File | null = data.get('file') as unknown as File;
     const uploadType: string | null = data.get('uploadType') as string;
@@ -54,22 +71,22 @@ export async function POST(request: NextRequest) {
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
-    // Determine upload directory based on type
-    let uploadDir = '';
+    // Determine file path and name for Firebase Storage
+    let storagePath = '';
     let finalFileName = '';
     const fileExtension = file.name.split('.').pop()?.toLowerCase() || '';
 
     switch (uploadType) {
       case 'profile':
-        uploadDir = path.join(process.cwd(), 'public');
+        storagePath = 'images';
         finalFileName = `profile.${fileExtension}`;
         break;
       case 'project':
-        uploadDir = path.join(process.cwd(), 'public', 'projects');
+        storagePath = 'images/projects';
         finalFileName = fileName || `project-${Date.now()}.${fileExtension}`;
         break;
       case 'general':
-        uploadDir = path.join(process.cwd(), 'public', 'uploads');
+        storagePath = 'documents';
         finalFileName = fileName || `cv-${Date.now()}.${fileExtension}`;
         break;
       default:
@@ -79,34 +96,56 @@ export async function POST(request: NextRequest) {
         }, { status: 400 });
     }
 
-    // Create directory if it doesn't exist
-    if (!existsSync(uploadDir)) {
-      await mkdir(uploadDir, { recursive: true });
+    // Upload to Firebase Storage
+    if (!bucketName) {
+      return NextResponse.json({ 
+        success: false, 
+        message: 'Firebase Storage bucket not configured' 
+      }, { status: 500 });
     }
 
-    // Write file
-    const filePath = path.join(uploadDir, finalFileName);
-    await writeFile(filePath, buffer);
+    // Try to get the default bucket first, then fallback to named bucket
+    let bucket;
+    try {
+      bucket = storage.bucket(); // Use default bucket from initialization
+    } catch (error) {
+      bucket = storage.bucket(bucketName);
+    }
+    
+    const fileRef = bucket.file(`${storagePath}/${finalFileName}`);
+    
+    // Upload the file
+    await fileRef.save(buffer, {
+      metadata: {
+        contentType: file.type,
+        metadata: {
+          uploadType: uploadType,
+          originalName: file.name,
+          uploadedAt: new Date().toISOString(),
+        }
+      }
+    });
 
-    // Return the public URL
-    const publicUrl = uploadType === 'profile' 
-      ? `/${finalFileName}`
-      : uploadType === 'project' 
-        ? `/projects/${finalFileName}`
-        : `/uploads/${finalFileName}`;
+    // Make the file publicly accessible
+    await fileRef.makePublic();
+
+    // Get the public URL
+    const actualBucketName = bucket.name;
+    const publicUrl = `https://storage.googleapis.com/${actualBucketName}/${storagePath}/${finalFileName}`;
 
     return NextResponse.json({ 
       success: true, 
       message: 'File uploaded successfully',
       url: publicUrl,
-      fileName: finalFileName
+      fileName: finalFileName,
+      storagePath: `${storagePath}/${finalFileName}`
     });
 
   } catch (error) {
     console.error('Upload error:', error);
     return NextResponse.json({ 
       success: false, 
-      message: 'Upload failed' 
+      message: 'Upload failed: ' + (error instanceof Error ? error.message : 'Unknown error')
     }, { status: 500 });
   }
 }

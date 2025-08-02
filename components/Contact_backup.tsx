@@ -83,6 +83,21 @@ export default function Contact() {
       }
     ];
 
+    // Add social links if available
+    if (profile.socialLinks && profile.socialLinks.length > 0) {
+      profile.socialLinks.forEach(socialLink => {
+        const iconConfig = getSocialIcon(socialLink.icon);
+        if (iconConfig) {
+          baseInfo.push({
+            icon: iconConfig.icon,
+            title: socialLink.name,
+            value: socialLink.name,
+            link: socialLink.url
+          });
+        }
+      });
+    }
+
     return baseInfo;
   };
 
@@ -155,133 +170,134 @@ export default function Contact() {
             </div>
             
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-              {/* Name */}
-              <div>
-                <label htmlFor="name" className="block text-sm font-semibold text-gray-700 mb-2">
-                  Full Name *
-                </label>
-                <input
-                  type="text"
-                  id="name"
-                  {...register('name', { 
-                    required: 'Name is required',
-                    minLength: { value: 2, message: 'Name must be at least 2 characters' }
-                  })}
-                  className={`w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 transition-colors ${
-                    errors.name ? 'border-red-500' : 'border-gray-300'
-                  }`}
-                  placeholder="Your full name"
-                />
-                {errors.name && (
-                  <p className="mt-1 text-sm text-red-600">{errors.name.message}</p>
-                )}
-              </div>
-
-              {/* Email */}
-              <div>
-                <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-2">
-                  Email Address *
-                </label>
-                <input
-                  type="email"
-                  id="email"
-                  {...register('email', { 
-                    required: 'Email is required',
-                    pattern: {
-                      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                      message: 'Invalid email address'
-                    }
-                  })}
-                  className={`w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 transition-colors ${
-                    errors.email ? 'border-red-500' : 'border-gray-300'
-                  }`}
-                  placeholder="kyawmk787@gmail.com"
-                />
-                {errors.email && (
-                  <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>
-                )}
-              </div>
-
-              {/* Phone and Subject in grid */}
-              <div className="grid md:grid-cols-2 gap-6">
+                {/* Name */}
                 <div>
-                  <label htmlFor="phone" className="block text-sm font-semibold text-gray-700 mb-2">
-                    Phone Number
-                  </label>
-                  <input
-                    type="tel"
-                    id="phone"
-                    {...register('phone')}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 transition-colors"
-                    placeholder="+66628602714"
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="subject" className="block text-sm font-semibold text-gray-700 mb-2">
-                    Subject *
+                  <label htmlFor="name" className="block text-sm font-semibold text-gray-700 mb-2">
+                    Full Name *
                   </label>
                   <input
                     type="text"
-                    id="subject"
-                    {...register('subject', { 
-                      required: 'Subject is required',
-                      minLength: { value: 5, message: 'Subject must be at least 5 characters' }
+                    id="name"
+                    {...register('name', { 
+                      required: 'Name is required',
+                      minLength: { value: 2, message: 'Name must be at least 2 characters' }
                     })}
                     className={`w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 transition-colors ${
-                      errors.subject ? 'border-red-500' : 'border-gray-300'
+                      errors.name ? 'border-red-500' : 'border-gray-300'
                     }`}
-                    placeholder="What's this about?"
+                    placeholder="Your full name"
                   />
-                  {errors.subject && (
-                    <p className="mt-1 text-sm text-red-600">{errors.subject.message}</p>
+                  {errors.name && (
+                    <p className="mt-1 text-sm text-red-600">{errors.name.message}</p>
                   )}
                 </div>
-              </div>
 
-              {/* Message */}
-              <div>
-                <label htmlFor="message" className="block text-sm font-semibold text-gray-700 mb-2">
-                  Message *
-                </label>
-                <textarea
-                  id="message"
-                  rows={5}
-                  {...register('message', { 
-                    required: 'Message is required',
-                    minLength: { value: 20, message: 'Message must be at least 20 characters' }
-                  })}
-                  className={`w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 transition-colors resize-none ${
-                    errors.message ? 'border-red-500' : 'border-gray-300'
-                  }`}
-                  placeholder="Tell me about your project, ideas, or just say hello!"
-                />
-                {errors.message && (
-                  <p className="mt-1 text-sm text-red-600">{errors.message.message}</p>
-                )}
-              </div>
+                {/* Email */}
+                <div>
+                  <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-2">
+                    Email Address *
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    {...register('email', { 
+                      required: 'Email is required',
+                      pattern: {
+                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                        message: 'Invalid email address'
+                      }
+                    })}
+                    className={`w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 transition-colors ${
+                      errors.email ? 'border-red-500' : 'border-gray-300'
+                    }`}
+                    placeholder="kyawmk787@gmail.com"
+                  />
+                  {errors.email && (
+                    <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>
+                  )}
+                </div>
 
-              {/* Submit Button */}
-              <motion.button
-                type="submit"
-                disabled={isSubmitting}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                className="w-full bg-gradient-primary text-white font-semibold py-4 rounded-xl hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {isSubmitting ? (
-                  <>
-                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                    Sending...
-                  </>
-                ) : (
-                  <>
-                    <Send className="w-5 h-5" />
-                    Send Message
-                  </>
-                )}
-              </motion.button>
-            </form>
+                {/* Phone and Subject in grid */}
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div>
+                    <label htmlFor="phone" className="block text-sm font-semibold text-gray-700 mb-2">
+                      Phone Number
+                    </label>
+                    <input
+                      type="tel"
+                      id="phone"
+                      {...register('phone')}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 transition-colors"
+                      placeholder="+66628602714"
+                    />
+                  </div>
+
+                  <div>
+                    <label htmlFor="subject" className="block text-sm font-semibold text-gray-700 mb-2">
+                      Subject *
+                    </label>
+                    <input
+                      type="text"
+                      id="subject"
+                      {...register('subject', { 
+                        required: 'Subject is required',
+                        minLength: { value: 5, message: 'Subject must be at least 5 characters' }
+                      })}
+                      className={`w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 transition-colors ${
+                        errors.subject ? 'border-red-500' : 'border-gray-300'
+                      }`}
+                      placeholder="What's this about?"
+                    />
+                    {errors.subject && (
+                      <p className="mt-1 text-sm text-red-600">{errors.subject.message}</p>
+                    )}
+                  </div>
+                </div>
+
+                {/* Message */}
+                <div>
+                  <label htmlFor="message" className="block text-sm font-semibold text-gray-700 mb-2">
+                    Message *
+                  </label>
+                  <textarea
+                    id="message"
+                    rows={5}
+                    {...register('message', { 
+                      required: 'Message is required',
+                      minLength: { value: 20, message: 'Message must be at least 20 characters' }
+                    })}
+                    className={`w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 transition-colors resize-none ${
+                      errors.message ? 'border-red-500' : 'border-gray-300'
+                    }`}
+                    placeholder="Tell me about your project, ideas, or just say hello!"
+                  />
+                  {errors.message && (
+                    <p className="mt-1 text-sm text-red-600">{errors.message.message}</p>
+                  )}
+                </div>
+
+                {/* Submit Button */}
+                <motion.button
+                  type="submit"
+                  disabled={isSubmitting}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="w-full bg-gradient-primary text-white font-semibold py-4 rounded-xl hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {isSubmitting ? (
+                    <>
+                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                      Sending...
+                    </>
+                  ) : (
+                    <>
+                      <Send className="w-5 h-5" />
+                      Send Message
+                    </>
+                  )}
+                </motion.button>
+              </form>
+            </div>
           </div>
         </motion.div>
 
@@ -302,7 +318,7 @@ export default function Contact() {
 
             {/* Primary Contact Info */}
             <div className="space-y-4 mb-8">
-              {contactInfo.map((info, index) => (
+              {contactInfo.filter(info => ['Email', 'Phone', 'Location', 'Response Time'].includes(info.title)).map((info, index) => (
                 <motion.div
                   key={index}
                   initial={{ opacity: 0, y: 20 }}

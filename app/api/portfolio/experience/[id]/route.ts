@@ -115,13 +115,12 @@ export async function PUT(
     }
 
     // Prepare updated experience object
-    const updatedExperience = {
+    const updatedExperience: any = {
       ...experiences[experienceIndex],
       title: experienceData.title.trim(),
       company: experienceData.company.trim(),
       location: experienceData.location?.trim() || '',
       startDate: experienceData.startDate,
-      endDate: experienceData.current ? null : experienceData.endDate,
       current: Boolean(experienceData.current),
       description: experienceData.description?.trim() || '',
       responsibilities: Array.isArray(experienceData.responsibilities) 
@@ -133,10 +132,19 @@ export async function PUT(
       technologies: Array.isArray(experienceData.technologies) 
         ? experienceData.technologies.filter((item: string) => item.trim()) 
         : [],
-      companyUrl: experienceData.companyUrl?.trim() || null,
       order: Number(experienceData.order) || 0,
       updatedAt: new Date().toISOString()
     };
+
+    // Add endDate only if not current job and endDate exists
+    if (!experienceData.current && experienceData.endDate) {
+      updatedExperience.endDate = experienceData.endDate;
+    }
+
+    // Add companyUrl only if it exists
+    if (experienceData.companyUrl?.trim()) {
+      updatedExperience.companyUrl = experienceData.companyUrl.trim();
+    }
 
     // Update the experience in the array
     const updatedExperiences = [...experiences];

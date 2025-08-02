@@ -2,7 +2,29 @@
 
 import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
-import { Code, Database, Globe, Cpu, Wrench, BookOpen, Star } from 'lucide-react';
+import { 
+  Code, 
+  Database, 
+  Globe, 
+  Cpu, 
+  Wrench, 
+  BookOpen, 
+  Star,
+  Monitor,
+  Server,
+  Layers,
+  Terminal,
+  Zap,
+  Settings,
+  Palette,
+  Shield,
+  Cloud,
+  GitBranch,
+  Package,
+  Brain,
+  Lightbulb,
+  Smartphone
+} from 'lucide-react';
 
 interface Skill {
   id: string;
@@ -25,6 +47,33 @@ const categoryIcons: { [key: string]: any } = {
   'embedded': Cpu,
   'other': BookOpen,
   'default': Code
+};
+
+const skillIcons: { [key: string]: any } = {
+  'code': Code,
+  'database': Database,
+  'globe': Globe,
+  'smartphone': Smartphone,
+  'cpu': Cpu,
+  'monitor': Monitor,
+  'server': Server,
+  'layers': Layers,
+  'terminal': Terminal,
+  'zap': Zap,
+  'settings': Settings,
+  'palette': Palette,
+  'shield': Shield,
+  'cloud': Cloud,
+  'book': BookOpen,
+  'wrench': Wrench,
+  'git': GitBranch,
+  'package': Package,
+  'brain': Brain,
+  'lightbulb': Lightbulb
+};
+
+const getSkillIcon = (iconKey: string) => {
+  return skillIcons[iconKey] || Code;
 };
 
 const categoryColors: { [key: string]: string } = {
@@ -227,6 +276,14 @@ export default function Skills() {
                     >
                       <div className="flex items-center justify-between mb-2">
                         <div className="flex items-center">
+                          {skill.icon && (
+                            <span className="mr-2">
+                              {(() => {
+                                const SkillIconComponent = getSkillIcon(skill.icon);
+                                return <SkillIconComponent className="w-4 h-4 text-primary-600" />;
+                              })()}
+                            </span>
+                          )}
                           <span className="font-medium text-gray-900">{skill.name}</span>
                           {skill.featured && (
                             <Star className="w-4 h-4 text-yellow-500 ml-2 fill-current" />

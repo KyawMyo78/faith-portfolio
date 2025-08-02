@@ -123,7 +123,7 @@ export default function Experience() {
               {formatDate(experience.startDate)} - {experience.current ? 'Present' : (experience.endDate ? formatDate(experience.endDate) : 'Present')}
             </span>
             <span className="text-sm text-gray-500">
-              ({calculateDuration(experience.startDate, experience.endDate)})
+              ({calculateDuration(experience.startDate, experience.current ? undefined : experience.endDate)})
             </span>
           </div>
         </div>
