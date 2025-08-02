@@ -7,6 +7,7 @@ import { GoogleAnalytics } from '@next/third-parties/google'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.SITE_URL || 'https://kyawmyokhant.com'),
   title: 'Kyaw Myo Khant (Phillip) - Portfolio',
   description: 'Portfolio website of Kyaw Myo Khant (Phillip), a 23-year-old Myanmar student studying IT in Thailand. Specializing in programming, embedded systems, and mobile development.',
   keywords: ['portfolio', 'developer', 'programming', 'embedded systems', 'mobile development', 'web development', 'Myanmar', 'Thailand', 'IT student'],
@@ -14,15 +15,24 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Kyaw Myo Khant (Phillip) - Portfolio',
     description: 'Portfolio website showcasing projects and skills in programming, embedded systems, and mobile development.',
-    url: process.env.SITE_URL || 'http://localhost:3000',
+    url: '/',
     siteName: 'Phillip Portfolio',
     locale: 'en_US',
     type: 'website',
+    images: [
+      {
+        url: '/og-image.jpg', // You'll need to add this image
+        width: 1200,
+        height: 630,
+        alt: 'Kyaw Myo Khant (Phillip) - Portfolio',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Kyaw Myo Khant (Phillip) - Portfolio',
     description: 'Portfolio website showcasing projects and skills in programming, embedded systems, and mobile development.',
+    images: ['/og-image.jpg'],
   },
   robots: {
     index: true,
