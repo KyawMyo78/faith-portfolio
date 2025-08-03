@@ -7,7 +7,7 @@ import { GoogleAnalytics } from '@next/third-parties/google'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.SITE_URL || 'https://kyawmyokhant.com'),
+  metadataBase: new URL(process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : process.env.SITE_URL || 'https://kyawmyokhant.com'),
   title: 'Kyaw Myo Khant (Phillip) - Portfolio',
   description: 'Portfolio website of Kyaw Myo Khant (Phillip), a 23-year-old Myanmar student studying IT in Thailand. Specializing in programming, embedded systems, and mobile development.',
   keywords: ['portfolio', 'developer', 'programming', 'embedded systems', 'mobile development', 'web development', 'Myanmar', 'Thailand', 'IT student'],
