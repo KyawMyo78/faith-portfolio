@@ -1,0 +1,501 @@
+================================================================================
+                    PORTFOLIO WEBSITE USER MANUAL
+                  Kyaw Myo Khant (Phillip) Portfolio
+================================================================================
+
+TABLE OF CONTENTS
+1. Introduction
+2. Website Overview
+3. Public Website Navigation
+4. Admin Panel Access & Management
+5. Content Management Guide
+6. Troubleshooting
+7. Important Notes
+
+================================================================================
+1. INTRODUCTION
+================================================================================
+
+Welcome to your portfolio website! This manual will guide you through every 
+feature of your website, from viewing it as a visitor to managing content as 
+an administrator.
+
+Your website has two main parts:
+- PUBLIC WEBSITE: What visitors see (kyawmyokhant.com)
+- ADMIN PANEL: Where you manage content (kyawmyokhant.com/admin)
+
+================================================================================
+2. WEBSITE OVERVIEW
+================================================================================
+
+Your portfolio website contains these main sections:
+
+PUBLIC SECTIONS:
+→ Home/Hero Section: Your introduction and profile
+→ About Section: Your background and story
+→ Skills Section: Your technical abilities
+→ Experience Section: Your work history
+→ Projects Section: Your completed projects
+→ Contact Section: Ways to reach you
+
+ADMIN SECTIONS:
+→ Dashboard: Overview of your content
+→ Profile Management: Edit your personal information
+→ Skills Management: Add/edit/delete skills
+→ Experience Management: Manage work history
+→ Projects Management: Manage your projects
+→ Contact Management: View messages from visitors
+
+================================================================================
+3. PUBLIC WEBSITE NAVIGATION
+================================================================================
+
+3.1 ACCESSING YOUR WEBSITE
+---------------------------
+1. Open any web browser (Chrome, Firefox, Safari, Edge)
+2. Type: kyawmyokhant.com
+3. Press Enter
+
+3.2 HOMEPAGE (HERO SECTION)
+---------------------------
+When visitors first arrive, they see:
+→ Your profile photo (on the left)
+→ Your name: "Kyaw Myo Khant (Phillip)"
+→ Your title: Current role/description
+→ Brief introduction text
+→ Social media links (if configured)
+→ "Contact Me" button → CLICK to jump to contact form
+→ "View My Work" button → CLICK to see your projects
+
+3.3 NAVIGATION MENU
+-------------------
+At the top of the page, visitors see a navigation bar with:
+→ "About" → CLICK to learn about your background
+→ "Skills" → CLICK to see your technical abilities  
+→ "Experience" → CLICK to view your work history
+→ "Projects" → CLICK to see your completed projects
+→ "Contact" → CLICK to reach the contact form
+
+On mobile devices:
+→ Look for the hamburger menu (≡) → TAP to open navigation
+
+3.4 ABOUT SECTION
+-----------------
+This section shows:
+→ Detailed background information
+→ Education details
+→ Personal story and interests
+→ Professional goals
+
+3.5 SKILLS SECTION
+------------------
+Displays your technical skills organized by categories:
+→ Programming Languages (e.g., Python, JavaScript)
+→ Frameworks & Libraries (e.g., React, Next.js)
+→ Tools & Technologies (e.g., Git, Docker)
+→ Each skill shows a proficiency level (Beginner/Intermediate/Advanced/Expert)
+
+3.6 EXPERIENCE SECTION
+----------------------
+Shows your work history in timeline format:
+→ Job titles and company names
+→ Employment dates (Start date - End date or "Present")
+→ Location of work
+→ Job descriptions
+→ Key responsibilities (bulleted list)
+→ Major achievements (with checkmarks)
+→ Technologies used (as colored tags)
+→ Company website links (if available) → CLICK to visit company website
+
+3.7 PROJECTS SECTION
+--------------------
+Displays your completed projects:
+→ Project thumbnails/images
+→ Project titles and descriptions
+→ Technologies used in each project
+→ "View Project" buttons → CLICK to see project details
+→ "Source Code" buttons → CLICK to view code on GitHub
+
+3.8 CONTACT SECTION
+-------------------
+Two main parts:
+
+CONTACT FORM (Left side):
+→ Name field → TYPE visitor's full name
+→ Email field → TYPE visitor's email address
+→ Subject field → TYPE message subject/topic
+→ Message field → TYPE detailed message
+→ "Send Message" button → CLICK to submit
+
+CONTACT INFORMATION (Right side):
+→ Your email address → CLICK to open email client
+→ Social media links → CLICK to visit your profiles
+  - LinkedIn → Professional networking
+  - GitHub → Code repositories
+  - Twitter → Social updates
+  - Instagram → Personal photos
+  - Other platforms as configured
+
+================================================================================
+4. ADMIN PANEL ACCESS & MANAGEMENT
+================================================================================
+
+4.1 ACCESSING THE ADMIN PANEL
+------------------------------
+1. Open web browser
+2. Go to: kyawmyokhant.com/admin/login
+3. You will see the login page
+
+LOGIN PROCESS:
+→ Email field → TYPE: kyawmk787@gmail.com
+→ Password field → TYPE: [Your admin password]
+→ "Sign In" button → CLICK to log in
+
+FORGOT PASSWORD:
+→ "Forgot Password?" link → CLICK if you forgot your password
+→ Enter your email → TYPE: kyawmk787@gmail.com
+→ "Send Reset Link" → CLICK to receive password reset email
+→ Check your email for reset instructions
+
+4.2 ADMIN DASHBOARD
+-------------------
+After logging in, you see the main dashboard with:
+→ Welcome message with your name
+→ Quick statistics (total projects, skills, experiences)
+→ Recent activity summary
+→ Quick action buttons to manage content
+
+NAVIGATION MENU (Left sidebar):
+→ "Dashboard" → CLICK to return to main overview
+→ "Profile" → CLICK to edit your personal information
+→ "Skills" → CLICK to manage your technical skills
+→ "Experience" → CLICK to manage work history
+→ "Projects" → CLICK to manage your projects
+→ "Contacts" → CLICK to view visitor messages
+→ "Logout" → CLICK to sign out safely
+
+================================================================================
+5. CONTENT MANAGEMENT GUIDE
+================================================================================
+
+5.1 PROFILE MANAGEMENT
+----------------------
+PATH: Admin Panel → Profile
+
+EDITING YOUR PROFILE:
+1. Click "Profile" in the admin sidebar
+2. You'll see a form with your current information
+
+PERSONAL INFORMATION SECTION:
+→ Full Name field → EDIT your complete name
+→ Professional Title field → EDIT your job title/role
+→ Email field → EDIT your contact email
+→ Phone field → EDIT your phone number
+→ Location field → EDIT your current city/country
+→ Website field → EDIT your personal website (optional)
+
+ABOUT/BIO SECTION:
+→ Biography text area → EDIT your personal story
+→ Professional Summary → EDIT your career overview
+→ "Save Changes" button → CLICK to update your profile
+
+PROFILE PHOTO:
+→ Current photo display
+→ "Change Photo" button → CLICK to upload new photo
+→ Choose file → SELECT image from your computer
+→ Recommended: Square image, 400x400 pixels minimum
+→ "Upload" button → CLICK to save new photo
+
+5.2 SKILLS MANAGEMENT
+---------------------
+PATH: Admin Panel → Skills
+
+VIEWING CURRENT SKILLS:
+→ List of all your skills organized by categories
+→ Each skill shows: Name, Category, Proficiency Level
+
+ADDING NEW SKILL:
+1. "Add New Skill" button → CLICK
+2. Skill Name field → TYPE skill name (e.g., "Python")
+3. Category dropdown → SELECT category:
+   - Programming Languages
+   - Frameworks & Libraries  
+   - Tools & Technologies
+   - Databases
+   - Cloud Services
+   - Other
+4. Proficiency Level dropdown → SELECT your level:
+   - Beginner (Learning basics)
+   - Intermediate (Comfortable using)
+   - Advanced (Very proficient)
+   - Expert (Can teach others)
+5. "Save Skill" button → CLICK to add
+
+EDITING EXISTING SKILL:
+→ Find the skill in the list
+→ "Edit" icon (pencil) → CLICK
+→ Modify any field as needed
+→ "Update Skill" button → CLICK to save changes
+
+DELETING SKILL:
+→ Find the skill in the list
+→ "Delete" icon (trash can) → CLICK
+→ Confirmation popup → "Yes, Delete" → CLICK to confirm
+
+5.3 EXPERIENCE MANAGEMENT
+-------------------------
+PATH: Admin Panel → Experience
+
+VIEWING WORK HISTORY:
+→ Timeline view of all your work experiences
+→ Each entry shows: Job title, Company, Dates, Description
+
+ADDING NEW WORK EXPERIENCE:
+1. "Add Experience" button → CLICK
+2. Fill out the form:
+
+BASIC INFORMATION:
+→ Job Title field → TYPE your position (e.g., "Software Developer")
+→ Company Name field → TYPE company name
+→ Location field → TYPE city, country (e.g., "Bangkok, Thailand")
+→ Company Website field → TYPE website URL (optional)
+
+EMPLOYMENT DATES:
+→ Start Date → SELECT from calendar
+→ End Date → SELECT from calendar OR
+→ "I currently work here" checkbox → CHECK if still employed
+  (This will hide the end date and show "Present")
+
+JOB DESCRIPTION:
+→ Description text area → TYPE overview of your role
+
+RESPONSIBILITIES:
+→ "Add Responsibility" field → TYPE one responsibility
+→ Press Enter → ADDS to list
+→ Repeat for each responsibility
+→ "X" button next to each → CLICK to remove
+
+ACHIEVEMENTS:
+→ "Add Achievement" field → TYPE one achievement
+→ Press Enter → ADDS to list
+→ Examples: "Increased efficiency by 30%", "Led team of 5 developers"
+→ "X" button next to each → CLICK to remove
+
+TECHNOLOGIES USED:
+→ "Add Technology" field → TYPE technology name
+→ Press Enter → ADDS as a colored tag
+→ Examples: "React", "Python", "MySQL"
+→ "X" button on each tag → CLICK to remove
+
+3. "Save Experience" button → CLICK to add to your profile
+
+EDITING EXPERIENCE:
+→ Find experience in the list
+→ "Edit" icon (pencil) → CLICK
+→ Modify any fields needed
+→ "Update Experience" button → CLICK to save
+
+DELETING EXPERIENCE:
+→ Find experience in the list
+→ "Delete" icon (trash can) → CLICK
+→ "Are you sure?" popup → "Yes, Delete" → CLICK to confirm
+
+5.4 PROJECTS MANAGEMENT
+-----------------------
+PATH: Admin Panel → Projects
+
+VIEWING PROJECTS:
+→ Grid view of all your projects
+→ Each shows: Image, Title, Description, Technologies
+
+ADDING NEW PROJECT:
+1. "Add New Project" button → CLICK
+2. Fill out the project form:
+
+PROJECT DETAILS:
+→ Project Title field → TYPE project name
+→ Description text area → TYPE what the project does
+→ Category dropdown → SELECT type:
+  - Web Development
+  - Mobile App
+  - Desktop Application
+  - Embedded Systems
+  - Other
+
+PROJECT LINKS:
+→ Demo URL field → TYPE link to live project (optional)
+→ GitHub URL field → TYPE link to source code (optional)
+
+PROJECT IMAGE:
+→ "Upload Image" button → CLICK
+→ Choose file → SELECT image from computer
+→ Recommended: 1200x800 pixels, clear screenshot/photo
+→ "Upload" → CLICK to save
+
+TECHNOLOGIES USED:
+→ "Add Technology" field → TYPE technology name
+→ Press Enter → ADDS as tag
+→ Examples: "React", "Node.js", "MongoDB"
+→ "X" on each tag → CLICK to remove
+
+PROJECT STATUS:
+→ Status dropdown → SELECT:
+  - Completed (finished project)
+  - In Progress (still working)
+  - On Hold (paused)
+
+3. "Save Project" button → CLICK to add
+
+EDITING PROJECT:
+→ Find project in grid
+→ "Edit" icon → CLICK
+→ Modify any fields
+→ "Update Project" button → CLICK to save
+
+DELETING PROJECT:
+→ Find project in grid
+→ "Delete" icon → CLICK
+→ Confirmation → "Yes, Delete" → CLICK
+
+5.5 CONTACT MANAGEMENT
+----------------------
+PATH: Admin Panel → Contacts
+
+VIEWING MESSAGES:
+→ List of all messages received from your contact form
+→ Each shows: Sender name, email, subject, date received
+
+MESSAGE DETAILS:
+→ Click on any message row to see full details:
+  - Sender's full name
+  - Email address
+  - Subject line
+  - Complete message text
+  - Date and time received
+
+MESSAGE ACTIONS:
+→ "Reply" button → CLICK to respond via your email client
+→ "Mark as Read" → CLICK to mark message as handled
+→ "Delete" button → CLICK to remove message
+
+FILTERING MESSAGES:
+→ "All Messages" → Shows everything
+→ "Unread" → Shows only new messages
+→ "Read" → Shows only handled messages
+
+================================================================================
+6. TROUBLESHOOTING
+================================================================================
+
+6.1 COMMON ISSUES & SOLUTIONS
+------------------------------
+
+PROBLEM: Can't log into admin panel
+SOLUTION: 
+→ Double-check email: kyawmk787@gmail.com
+→ Make sure password is correct
+→ Use "Forgot Password" if needed
+→ Clear browser cache and try again
+
+PROBLEM: Changes not showing on website
+SOLUTION:
+→ Wait 2-3 minutes for updates to process
+→ Refresh the page (Ctrl+F5 or Cmd+R)
+→ Clear browser cache
+→ Try viewing in incognito/private mode
+
+PROBLEM: Image upload not working
+SOLUTION:
+→ Check image size (should be under 5MB)
+→ Use supported formats: JPG, PNG, GIF
+→ Try compressing the image
+→ Ensure stable internet connection
+
+PROBLEM: Contact form not receiving messages
+SOLUTION:
+→ Check admin panel → Contacts section
+→ Verify email settings
+→ Check spam folder for notifications
+
+6.2 BROWSER COMPATIBILITY
+-------------------------
+Your website works best with:
+→ Chrome (recommended)
+→ Firefox
+→ Safari
+→ Edge
+→ Mobile browsers (iPhone Safari, Android Chrome)
+
+6.3 PERFORMANCE TIPS
+--------------------
+→ Use compressed images (under 1MB when possible)
+→ Keep descriptions concise but informative
+→ Regularly update content to keep it fresh
+→ Test your website on different devices
+
+================================================================================
+7. IMPORTANT NOTES
+================================================================================
+
+7.1 SECURITY BEST PRACTICES
+----------------------------
+→ NEVER share your admin password
+→ Log out of admin panel when finished
+→ Use strong passwords
+→ Change password regularly
+→ Don't access admin panel on public computers
+
+7.2 CONTENT GUIDELINES
+----------------------
+→ Keep all information professional
+→ Use high-quality images
+→ Proofread all text before publishing
+→ Update experience and projects regularly
+→ Respond to contact messages promptly
+
+7.3 BACKUP & MAINTENANCE
+------------------------
+→ Your content is automatically backed up
+→ Images are stored securely in cloud storage
+→ Regular updates happen automatically
+→ Contact support if you notice any issues
+
+7.4 CONTACT INFORMATION FOR SUPPORT
+-----------------------------------
+If you need help with your website:
+→ Email: kyawmk787@gmail.com
+→ Include screenshots if reporting a problem
+→ Describe what you were trying to do when the issue occurred
+
+7.5 REGULAR MAINTENANCE TASKS
+-----------------------------
+WEEKLY:
+→ Check for new contact messages
+→ Review and respond to inquiries
+
+MONTHLY:
+→ Update your experience if you have new roles
+→ Add new projects you've completed
+→ Review and update skills as you learn new ones
+→ Check that all links still work
+
+QUARTERLY:
+→ Update your profile photo if needed
+→ Refresh your bio and professional summary
+→ Review all content for accuracy
+→ Consider adding new sections or features
+
+================================================================================
+
+END OF USER MANUAL
+
+This manual covers all aspects of your portfolio website. Keep this document 
+handy for reference when managing your website content. 
+
+Remember: Your portfolio is a living document that should grow with your career.
+Regular updates will keep it relevant and impressive to potential employers or 
+clients.
+
+Last Updated: August 3, 2025
+Website Version: 2.0
+================================================================================
