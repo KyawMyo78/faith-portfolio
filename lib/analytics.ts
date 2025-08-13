@@ -59,6 +59,10 @@ export const analytics = {
     trackEvent('project_link_click', 'engagement', `${projectName}_${linkType}`);
   },
 
+  projectCardClick: (projectName: string) => {
+    trackEvent('project_card_click', 'engagement', projectName);
+  },
+
   // CV/Resume events
   cvDownload: () => {
     trackEvent('cv_download', 'engagement', 'resume_download');

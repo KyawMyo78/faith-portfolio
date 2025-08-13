@@ -102,7 +102,7 @@ export default function AdminLogin() {
                   className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-gray-900 bg-white ${
                     errors.email ? 'border-red-300' : 'border-gray-300'
                   }`}
-                  placeholder="kyawmk787@gmail.com"
+                  placeholder="Enter your email"
                 />
               </div>
               {errors.email && (
@@ -180,7 +180,7 @@ export default function AdminLogin() {
           {/* Demo Credentials */}
           <div className="mt-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
             <h4 className="text-sm font-semibold text-gray-800 mb-2">Demo Credentials:</h4>
-            <p className="text-sm text-gray-600 mb-1">Email: kyawmk787@gmail.com</p>
+            <p className="text-sm text-gray-600 mb-1">Email: admin@gmail.com</p>
             <p className="text-sm text-gray-600">Password: admin123</p>
             <p className="text-xs text-gray-500 mt-2">
               Note: Update these in your environment variables for production use.

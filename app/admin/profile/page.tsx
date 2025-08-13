@@ -23,19 +23,32 @@ interface ProfileData {
 
 export default function ProfileManager() {
   const [profile, setProfile] = useState<ProfileData>({
-    name: 'Kyaw Myo Khant',
-    nickname: 'Phillip',
-    title: 'IT Student & Developer',
-    specialization: 'Specializing in Embedded Systems & Mobile Development',
-    description: 'A passionate 23-year-old Myanmar student studying IT in Thailand. I love creating innovative solutions through programming, embedded systems, and mobile development while mentoring others in their coding journey.',
-    location: 'Thailand • Myanmar Native',
-    email: 'kyawmyokhant78@gmail.com',
-    phone: '+66628602714',
-    github: 'https://github.com/KyawMyo78',
-    linkedin: 'https://linkedin.com',
-    profileImage: '/profile.jpg',
-    cvUrl: '',
-    socialLinks: []
+    name: 'John Doe',
+    nickname: 'Johnny',
+    title: 'Software Engineer',
+    specialization: 'Frontend & Backend Development',
+    description: 'Experienced developer with a passion for building scalable web applications and mentoring junior engineers.',
+    location: 'San Francisco, CA',
+    email: 'john.doe@example.com',
+    phone: '+1 (555) 987-6543',
+    github: 'https://github.com/johndoe',
+    linkedin: 'https://linkedin.com/in/johndoe',
+    profileImage: '/example-profile.jpg',
+    cvUrl: 'https://example.com/johndoe-cv.pdf',
+    socialLinks: [
+      {
+        id: '1',
+        name: 'Twitter',
+        url: 'https://twitter.com/johndoe',
+        icon: 'twitter'
+      },
+      {
+        id: '2',
+        name: 'Portfolio',
+        url: 'https://johndoe.dev',
+        icon: 'external'
+      }
+    ]
   });
 
   const [loading, setLoading] = useState(false);

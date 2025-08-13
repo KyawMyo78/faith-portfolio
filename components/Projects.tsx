@@ -2,8 +2,9 @@
 
 import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
-import { ExternalLink, Github, Play, Filter, Search } from 'lucide-react';
+import { ExternalLink, Github, Play, Filter, Search, Calendar, Star, ArrowRight } from 'lucide-react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { analytics } from '@/lib/analytics';
 
 interface Project {
@@ -23,6 +24,7 @@ interface Project {
   endDate?: string;
   highlights: string[];
   order: number;
+  slug?: string;
 }
 
 export default function Projects() {
@@ -30,6 +32,13 @@ export default function Projects() {
   const [isLoading, setIsLoading] = useState(true);
   const [activeCategory, setActiveCategory] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
+  const router = useRouter();
+
+  const handleProjectNavigation = (project: Project) => {
+    const slug = project.slug || project.title.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+    analytics.projectCardClick(project.title);
+    router.push(`/projects/${slug}`);
+  };
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -184,7 +193,13 @@ export default function Projects() {
             <h3 className="text-2xl font-bold text-center mb-8 text-primary-800">Featured Projects</h3>
             <div className="grid lg:grid-cols-2 gap-8">
               {featuredProjects.map((project, index) => (
-                <ProjectCard key={project.id} project={project} featured={true} index={index} />
+                <ProjectCard 
+                  key={project.id} 
+                  project={project} 
+                  featured={true} 
+                  index={index}
+                  onProjectClick={handleProjectNavigation}
+                />
               ))}
             </div>
           </motion.div>
@@ -201,7 +216,13 @@ export default function Projects() {
             <h3 className="text-2xl font-bold text-center mb-8 text-primary-800">All Projects</h3>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {otherProjects.map((project, index) => (
-                <ProjectCard key={project.id} project={project} featured={false} index={index} />
+                <ProjectCard 
+                  key={project.id} 
+                  project={project} 
+                  featured={false} 
+                  index={index}
+                  onProjectClick={handleProjectNavigation}
+                />
               ))}
             </div>
           </motion.div>
@@ -228,9 +249,10 @@ interface ProjectCardProps {
   project: Project;
   featured: boolean;
   index: number;
+  onProjectClick: (project: Project) => void;
 }
 
-function ProjectCard({ project, featured, index }: ProjectCardProps) {
+function ProjectCard({ project, featured, index, onProjectClick }: ProjectCardProps) {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const statusColors = {
@@ -239,13 +261,22 @@ function ProjectCard({ project, featured, index }: ProjectCardProps) {
     planned: 'bg-blue-100 text-blue-700'
   };
 
+  const handleCardClick = (e: React.MouseEvent) => {
+    // Don't trigger card click if clicking on action buttons
+    if ((e.target as HTMLElement).closest('.action-button')) {
+      return;
+    }
+    onProjectClick(project);
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.6, delay: index * 0.1 }}
-      className={`bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group ${
+      onClick={handleCardClick}
+      className={`bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group cursor-pointer transform hover:scale-[1.02] ${
         featured ? 'lg:col-span-1' : ''
       }`}
     >
@@ -265,6 +296,13 @@ function ProjectCard({ project, featured, index }: ProjectCardProps) {
           </div>
         )}
         
+        {/* Click to view overlay */}
+        <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-300 flex items-center justify-center">
+          <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-white/90 backdrop-blur-sm px-4 py-2 rounded-lg">
+            <span className="text-primary-600 font-medium">Click to view details</span>
+          </div>
+        </div>
+        
         {/* Status Badge */}
         <div className="absolute top-4 left-4">
           <span className={`px-3 py-1 rounded-full text-xs font-medium ${statusColors[project.status]}`}>
@@ -279,8 +317,11 @@ function ProjectCard({ project, featured, index }: ProjectCardProps) {
               href={project.githubUrl}
               target="_blank"
               rel="noopener noreferrer"
-              onClick={() => analytics.projectLinkClick(project.title, 'github')}
-              className="w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center text-primary-600 hover:bg-white transition-colors"
+              onClick={(e) => {
+                e.stopPropagation();
+                analytics.projectLinkClick(project.title, 'github');
+              }}
+              className="action-button w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center text-primary-600 hover:bg-white transition-colors"
             >
               <Github size={18} />
             </a>
@@ -290,8 +331,11 @@ function ProjectCard({ project, featured, index }: ProjectCardProps) {
               href={project.liveUrl}
               target="_blank"
               rel="noopener noreferrer"
-              onClick={() => analytics.projectLinkClick(project.title, 'live')}
-              className="w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center text-primary-600 hover:bg-white transition-colors"
+              onClick={(e) => {
+                e.stopPropagation();
+                analytics.projectLinkClick(project.title, 'live');
+              }}
+              className="action-button w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center text-primary-600 hover:bg-white transition-colors"
             >
               <ExternalLink size={18} />
             </a>
@@ -301,8 +345,11 @@ function ProjectCard({ project, featured, index }: ProjectCardProps) {
               href={project.downloadUrl}
               target="_blank"
               rel="noopener noreferrer"
-              onClick={() => analytics.projectLinkClick(project.title, 'demo')}
-              className="w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center text-primary-600 hover:bg-white transition-colors"
+              onClick={(e) => {
+                e.stopPropagation();
+                analytics.projectLinkClick(project.title, 'demo');
+              }}
+              className="action-button w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center text-primary-600 hover:bg-white transition-colors"
             >
               <Play size={18} />
             </a>
