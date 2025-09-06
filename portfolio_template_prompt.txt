@@ -1,0 +1,1441 @@
+# Portfolio Template Development Prompt
+
+## Project Overview
+Create a modern, professional portfolio website template with full admin dashboard functionality. This should be a complete solution that developers can customize for their personal portfolios with minimal configuration.
+
+## Tech Stack Requirements
+- **Framework**: Next.js 14+ with App Router
+- **Language**: TypeScript (strict mode)
+- **Styling**: Tailwind CSS with custom design system
+- **Database**: Firebase Firestore
+- **Authentication**: JWT + bcrypt for admin access
+- **Email**: Nodemailer for contact form
+- **Animations**: Framer Motion for smooth transitions
+- **Icons**: Lucide React
+- **Deployment**: github+Vercel
+
+## Main User-Facing Pages
+
+### 1. Homepage (/) - Main Portfolio Page
+**Navigation Bar:**
+- Logo/Name on the left
+- Navigation links: About, Skills, Experience, Projects, Contact
+- Mobile hamburger menu with smooth animations
+- Sticky header with backdrop blur effect
+- Active section highlighting
+
+**Hero Section:**
+- Professional headshot/avatar image
+- Animated typing effect for roles/titles
+- Brief tagline/bio (2-3 sentences)
+- Call-to-action buttons (Contact Me, View Projects, Download Resume)
+- Social media links with hover animations
+- Background: Gradient or subtle pattern
+
+**About Section:**
+- Detailed bio paragraph
+- Personal interests and values
+- Professional photo (different from hero)
+- Skills overview with progress bars or icons
+- Years of experience counter
+- Location and availability status
+
+**Skills Section:**
+- Categorized skill groups (Frontend, Backend, Tools, etc.)
+- Visual skill level indicators (bars, circles, or stars)
+- Technology icons with hover effects
+- Skill descriptions on hover
+- Filter/category tabs
+
+**Experience Section:**
+- Timeline layout (vertical on desktop, stacked on mobile)
+- Company logos and positions
+- Date ranges and locations
+- Key achievements and responsibilities
+- Interactive hover states
+- Expandable details
+
+**Projects Section:**
+- Grid layout (3 columns desktop, 2 tablet, 1 mobile)
+- Project cards with hover animations
+- Technology tags/badges
+- Live demo and GitHub links
+- Project categories/filters
+- "Load More" or pagination
+- Featured projects highlight
+
+**Testimonials/Reviews Section:**
+- Carousel/slider of customer testimonials
+- Client company logos
+- Star ratings display
+- Client photos and names/titles
+- Project-specific testimonials linking to project pages
+- Filter by client type (individual, company, partner)
+- "Write a Review" call-to-action for new clients
+- Trust badges and certifications
+- Client video testimonials (optional)
+- Case study highlights with quotes
+
+**Contact Section:**
+- Contact form with validation
+- Alternative contact methods (email, phone, location)
+- Social media links
+- Contact availability status
+- Success/error message handling
+
+**Footer:**
+- Copyright information
+- Quick navigation links
+- Social media icons
+- Back to top button
+
+### 2. Individual Project Pages (/projects/[slug])
+**Structure:**
+- Breadcrumb navigation
+- Back to projects button
+- Hero image/video showcase
+- Project title and description
+- Technology stack display
+- Live demo, GitHub, and download links
+- Detailed project information
+- Image gallery/screenshots
+- Key features and highlights
+- Development process/challenges
+- Share functionality with copy-to-clipboard feedback
+- Related projects suggestions
+
+### 3. Resume/CV Page (/resume)
+**Structure:**
+- Downloadable PDF version
+- Online formatted version
+- Print-optimized styles
+- Sections: Education, Experience, Skills, Certifications
+- Professional summary
+- Contact information
+
+### 4. Testimonials/Reviews Page (/testimonials)
+**Main Testimonials Page Structure:**
+- Hero section with overall satisfaction stats
+- Filter options (All, Clients, Partners, Colleagues, Project Type)
+- Testimonial grid with full reviews
+- Star ratings and review summary
+- Client company logos showcase
+- Success metrics and statistics
+- Video testimonial section
+- Case study highlights with detailed reviews
+- Trust badges and certifications display
+- Call-to-action for new testimonials
+
+**Individual Testimonial Details:**
+- Full testimonial text with rich formatting
+- Client information (name, title, company, photo)
+- Project context and collaboration details
+- Star ratings breakdown (communication, quality, timeline, value)
+- Related project links
+- Social proof elements
+- Collaboration timeline
+- Before/after results (if applicable)
+
+**Review Submission Form (for clients):**
+- Client information fields
+- Project selection dropdown
+- Star rating system (multiple categories)
+- Written testimonial with rich text
+- Photo upload option
+- Permission to use testimonial checkbox
+- Contact information for follow-up
+
+### 5. Blog/Articles Page (/blog)
+**Main Blog Page Structure:**
+- Hero section with latest featured article
+- Article grid with card previews (title, excerpt, featured image, publish date, read time)
+- Search bar with real-time filtering
+- Category filter tabs (All, Web Development, Mobile, Design, etc.)
+- Tag cloud sidebar
+- Pagination or infinite scroll
+- Featured articles carousel
+- Recent articles sidebar
+- Newsletter subscription form
+- RSS feed link
+
+**Individual Blog Post Page (/blog/[slug]):**
+- Article hero image
+- Title, publish date, read time, author info
+- Table of contents (auto-generated from headings)
+- Article content with proper typography
+- Code syntax highlighting
+- Social share buttons
+- Related articles section
+- Comments system (optional)
+- Newsletter subscription CTA
+- Back to blog navigation
+
+**Blog Categories Page (/blog/category/[category]):**
+- Category description
+- Filtered articles for specific category
+- Category-specific hero section
+- Breadcrumb navigation
+
+**Blog Tags Page (/blog/tag/[tag]):**
+- Tag-specific article listing
+- Related tags suggestions
+- Tag description
+
+## Admin Dashboard System
+
+### Authentication System
+**Login Page (/admin/login):**
+- Email/username and password fields
+- Form validation with error messages
+- "Remember me" checkbox
+- Password reset link
+- Secure session management
+- Rate limiting for failed attempts
+- CSRF protection
+
+**Password Reset Flow:**
+- Email-based reset system
+- Secure token generation
+- Time-limited reset links
+- Password strength validation
+- Email notifications
+
+### Admin Dashboard Layout
+**Sidebar Navigation:**
+- Dashboard overview
+- Profile management
+- Projects management
+- Experience management
+- Skills management
+- Achievements management
+- Testimonials management
+- Blog management
+- Contact messages
+- Site settings (section toggles)
+- User manual & help
+- Settings
+- Logout button
+
+**Header:**
+- User profile dropdown
+- Quick stats
+- Notifications
+- Dark/light mode toggle
+
+### Dashboard Overview (/admin/dashboard)
+**Analytics Cards:**
+- Total projects count
+- Total blog posts count
+- Total testimonials count
+- Average testimonial rating
+- Contact form submissions
+- Blog post views and engagement
+- Portfolio views (if analytics implemented)
+- Recent activity timeline
+
+**Quick Actions:**
+- Add new project
+- Add new blog post
+- View recent contacts
+- Edit profile
+- System status
+
+### Profile Management (/admin/profile)
+**Editable Fields:**
+- Personal information (name, title, bio)
+- Contact details
+- Social media links
+- Profile images (upload functionality)
+- Resume/CV upload
+- Skills and specializations
+- Availability status
+
+**Image Upload System:**
+- Drag and drop interface
+- Image preview and cropping
+- Multiple format support (JPG, PNG, WebP)
+- Automatic optimization
+- Cloud storage integration
+
+### Projects Management (/admin/projects)
+**Project List View:**
+- Sortable table with project details
+- Search and filter functionality
+- Bulk actions (delete, feature, hide)
+- Drag-and-drop reordering
+- Status indicators (published, draft, featured)
+
+**Add/Edit Project Form:**
+- Project title and slug
+- Description (short and detailed)
+- Technology stack (multi-select with autocomplete)
+- Project category
+- Status (completed, in-progress, planned)
+- Featured toggle
+- Start and end dates
+- GitHub URL, live demo URL, download URL
+- Image gallery upload
+- Key highlights/achievements
+- Project order/priority
+- SEO meta tags
+
+### Experience Management (/admin/experience)
+**Experience List:**
+- Timeline view of positions
+- Company information
+- Drag-and-drop reordering
+- Status indicators
+
+**Add/Edit Experience Form:**
+- Company name and logo upload
+- Position title
+- Employment type (full-time, part-time, contract, freelance)
+- Start and end dates (current position checkbox)
+- Location (city, country, remote)
+- Job description and key achievements
+- Technologies used
+- Company website URL
+
+### Skills Management (/admin/skills)
+**Skill Categories:**
+- Frontend Development
+- Backend Development
+- Mobile Development
+- Database & Cloud
+- Tools & Platforms
+- Soft Skills
+
+**Add/Edit Skills:**
+- Skill name and category
+- Proficiency level (1-5 stars or percentage)
+- Years of experience
+- Icon selection
+- Skill description
+- Certification links
+
+### Achievements Management (/admin/achievements)
+**Achievement Types:**
+- Certifications
+- Awards
+- Publications
+- Speaking engagements
+- Open source contributions
+
+**Add/Edit Achievements:**
+- Title and description
+- Date achieved
+- Issuing organization
+- Credential URL/ID
+- Achievement type/category
+- Image/badge upload
+
+### Testimonials Management (/admin/testimonials)
+**Testimonial List View:**
+- Sortable table with client details (name, company, rating, status, date)
+- Search and filter functionality (by rating, client type, project, status)
+- Bulk actions (approve, feature, delete, hide)
+- Status indicators (pending, approved, featured, archived)
+- Average rating display
+- Quick preview functionality
+
+**Add/Edit Testimonial Form:**
+- Client information (name, title, company, email, phone)
+- Client photo upload with cropping
+- Company logo upload
+- Testimonial content (rich text editor)
+- Star rating system (overall + categories):
+  - Overall satisfaction (1-5 stars)
+  - Communication quality
+  - Work quality
+  - Timeline adherence
+  - Value for money
+  - Professionalism
+- Project association (link to specific project)
+- Client type selection (individual, small business, enterprise, partner)
+- Collaboration details (project duration, budget range, team size)
+- Permission settings (public display, use in marketing, contact for references)
+- Testimonial status (pending review, approved, featured)
+- Social media links (LinkedIn, company website)
+- Video testimonial upload (optional)
+- Case study attachment option
+
+**Client Outreach Tools:**
+- Email templates for testimonial requests
+- Automated follow-up sequences
+- Integration with project completion workflows
+- Bulk email functionality for testimonial campaigns
+- Response tracking and analytics
+
+**Testimonial Analytics:**
+- Overall satisfaction ratings
+- Response rate to testimonial requests
+- Most praised skills/services
+- Client retention metrics
+- Testimonial impact on new client acquisition
+- Geographic distribution of testimonials
+
+**Public Testimonial Submission Form Management:**
+- Form customization options
+- Auto-approval settings
+- Notification preferences
+- Spam protection settings
+- Required fields configuration
+
+### Blog Management (/admin/blog)
+**Blog Post List View:**
+- Sortable table with post details (title, status, publish date, views)
+- Search and filter functionality (by status, category, tags)
+- Bulk actions (delete, publish, draft, feature)
+- Quick edit inline functionality
+- Status indicators (published, draft, scheduled, featured)
+- View count and engagement metrics
+
+**Add/Edit Blog Post Form:**
+- Post title and auto-generated slug (editable)
+- Rich text editor with markdown support
+- Content sections (introduction, body, conclusion)
+- Featured image upload with alt text
+- Post excerpt/summary
+- Category selection (with option to create new)
+- Tags input (with autocomplete)
+- SEO meta title and description
+- Publish status (draft, published, scheduled)
+- Publish date/time picker
+- Featured post toggle
+- Comments enabled/disabled toggle
+- Newsletter inclusion toggle
+- Social media auto-post settings
+
+**Content Editor Features:**
+- WYSIWYG editor with markdown support
+- Code syntax highlighting
+- Image gallery insertion
+- Link management
+- Table of contents auto-generation
+- Word count and reading time estimation
+- Auto-save functionality
+- Preview mode (desktop/mobile)
+- Revision history
+
+**Blog Categories Management:**
+- Create, edit, delete categories
+- Category descriptions and images
+- SEO settings for category pages
+- Category hierarchy (parent/child)
+- Post count per category
+
+**Blog Tags Management:**
+- Tag creation and merging
+- Tag descriptions
+- Popular tags overview
+- Unused tags cleanup
+
+**Blog Analytics:**
+- Most popular posts
+- Engagement metrics
+- Traffic sources
+- Reading completion rates
+- Comment statistics
+- Search terms that led to posts
+
+### Contact Messages (/admin/contacts)
+**Message Management:**
+- Inbox view with message previews
+- Message status (new, read, replied, archived)
+- Search and filter functionality
+- Reply functionality (optional)
+- Export to CSV
+- Delete and archive options
+
+**Message Details:**
+- Sender information
+- Message content
+- Timestamp
+- IP address (for security)
+- Referrer page
+- Response options
+
+### Site Settings (/admin/site-settings)
+**Section Visibility Controls:**
+- Toggle switches for each homepage section:
+  - Hero Section (always visible)
+  - About Section
+  - Skills Section
+  - Experience Section
+  - Projects Section
+  - Testimonials Section
+  - Blog Section
+  - Contact Section
+- Navigation menu customization
+- Section order/reordering (drag and drop)
+- Custom section titles and descriptions
+
+**Page Settings:**
+- Enable/disable individual pages:
+  - Blog page
+  - Testimonials page
+  - Resume page
+  - Individual project pages
+- Custom page slugs
+- Page visibility (public/private)
+- Maintenance mode toggle
+
+**Layout Customization:**
+- Homepage layout options (single page vs multi-page)
+- Project grid layout (2, 3, or 4 columns)
+- Blog layout options (grid, list, magazine)
+- Sidebar options for blog
+- Footer customization
+
+**Content Display Options:**
+- Number of featured projects to show
+- Number of recent blog posts to display
+- Skills display format (bars, circles, stars)
+- Experience timeline style
+- Project card information to display
+
+### Settings (/admin/settings)
+**General Settings:**
+- Site title and description
+- SEO meta tags
+- Contact form settings
+- Social media links
+- Analytics integration
+
+**Security Settings:**
+- Change password
+- Two-factor authentication (optional)
+- Session management
+- Login activity log
+
+**Email Settings:**
+- SMTP configuration
+- Email templates
+- Notification preferences
+- Auto-reply settings
+
+### User Manual & Help (/admin/user-manual)
+**Main User Manual Dashboard:**
+- Quick start guide with video tutorials
+- Section-by-section walkthroughs
+- Search functionality for specific topics
+- Progress tracking for completed tutorials
+- FAQ section with expandable answers
+- Contact support button
+- Print-friendly manual option
+- Video library with step-by-step guides
+
+**Getting Started Section:**
+- **Welcome Tour**: Interactive guide highlighting key features
+- **First Steps Checklist**:
+  - ✅ Update your profile information
+  - ✅ Upload your profile photo
+  - ✅ Add your first project
+  - ✅ Configure contact settings
+  - ✅ Customize your portfolio sections
+- **Basic Navigation**: How to use the admin dashboard
+- **Quick Tips**: Essential shortcuts and time-saving features
+
+**Profile Management Guide:**
+- **Step-by-Step Instructions**:
+  - How to update personal information
+  - How to upload and crop profile photos
+  - How to add social media links
+  - How to upload your resume/CV
+- **Best Practices**:
+  - Writing an effective bio
+  - Choosing the right profile photo
+  - Optimizing social media presence
+- **Common Issues & Solutions**:
+  - Photo upload problems
+  - Bio formatting tips
+  - Social media link validation
+
+**Projects Management Guide:**
+- **Creating Your First Project**:
+  - Project information requirements
+  - How to write compelling descriptions
+  - Uploading project images
+  - Setting up project links
+- **Project Organization**:
+  - Using categories effectively
+  - Setting project status
+  - Featuring important projects
+  - Organizing project order
+- **Advanced Features**:
+  - SEO optimization for projects
+  - Project galleries and media
+  - Linking projects to testimonials
+- **Visual Examples**: Screenshots showing each step
+
+**Content Management Guides:**
+- **Experience Section**:
+  - Adding work experience
+  - Company logos and descriptions
+  - Timeline organization
+  - Writing achievement bullet points
+- **Skills Section**:
+  - Organizing skills by category
+  - Setting skill levels
+  - Adding certifications
+  - Skill descriptions and icons
+- **Achievements Section**:
+  - Adding certifications and awards
+  - Uploading credential badges
+  - Organizing by achievement type
+  - Linking to external credentials
+
+**Blog Management Guide:**
+- **Writing Your First Blog Post**:
+  - Using the rich text editor
+  - Adding images and media
+  - Formatting content properly
+  - SEO best practices
+- **Content Organization**:
+  - Creating and managing categories
+  - Using tags effectively
+  - Scheduling posts
+  - Managing drafts
+- **Engagement Features**:
+  - Comment management
+  - Social sharing optimization
+  - Newsletter integration
+  - Analytics interpretation
+
+**Testimonials Management Guide:**
+- **Collecting Testimonials**:
+  - How to request testimonials from clients
+  - Email templates and best practices
+  - Following up professionally
+  - Managing client relationships
+- **Managing Reviews**:
+  - Approving and featuring testimonials
+  - Organizing by client type
+  - Linking to specific projects
+  - Handling negative feedback
+- **Display Optimization**:
+  - Choosing featured testimonials
+  - Arranging for maximum impact
+  - Using ratings effectively
+  - Video testimonial setup
+
+**Site Customization Guide:**
+- **Section Management**:
+  - Enabling/disabling sections
+  - Reordering homepage sections
+  - Customizing section titles
+  - Hiding sections temporarily
+- **Layout Options**:
+  - Choosing grid layouts
+  - Customizing navigation
+  - Mobile optimization
+  - Color and theme options
+- **Page Settings**:
+  - Managing individual pages
+  - Custom URLs and slugs
+  - SEO settings
+  - Maintenance mode
+
+**Contact & Communication Guide:**
+- **Contact Form Management**:
+  - Viewing and responding to messages
+  - Organizing inquiries
+  - Setting up auto-responses
+  - Managing spam
+- **Email Settings**:
+  - SMTP configuration (simplified)
+  - Notification preferences
+  - Template customization
+  - Testing email delivery
+
+**Troubleshooting Section:**
+- **Common Issues**:
+  - Login problems and solutions
+  - File upload errors
+  - Image display issues
+  - Form submission problems
+- **Technical Support**:
+  - How to report bugs
+  - System requirements
+  - Browser compatibility
+  - Performance optimization
+- **Recovery Procedures**:
+  - Password reset process
+  - Data backup information
+  - Restoring deleted content
+  - Emergency contacts
+
+**Video Tutorial Library:**
+- **Getting Started** (5-minute overview)
+- **Profile Setup** (3-minute walkthrough)
+- **Adding Your First Project** (7-minute detailed guide)
+- **Blog Writing Basics** (6-minute tutorial)
+- **Testimonial Management** (4-minute guide)
+- **Site Customization** (8-minute comprehensive guide)
+- **Mobile Preview and Testing** (3-minute guide)
+- **SEO Optimization Tips** (5-minute advanced guide)
+
+**Interactive Help Features:**
+- **Contextual Help Tooltips**: Hover help on every form field
+- **Progressive Disclosure**: Advanced options shown only when needed
+- **Guided Tours**: Interactive overlays for new features
+- **Help Chat Widget**: Direct access to support
+- **Screen Recording Tool**: Users can record issues for support
+
+**Quick Reference Cards:**
+- **Keyboard Shortcuts** (printable PDF)
+- **Image Size Guidelines** (optimal dimensions for different sections)
+- **SEO Checklist** (what to optimize for search engines)
+- **Content Best Practices** (writing tips for each section)
+- **Emergency Contacts** (support information)
+
+**User Manual Features:**
+- **Search Functionality**: Find answers quickly
+- **Bookmark Favorite Topics**: Save frequently accessed guides
+- **Progress Tracking**: Mark completed tutorials
+- **Feedback System**: Rate helpfulness of each guide
+- **Mobile-Friendly**: Access help on any device
+- **Offline Access**: Download PDF versions
+- **Multi-Language Support**: Available in multiple languages
+- **Version Updates**: Notifications when new guides are added
+
+## Backend API System
+
+### Authentication APIs
+```
+POST /api/auth/login
+POST /api/auth/logout
+POST /api/auth/refresh
+POST /api/auth/forgot-password
+POST /api/auth/reset-password
+GET  /api/auth/verify-token
+```
+
+### Portfolio Data APIs
+```
+GET    /api/portfolio              // Get all portfolio data
+GET    /api/portfolio/projects     // Get all projects
+GET    /api/portfolio/projects/[id] // Get specific project
+POST   /api/portfolio/projects     // Create project (admin)
+PUT    /api/portfolio/projects/[id] // Update project (admin)
+DELETE /api/portfolio/projects/[id] // Delete project (admin)
+
+GET    /api/portfolio/experience   // Get all experience
+POST   /api/portfolio/experience   // Create experience (admin)
+PUT    /api/portfolio/experience/[id] // Update experience (admin)
+DELETE /api/portfolio/experience/[id] // Delete experience (admin)
+
+GET    /api/portfolio/skills       // Get all skills
+POST   /api/portfolio/skills       // Create skill (admin)
+PUT    /api/portfolio/skills/[id]  // Update skill (admin)
+DELETE /api/portfolio/skills/[id]  // Delete skill (admin)
+
+GET    /api/portfolio/achievements // Get all achievements
+POST   /api/portfolio/achievements // Create achievement (admin)
+PUT    /api/portfolio/achievements/[id] // Update achievement (admin)
+DELETE /api/portfolio/achievements/[id] // Delete achievement (admin)
+
+GET    /api/testimonials          // Get all approved testimonials (public)
+GET    /api/testimonials/featured // Get featured testimonials
+GET    /api/testimonials/stats    // Get testimonial statistics
+POST   /api/testimonials/submit   // Submit new testimonial (public form)
+GET    /api/portfolio/testimonials // Get all testimonials (admin)
+POST   /api/portfolio/testimonials // Create testimonial (admin)
+PUT    /api/portfolio/testimonials/[id] // Update testimonial (admin)
+DELETE /api/portfolio/testimonials/[id] // Delete testimonial (admin)
+PUT    /api/portfolio/testimonials/[id]/approve // Approve testimonial (admin)
+PUT    /api/portfolio/testimonials/[id]/feature // Feature testimonial (admin)
+POST   /api/portfolio/testimonials/request // Send testimonial request email (admin)
+
+GET    /api/blog                  // Get all blog posts (public)
+GET    /api/blog/[slug]           // Get specific blog post
+GET    /api/blog/category/[category] // Get posts by category
+GET    /api/blog/tag/[tag]        // Get posts by tag
+GET    /api/blog/search           // Search blog posts
+POST   /api/portfolio/blog        // Create blog post (admin)
+PUT    /api/portfolio/blog/[id]   // Update blog post (admin)
+DELETE /api/portfolio/blog/[id]   // Delete blog post (admin)
+
+GET    /api/portfolio/blog-categories // Get all categories (admin)
+POST   /api/portfolio/blog-categories // Create category (admin)
+PUT    /api/portfolio/blog-categories/[id] // Update category (admin)
+DELETE /api/portfolio/blog-categories/[id] // Delete category (admin)
+
+GET    /api/portfolio/blog-tags   // Get all tags (admin)
+POST   /api/portfolio/blog-tags   // Create tag (admin)
+PUT    /api/portfolio/blog-tags/[id] // Update tag (admin)
+DELETE /api/portfolio/blog-tags/[id] // Delete tag (admin)
+
+GET    /api/portfolio/site-settings // Get site settings (admin)
+PUT    /api/portfolio/site-settings // Update site settings (admin)
+```
+
+### Contact & File Management APIs
+```
+POST   /api/contact               // Submit contact form
+GET    /api/portfolio/contacts    // Get contact messages (admin)
+PUT    /api/portfolio/contacts/[id] // Update message status (admin)
+DELETE /api/portfolio/contacts/[id] // Delete message (admin)
+
+POST   /api/upload                // File upload endpoint
+DELETE /api/delete-file           // Delete uploaded file
+```
+
+### Utility APIs
+```
+GET    /api/og                    // Dynamic Open Graph images
+GET    /api/profile               // Get public profile data
+GET    /api/user-manual           // Get user manual content
+GET    /api/user-manual/search    // Search user manual
+POST   /api/user-manual/feedback  // Submit manual feedback
+GET    /api/user-manual/videos    // Get tutorial videos
+POST   /api/support/ticket        // Submit support ticket
+```
+
+## Database Schema (Firestore)
+
+### Collections Structure
+
+**users** (admin users)
+```javascript
+{
+  id: string,
+  email: string,
+  passwordHash: string,
+  name: string,
+  role: 'admin',
+  createdAt: timestamp,
+  lastLogin: timestamp,
+  settings: object
+}
+```
+
+**profile** (single document)
+```javascript
+{
+  name: string,
+  title: string,
+  bio: string,
+  email: string,
+  phone: string,
+  location: string,
+  avatar: string,
+  resume: string,
+  socialLinks: {
+    linkedin: string,
+    github: string,
+    twitter: string,
+    // etc.
+  },
+  availability: boolean,
+  updatedAt: timestamp
+}
+```
+
+**projects**
+```javascript
+{
+  id: string,
+  title: string,
+  slug: string,
+  description: string,
+  longDescription: string,
+  category: string,
+  status: 'completed' | 'in-progress' | 'planned',
+  featured: boolean,
+  technologies: string[],
+  images: string[],
+  githubUrl: string,
+  liveUrl: string,
+  downloadUrl: string,
+  startDate: string,
+  endDate: string,
+  highlights: string[],
+  order: number,
+  createdAt: timestamp,
+  updatedAt: timestamp
+}
+```
+
+**experience**
+```javascript
+{
+  id: string,
+  company: string,
+  position: string,
+  type: 'full-time' | 'part-time' | 'contract' | 'freelance',
+  location: string,
+  startDate: string,
+  endDate: string,
+  current: boolean,
+  description: string,
+  achievements: string[],
+  technologies: string[],
+  companyLogo: string,
+  companyUrl: string,
+  order: number,
+  createdAt: timestamp,
+  updatedAt: timestamp
+}
+```
+
+**skills**
+```javascript
+{
+  id: string,
+  name: string,
+  category: string,
+  level: number, // 1-5
+  yearsOfExperience: number,
+  icon: string,
+  description: string,
+  certifications: string[],
+  order: number,
+  createdAt: timestamp,
+  updatedAt: timestamp
+}
+```
+
+**achievements**
+```javascript
+{
+  id: string,
+  title: string,
+  description: string,
+  type: string,
+  organization: string,
+  date: string,
+  credentialUrl: string,
+  credentialId: string,
+  image: string,
+  order: number,
+  createdAt: timestamp,
+  updatedAt: timestamp
+}
+```
+
+**contacts**
+```javascript
+{
+  id: string,
+  name: string,
+  email: string,
+  subject: string,
+  message: string,
+  status: 'new' | 'read' | 'replied' | 'archived',
+  ipAddress: string,
+  userAgent: string,
+  referrer: string,
+  createdAt: timestamp,
+  updatedAt: timestamp
+}
+```
+
+**blog_posts**
+```javascript
+{
+  id: string,
+  title: string,
+  slug: string,
+  excerpt: string,
+  content: string, // Rich text content
+  featuredImage: string,
+  category: string,
+  tags: string[],
+  status: 'draft' | 'published' | 'scheduled',
+  featured: boolean,
+  publishDate: timestamp,
+  author: string, // Author ID
+  readingTime: number, // In minutes
+  views: number,
+  likes: number,
+  seoTitle: string,
+  seoDescription: string,
+  allowComments: boolean,
+  includeInNewsletter: boolean,
+  socialMediaPosted: boolean,
+  createdAt: timestamp,
+  updatedAt: timestamp
+}
+```
+
+**blog_categories**
+```javascript
+{
+  id: string,
+  name: string,
+  slug: string,
+  description: string,
+  image: string,
+  parentCategory: string, // For hierarchical categories
+  postCount: number,
+  seoTitle: string,
+  seoDescription: string,
+  order: number,
+  createdAt: timestamp,
+  updatedAt: timestamp
+}
+```
+
+**blog_tags**
+```javascript
+{
+  id: string,
+  name: string,
+  slug: string,
+  description: string,
+  postCount: number,
+  createdAt: timestamp,
+  updatedAt: timestamp
+}
+```
+
+**testimonials**
+```javascript
+{
+  id: string,
+  clientName: string,
+  clientTitle: string,
+  clientCompany: string,
+  clientEmail: string,
+  clientPhone: string,
+  clientPhoto: string,
+  companyLogo: string,
+  testimonialContent: string, // Rich text
+  ratings: {
+    overall: number, // 1-5
+    communication: number,
+    workQuality: number,
+    timeline: number,
+    value: number,
+    professionalism: number
+  },
+  projectId: string, // Reference to associated project
+  clientType: 'individual' | 'small-business' | 'enterprise' | 'partner',
+  collaborationDetails: {
+    duration: string,
+    budgetRange: string,
+    teamSize: number,
+    projectType: string
+  },
+  permissions: {
+    publicDisplay: boolean,
+    useInMarketing: boolean,
+    contactForReference: boolean
+  },
+  status: 'pending' | 'approved' | 'featured' | 'archived',
+  featured: boolean,
+  socialLinks: {
+    linkedin: string,
+    companyWebsite: string
+  },
+  videoTestimonial: string, // URL to video file
+  caseStudyAttachment: string,
+  submissionMethod: 'admin' | 'public-form' | 'email-request',
+  ipAddress: string, // For public submissions
+  createdAt: timestamp,
+  updatedAt: timestamp,
+  approvedAt: timestamp,
+  approvedBy: string // Admin user ID
+}
+```
+
+**site_settings** (single document)
+```javascript
+{
+  sections: {
+    hero: { enabled: boolean, order: number },
+    about: { enabled: boolean, order: number },
+    skills: { enabled: boolean, order: number },
+    experience: { enabled: boolean, order: number },
+    projects: { enabled: boolean, order: number },
+    testimonials: { enabled: boolean, order: number },
+    blog: { enabled: boolean, order: number },
+    contact: { enabled: boolean, order: number }
+  },
+  pages: {
+    blog: { enabled: boolean, slug: string },
+    testimonials: { enabled: boolean, slug: string },
+    resume: { enabled: boolean, slug: string },
+    projectPages: { enabled: boolean }
+  },
+  layout: {
+    homepageStyle: 'single-page' | 'multi-page',
+    projectGridColumns: 2 | 3 | 4,
+    blogLayout: 'grid' | 'list' | 'magazine',
+    showBlogSidebar: boolean
+  },
+  content: {
+    featuredProjectsCount: number,
+    recentBlogPostsCount: number,
+    skillsDisplayFormat: 'bars' | 'circles' | 'stars',
+    experienceTimelineStyle: 'vertical' | 'horizontal',
+    projectCardInfo: string[] // Fields to show on project cards
+  },
+  navigation: {
+    customMenuItems: array,
+    showBlogInMenu: boolean,
+    showResumeInMenu: boolean
+  },
+  updatedAt: timestamp
+}
+```
+
+**user_manual_content** (subcollections for organization)
+```javascript
+{
+  // Main categories
+  gettingStarted: {
+    id: string,
+    title: string,
+    content: string, // Rich text
+    videoUrl: string,
+    order: number,
+    estimatedTime: string, // "5 minutes"
+    difficulty: 'beginner' | 'intermediate' | 'advanced',
+    lastUpdated: timestamp
+  },
+  profileManagement: { /* same structure */ },
+  projectsGuide: { /* same structure */ },
+  contentManagement: { /* same structure */ },
+  blogManagement: { /* same structure */ },
+  testimonialsGuide: { /* same structure */ },
+  siteCustomization: { /* same structure */ },
+  troubleshooting: { /* same structure */ }
+}
+```
+
+**user_manual_progress** (track user progress)
+```javascript
+{
+  id: string,
+  userId: string, // Admin user ID
+  completedSections: string[], // Array of section IDs
+  bookmarkedSections: string[], // Favorite sections
+  lastAccessed: timestamp,
+  totalTimeSpent: number, // In minutes
+  feedbackGiven: string[], // Section IDs with feedback
+  preferredLearningStyle: 'video' | 'text' | 'interactive',
+  createdAt: timestamp,
+  updatedAt: timestamp
+}
+```
+
+**user_manual_feedback**
+```javascript
+{
+  id: string,
+  userId: string,
+  sectionId: string,
+  rating: number, // 1-5 stars
+  comment: string,
+  helpful: boolean,
+  suggestions: string,
+  reportedIssue: boolean,
+  issueDescription: string,
+  createdAt: timestamp
+}
+```
+
+**support_tickets**
+```javascript
+{
+  id: string,
+  userId: string,
+  subject: string,
+  description: string,
+  category: 'technical' | 'how-to' | 'bug-report' | 'feature-request',
+  priority: 'low' | 'medium' | 'high' | 'urgent',
+  status: 'open' | 'in-progress' | 'resolved' | 'closed',
+  attachments: string[], // File URLs
+  adminNotes: string,
+  resolution: string,
+  assignedTo: string, // Support staff ID
+  createdAt: timestamp,
+  updatedAt: timestamp,
+  resolvedAt: timestamp
+}
+```
+
+## Security Best Practices
+
+### Authentication & Authorization
+1. **Password Security:**
+   - Use bcrypt with minimum 12 salt rounds
+   - Enforce strong password requirements
+   - Implement password history
+   - Session timeout after inactivity
+
+2. **JWT Implementation:**
+   - Short-lived access tokens (15 minutes)
+   - Refresh token rotation
+   - Secure httpOnly cookies
+   - CSRF protection
+
+3. **Rate Limiting:**
+   - Login attempts: 5 per 15 minutes
+   - Contact form: 3 per hour per IP
+   - API calls: 100 per minute per user
+
+### Data Validation
+1. **Input Sanitization:**
+   - Validate all user inputs
+   - Sanitize HTML content
+   - Check file upload types and sizes
+   - Prevent XSS attacks
+
+2. **API Security:**
+   - Validate request schemas
+   - Implement proper error handling
+   - Use CORS appropriately
+   - Sanitize database queries
+
+### File Upload Security
+1. **File Validation:**
+   - Check file types and extensions
+   - Limit file sizes (images: 5MB, documents: 10MB)
+   - Scan for malware (if possible)
+   - Generate unique filenames
+
+2. **Storage Security:**
+   - Use cloud storage with proper permissions
+   - Implement file access controls
+   - Backup important files
+   - Clean up unused files
+
+## Performance Optimization
+
+### Frontend Optimization
+1. **Image Optimization:**
+   - Use Next.js Image component
+   - Implement lazy loading
+   - Provide multiple image formats (WebP, AVIF)
+   - Responsive images with proper sizing
+
+2. **Code Splitting:**
+   - Dynamic imports for admin dashboard
+   - Route-based code splitting
+   - Component-level splitting for heavy components
+
+3. **Caching Strategy:**
+   - Static generation where possible
+   - Browser caching headers
+   - CDN for static assets
+   - Service worker for offline functionality
+
+### Backend Optimization
+1. **Database Optimization:**
+   - Proper indexing for queries
+   - Pagination for large datasets
+   - Caching frequently accessed data
+   - Connection pooling
+
+2. **API Optimization:**
+   - Response compression
+   - Efficient data fetching
+   - Background job processing
+   - API response caching
+
+## SEO & Analytics
+
+### SEO Implementation
+1. **Meta Tags:**
+   - Dynamic meta descriptions
+   - Open Graph tags
+   - Twitter Cards
+   - Structured data (JSON-LD)
+
+2. **Technical SEO:**
+   - XML sitemap generation
+   - Robots.txt configuration
+   - Canonical URLs
+   - Page speed optimization
+
+### Analytics Integration
+1. **Basic Analytics:**
+   - Google Analytics 4
+   - Page view tracking
+   - User behavior analysis
+   - Conversion tracking
+
+2. **Custom Analytics:**
+   - Project view tracking
+   - Contact form submissions
+   - Download tracking
+   - Social media click tracking
+
+## Common Errors to Avoid
+
+### Development Errors
+1. **Authentication Issues:**
+   - Not validating tokens properly
+   - Storing sensitive data in localStorage
+   - Missing CSRF protection
+   - Weak password policies
+
+2. **Database Errors:**
+   - Not handling connection failures
+   - Missing data validation
+   - Poor error handling
+   - Not using transactions for related operations
+
+3. **API Design Issues:**
+   - Inconsistent response formats
+   - Missing error codes
+   - Poor documentation
+   - Not implementing proper HTTP status codes
+
+### Security Vulnerabilities
+1. **Common Mistakes:**
+   - Exposing API keys in client-side code
+   - Not sanitizing user inputs
+   - Missing rate limiting
+   - Improper file upload handling
+
+2. **Data Protection:**
+   - Not encrypting sensitive data
+   - Logging sensitive information
+   - Missing backup strategies
+   - Poor access controls
+
+### Performance Issues
+1. **Frontend Problems:**
+   - Not optimizing images
+   - Bundle size too large
+   - Missing loading states
+   - Poor mobile performance
+
+2. **Backend Problems:**
+   - N+1 query problems
+   - Missing database indexes
+   - Memory leaks
+   - Slow API responses
+
+## Environment Setup
+
+### Required Environment Variables
+```bash
+# Firebase Configuration
+NEXT_PUBLIC_FIREBASE_API_KEY=
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=
+NEXT_PUBLIC_FIREBASE_APP_ID=
+
+# Firebase Admin (Server-side)
+FIREBASE_ADMIN_PROJECT_ID=
+FIREBASE_ADMIN_CLIENT_EMAIL=
+FIREBASE_ADMIN_PRIVATE_KEY=
+
+# Authentication
+ADMIN_PASSWORD_HASH=
+JWT_SECRET=
+JWT_REFRESH_SECRET=
+
+# Email Configuration
+EMAIL_HOST=smtp.gmail.com
+EMAIL_PORT=587
+EMAIL_USER=
+EMAIL_PASS=
+EMAIL_FROM=
+
+# Application
+NEXT_PUBLIC_APP_URL=
+ADMIN_EMAIL=
+
+# Analytics (Optional)
+NEXT_PUBLIC_GA_ID=
+```
+
+### Development Setup Script
+```bash
+#!/bin/bash
+# Setup script for portfolio template
+
+echo "🚀 Setting up Portfolio Template..."
+
+# Install dependencies
+npm install
+
+# Copy environment file
+cp .env.example .env.local
+
+# Generate password hash
+echo "📝 Generate admin password hash:"
+node scripts/generate-hash.js
+
+echo "✅ Setup complete!"
+echo "📝 Please update .env.local with your configuration"
+echo "🔥 Run 'npm run dev' to start development server"
+```
+
+## Testing Strategy
+
+### Unit Tests
+- Component testing with React Testing Library
+- API route testing
+- Utility function testing
+- Authentication flow testing
+
+### Integration Tests
+- Database operations
+- Email functionality
+- File upload/download
+- Form submissions
+
+### E2E Tests
+- User registration and login flow
+- Admin dashboard functionality
+- Contact form submission
+- Project CRUD operations
+
+## Deployment Checklist
+
+### Pre-deployment
+- [ ] All environment variables configured
+- [ ] Database properly set up and seeded
+- [ ] Email configuration tested
+- [ ] File upload storage configured
+- [ ] Security headers implemented
+- [ ] Performance optimization completed
+
+### Post-deployment
+- [ ] SSL certificate installed
+- [ ] Analytics tracking verified
+- [ ] Contact form functionality tested
+- [ ] Admin dashboard accessible
+- [ ] Backup strategy implemented
+- [ ] Monitoring and logging set up
+
+## Customization Guide
+
+### Design Customization
+1. **Color Scheme:**
+   - Update `tailwind.config.js` with custom colors
+   - Modify CSS custom properties
+   - Update brand colors throughout components
+
+2. **Typography:**
+   - Configure custom fonts in Next.js
+   - Update Tailwind typography settings
+   - Ensure font loading optimization
+
+3. **Layout Modifications:**
+   - Customize component layouts
+   - Adjust responsive breakpoints
+   - Modify animation timings and effects
+
+### Content Customization
+1. **Initial Setup:**
+   - Use admin dashboard to populate content
+   - Upload profile images and project screenshots
+   - Configure social media links and contact information
+
+2. **Advanced Customization:**
+   - Add new sections to homepage
+   - Create custom project categories
+   - Implement additional skill categories
+   - Add new achievement types
+
+This comprehensive template provides a solid foundation for building professional portfolio websites with full administrative capabilities. The system is designed to be secure, performant, and easily customizable while maintaining clean, maintainable code.

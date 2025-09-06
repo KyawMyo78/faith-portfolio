@@ -38,6 +38,7 @@ export default function ProjectPage({ params }: PageProps) {
   const [project, setProject] = useState<Project | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isCopied, setIsCopied] = useState(false);
 
   useEffect(() => {
     const fetchProject = async () => {
@@ -362,14 +363,32 @@ export default function ProjectPage({ params }: PageProps) {
               <h3 className="text-xl font-bold text-primary-800 mb-4">Share This Project</h3>
               <div className="space-y-3">
                 <button
-                  onClick={() => {
-                    navigator.clipboard.writeText(window.location.href);
-                    // You could add a toast notification here
+                  onClick={async () => {
+                    try {
+                      await navigator.clipboard.writeText(window.location.href);
+                      setIsCopied(true);
+                      // Reset the copied state after 2 seconds
+                      setTimeout(() => setIsCopied(false), 2000);
+                    } catch (err) {
+                      console.error('Failed to copy: ', err);
+                    }
                   }}
-                  className="w-full p-3 bg-primary-50 hover:bg-primary-100 rounded-lg transition-colors text-left"
+                  className={`w-full p-3 rounded-lg transition-all duration-200 text-left ${
+                    isCopied 
+                      ? 'bg-green-50 hover:bg-green-100 border-2 border-green-200' 
+                      : 'bg-primary-50 hover:bg-primary-100'
+                  }`}
                 >
-                  <div className="font-medium text-primary-900">Copy Link</div>
-                  <div className="text-sm text-primary-600">Share this project</div>
+                  <div className={`font-medium transition-colors ${
+                    isCopied ? 'text-green-900' : 'text-primary-900'
+                  }`}>
+                    {isCopied ? '✓ Copied!' : 'Copy Link'}
+                  </div>
+                  <div className={`text-sm transition-colors ${
+                    isCopied ? 'text-green-600' : 'text-primary-600'
+                  }`}>
+                    {isCopied ? 'Link copied to clipboard' : 'Share this project'}
+                  </div>
                 </button>
               </div>
             </motion.div>
