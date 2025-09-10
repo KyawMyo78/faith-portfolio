@@ -15,6 +15,7 @@ import {
   ExternalLink
 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import ConfirmDialog from '../../../components/ConfirmDialog';
 
 interface Experience {
   id?: string;
@@ -38,6 +39,11 @@ export default function ExperienceManagement() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingExperience, setEditingExperience] = useState<Experience | null>(null);
   const [isSaving, setIsSaving] = useState(false);
+  
+  // Confirmation dialog state
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const [experienceToDelete, setExperienceToDelete] = useState<string | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     loadExperiences();
@@ -143,10 +149,16 @@ export default function ExperienceManagement() {
   };
 
   const handleDelete = async (experienceId: string) => {
-    if (!confirm('Are you sure you want to delete this experience?')) return;
+    setExperienceToDelete(experienceId);
+    setShowConfirmDialog(true);
+  };
+
+  const confirmDelete = async () => {
+    if (!experienceToDelete) return;
 
     try {
-      const response = await fetch(`/api/portfolio/experience/${experienceId}`, {
+      setIsDeleting(true);
+      const response = await fetch(`/api/portfolio/experience/${experienceToDelete}`, {
         method: 'DELETE',
       });
 
@@ -160,7 +172,17 @@ export default function ExperienceManagement() {
       }
     } catch (error) {
       toast.error('Error deleting experience');
+    } finally {
+      setIsDeleting(false);
+      setShowConfirmDialog(false);
+      setExperienceToDelete(null);
     }
+  };
+
+  const closeConfirmDialog = () => {
+    setShowConfirmDialog(false);
+    setExperienceToDelete(null);
+    setIsDeleting(false);
   };
 
   const updateEditingExperience = (field: keyof Experience, value: any) => {
@@ -679,6 +701,19 @@ export default function ExperienceManagement() {
           </div>
         </div>
       )}
+
+      {/* Custom Confirmation Dialog */}
+      <ConfirmDialog
+        isOpen={showConfirmDialog}
+        onClose={closeConfirmDialog}
+        onConfirm={confirmDelete}
+        title="Delete Experience"
+        message="Are you sure you want to delete this work experience? This action cannot be undone and will permanently remove the experience from your portfolio."
+        confirmText="Delete Experience"
+        cancelText="Cancel"
+        type="danger"
+        loading={isDeleting}
+      />
     </div>
   );
 }

@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { Plus, Edit, Trash2, Eye, Calendar, Clock, Search, RefreshCw } from 'lucide-react'
 import toast from 'react-hot-toast'
+import ConfirmDialog from '../../../components/ConfirmDialog'
 import { getAdminSecret } from '@/lib/admin-config'
 
 interface BlogPost {
@@ -32,6 +33,11 @@ export default function AdminBlogPage() {
   const [statusFilter, setStatusFilter] = useState<string>('all')
   const [categoryFilter, setCategoryFilter] = useState<string>('all')
   const [lastRefresh, setLastRefresh] = useState<Date | null>(null)
+  
+  // Confirmation dialog state
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false)
+  const [postToDelete, setPostToDelete] = useState<string | null>(null)
+  const [isDeleting, setIsDeleting] = useState(false)
 
   useEffect(() => {
     fetchPosts()
@@ -69,12 +75,18 @@ export default function AdminBlogPage() {
   }
 
   const deletePost = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this blog post?')) return
+    setPostToDelete(id)
+    setShowConfirmDialog(true)
+  }
+
+  const confirmDelete = async () => {
+    if (!postToDelete) return
 
     const toastId = toast.loading('Deleting blog post...')
+    setIsDeleting(true)
 
     try {
-      const response = await fetch(`/api/admin/blog/${id}`, {
+      const response = await fetch(`/api/admin/blog/${postToDelete}`, {
         method: 'DELETE',
         headers: {
           'x-admin-secret': getAdminSecret()
@@ -82,7 +94,7 @@ export default function AdminBlogPage() {
       })
       
       if (response.ok) {
-        setPosts(posts.filter(post => post.id !== id))
+        setPosts(posts.filter(post => post.id !== postToDelete))
         toast.success('Blog post deleted successfully!', { id: toastId })
       } else {
         toast.error('Failed to delete post', { id: toastId })
@@ -90,7 +102,17 @@ export default function AdminBlogPage() {
     } catch (error) {
       console.error('Error deleting post:', error)
       toast.error('Error deleting post. Please try again.', { id: toastId })
+    } finally {
+      setIsDeleting(false)
+      setShowConfirmDialog(false)
+      setPostToDelete(null)
     }
+  }
+
+  const closeConfirmDialog = () => {
+    setShowConfirmDialog(false)
+    setPostToDelete(null)
+    setIsDeleting(false)
   }
 
   const updatePostStatus = async (id: string, status: string) => {
@@ -327,6 +349,19 @@ export default function AdminBlogPage() {
           </div>
         )}
       </div>
+
+      {/* Custom Confirmation Dialog */}
+      <ConfirmDialog
+        isOpen={showConfirmDialog}
+        onClose={closeConfirmDialog}
+        onConfirm={confirmDelete}
+        title="Delete Blog Post"
+        message="Are you sure you want to delete this blog post? This action cannot be undone and will permanently remove the post from your blog."
+        confirmText="Delete Post"
+        cancelText="Cancel"
+        type="danger"
+        loading={isDeleting}
+      />
     </div>
   )
 }

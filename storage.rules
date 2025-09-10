@@ -1,0 +1,62 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isAdmin() {
+      return isAuthenticated() && 
+             request.auth.token.email != null;
+    }
+    
+    function isValidImageFile() {
+      return resource.contentType.matches('image/.*') &&
+             resource.size < 5 * 1024 * 1024; // 5MB limit
+    }
+    
+    function isValidDocumentFile() {
+      return (resource.contentType.matches('application/pdf') ||
+              resource.contentType.matches('application/msword') ||
+              resource.contentType.matches('application/vnd.openxmlformats-officedocument.wordprocessingml.document')) &&
+             resource.size < 10 * 1024 * 1024; // 10MB limit
+    }
+    
+    // Profile images - admin can upload, everyone can read
+    match /profile/{allPaths=**} {
+      allow read: if true;
+      allow write: if isAdmin() && isValidImageFile();
+    }
+    
+    // Project images - admin can upload, everyone can read
+    match /projects/{allPaths=**} {
+      allow read: if true;
+      allow write: if isAdmin() && isValidImageFile();
+    }
+    
+    // Achievement images - admin can upload, everyone can read
+    match /achievements/{allPaths=**} {
+      allow read: if true;
+      allow write: if isAdmin() && isValidImageFile();
+    }
+    
+    // CV/Resume uploads - admin can upload, everyone can read
+    match /uploads/{allPaths=**} {
+      allow read: if true;
+      allow write: if isAdmin() && 
+                   (isValidImageFile() || isValidDocumentFile());
+    }
+    
+    // Temporary uploads - admin only
+    match /temp/{allPaths=**} {
+      allow read, write: if isAdmin();
+    }
+    
+    // Block all other paths
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

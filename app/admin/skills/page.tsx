@@ -31,6 +31,7 @@ import {
   Lightbulb
 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import ConfirmDialog from '../../../components/ConfirmDialog';
 
 interface Skill {
   id?: string;
@@ -101,6 +102,11 @@ export default function SkillsManagement() {
   const [activeCategory, setActiveCategory] = useState('all');
   const [showCustomCategory, setShowCustomCategory] = useState(false);
   const [customCategories, setCustomCategories] = useState<string[]>([]);
+  
+  // Confirmation dialog state
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const [skillToDelete, setSkillToDelete] = useState<string | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     loadSkills();
@@ -206,10 +212,16 @@ export default function SkillsManagement() {
   };
 
   const handleDelete = async (skillId: string) => {
-    if (!confirm('Are you sure you want to delete this skill?')) return;
+    setSkillToDelete(skillId);
+    setShowConfirmDialog(true);
+  };
+
+  const confirmDelete = async () => {
+    if (!skillToDelete) return;
 
     try {
-      const response = await fetch(`/api/portfolio/skills/${skillId}`, {
+      setIsDeleting(true);
+      const response = await fetch(`/api/portfolio/skills/${skillToDelete}`, {
         method: 'DELETE',
       });
 
@@ -223,7 +235,17 @@ export default function SkillsManagement() {
       }
     } catch (error) {
       toast.error('Error deleting skill');
+    } finally {
+      setIsDeleting(false);
+      setShowConfirmDialog(false);
+      setSkillToDelete(null);
     }
+  };
+
+  const closeConfirmDialog = () => {
+    setShowConfirmDialog(false);
+    setSkillToDelete(null);
+    setIsDeleting(false);
   };
 
   const updateEditingSkill = (field: keyof Skill, value: any) => {
@@ -623,6 +645,19 @@ export default function SkillsManagement() {
           </div>
         </div>
       )}
+
+      {/* Custom Confirmation Dialog */}
+      <ConfirmDialog
+        isOpen={showConfirmDialog}
+        onClose={closeConfirmDialog}
+        onConfirm={confirmDelete}
+        title="Delete Skill"
+        message="Are you sure you want to delete this skill? This action cannot be undone and will permanently remove the skill from your portfolio."
+        confirmText="Delete Skill"
+        cancelText="Cancel"
+        type="danger"
+        loading={isDeleting}
+      />
     </div>
   );
 }

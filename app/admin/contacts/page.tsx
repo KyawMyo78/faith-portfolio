@@ -19,6 +19,7 @@ import {
   Filter
 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import ConfirmDialog from '../../../components/ConfirmDialog';
 
 interface ContactMessage {
   id?: string;
@@ -48,6 +49,11 @@ export default function ContactMessagesManagement() {
   const [replyText, setReplyText] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const [activeFilter, setActiveFilter] = useState<FilterType>('all');
+  
+  // Confirmation dialog state
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const [messageToDelete, setMessageToDelete] = useState<string | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     loadMessages();
@@ -137,10 +143,16 @@ export default function ContactMessagesManagement() {
   };
 
   const deleteMessage = async (messageId: string) => {
-    if (!confirm('Are you sure you want to delete this message?')) return;
+    setMessageToDelete(messageId);
+    setShowConfirmDialog(true);
+  };
+
+  const confirmDelete = async () => {
+    if (!messageToDelete) return;
 
     try {
-      const response = await fetch(`/api/portfolio/contacts/${messageId}`, {
+      setIsDeleting(true);
+      const response = await fetch(`/api/portfolio/contacts/${messageToDelete}`, {
         method: 'DELETE',
       });
 
@@ -148,8 +160,8 @@ export default function ContactMessagesManagement() {
 
       if (data.success) {
         toast.success('Message deleted successfully');
-        setMessages(prev => prev.filter(msg => msg.id !== messageId));
-        if (selectedMessage?.id === messageId) {
+        setMessages(prev => prev.filter(msg => msg.id !== messageToDelete));
+        if (selectedMessage?.id === messageToDelete) {
           closeDetailModal();
         }
       } else {
@@ -157,7 +169,17 @@ export default function ContactMessagesManagement() {
       }
     } catch (error) {
       toast.error('Error deleting message');
+    } finally {
+      setIsDeleting(false);
+      setShowConfirmDialog(false);
+      setMessageToDelete(null);
     }
+  };
+
+  const closeConfirmDialog = () => {
+    setShowConfirmDialog(false);
+    setMessageToDelete(null);
+    setIsDeleting(false);
   };
 
   const markAsRead = (messageId: string) => {
@@ -524,6 +546,19 @@ export default function ContactMessagesManagement() {
           </div>
         </div>
       )}
+
+      {/* Custom Confirmation Dialog */}
+      <ConfirmDialog
+        isOpen={showConfirmDialog}
+        onClose={closeConfirmDialog}
+        onConfirm={confirmDelete}
+        title="Delete Message"
+        message="Are you sure you want to delete this contact message? This action cannot be undone and will permanently remove the message from your records."
+        confirmText="Delete Message"
+        cancelText="Cancel"
+        type="danger"
+        loading={isDeleting}
+      />
     </div>
   );
 }

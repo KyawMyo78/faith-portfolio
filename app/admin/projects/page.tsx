@@ -18,6 +18,7 @@ import {
 import toast from 'react-hot-toast';
 import Image from 'next/image';
 import FileUpload from '../../../components/FileUpload';
+import ConfirmDialog from '../../../components/ConfirmDialog';
 
 interface Project {
   id?: string;
@@ -40,10 +41,8 @@ interface Project {
 
 const categories = [
   { id: 'web', name: 'Web Development' },
-  { id: 'mobile', name: 'Mobile Apps' },
-  { id: 'embedded', name: 'Embedded Systems' },
-  { id: 'ai', name: 'AI & Robotics' },
-  { id: 'other', name: 'Other' }
+  { id: 'uiux', name: 'UI/UX Design' },
+  { id: 'data', name: 'Data Science' }
 ];
 
 const statuses = [
@@ -58,10 +57,26 @@ export default function ProjectsManagement() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingProject, setEditingProject] = useState<Project | null>(null);
   const [isSaving, setIsSaving] = useState(false);
+  const [activeCategory, setActiveCategory] = useState('all');
+  const [showCustomCategory, setShowCustomCategory] = useState(false);
+  const [customCategories, setCustomCategories] = useState<string[]>([]);
+  
+  // Confirmation dialog state
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const [projectToDelete, setProjectToDelete] = useState<string | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     loadProjects();
   }, []);
+
+  useEffect(() => {
+    // Extract custom categories from existing projects
+    const existingCategories = projects.map(project => project.category);
+    const predefinedCategoryIds = categories.map(cat => cat.id);
+    const customCats = Array.from(new Set(existingCategories.filter(cat => !predefinedCategoryIds.includes(cat))));
+    setCustomCategories(customCats);
+  }, [projects]);
 
   const loadProjects = async () => {
     try {
@@ -84,6 +99,9 @@ export default function ProjectsManagement() {
   const openModal = (project?: Project) => {
     if (project) {
       setEditingProject(project);
+      // Check if the project has a custom category
+      const isCustomCategory = !categories.some(cat => cat.id === project.category);
+      setShowCustomCategory(isCustomCategory);
     } else {
       setEditingProject({
         title: '',
@@ -98,6 +116,7 @@ export default function ProjectsManagement() {
         highlights: [],
         order: projects.length
       });
+      setShowCustomCategory(false);
     }
     setIsModalOpen(true);
   };
@@ -105,6 +124,7 @@ export default function ProjectsManagement() {
   const closeModal = () => {
     setIsModalOpen(false);
     setEditingProject(null);
+    setShowCustomCategory(false);
   };
 
   const handleSave = async () => {
@@ -117,6 +137,10 @@ export default function ProjectsManagement() {
     }
     if (!editingProject.description.trim()) {
       toast.error('Project description is required');
+      return;
+    }
+    if (!editingProject.category.trim()) {
+      toast.error('Project category is required');
       return;
     }
 
@@ -153,10 +177,16 @@ export default function ProjectsManagement() {
   };
 
   const handleDelete = async (projectId: string) => {
-    if (!confirm('Are you sure you want to delete this project?')) return;
+    setProjectToDelete(projectId);
+    setShowConfirmDialog(true);
+  };
+
+  const confirmDelete = async () => {
+    if (!projectToDelete) return;
 
     try {
-      const response = await fetch(`/api/portfolio/projects/${projectId}`, {
+      setIsDeleting(true);
+      const response = await fetch(`/api/portfolio/projects/${projectToDelete}`, {
         method: 'DELETE',
       });
 
@@ -170,7 +200,17 @@ export default function ProjectsManagement() {
       }
     } catch (error) {
       toast.error('Error deleting project');
+    } finally {
+      setIsDeleting(false);
+      setShowConfirmDialog(false);
+      setProjectToDelete(null);
     }
+  };
+
+  const closeConfirmDialog = () => {
+    setShowConfirmDialog(false);
+    setProjectToDelete(null);
+    setIsDeleting(false);
   };
 
   const updateEditingProject = (field: keyof Project, value: any) => {
@@ -181,6 +221,11 @@ export default function ProjectsManagement() {
       [field]: value
     });
   };
+
+  // Filter projects by category
+  const filteredProjects = activeCategory === 'all' 
+    ? projects 
+    : projects.filter(project => project.category === activeCategory);
 
   const addTechnology = (tech: string) => {
     if (!editingProject || !tech.trim()) return;
@@ -240,10 +285,56 @@ export default function ProjectsManagement() {
         </button>
       </div>
 
+      {/* Category Filter Tabs */}
+      <div className="flex flex-wrap gap-2 border-b border-gray-200 pb-4">
+        <button
+          onClick={() => setActiveCategory('all')}
+          className={`px-4 py-2 rounded-lg transition-colors ${
+            activeCategory === 'all'
+              ? 'bg-primary-100 text-primary-700 border border-primary-200'
+              : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+          }`}
+        >
+          All Projects ({projects.length})
+        </button>
+        {categories.map(category => {
+          const count = projects.filter(p => p.category === category.id).length;
+          return (
+            <button
+              key={category.id}
+              onClick={() => setActiveCategory(category.id)}
+              className={`px-4 py-2 rounded-lg transition-colors ${
+                activeCategory === category.id
+                  ? 'bg-primary-100 text-primary-700 border border-primary-200'
+                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              }`}
+            >
+              {category.name} ({count})
+            </button>
+          );
+        })}
+        {customCategories.map(category => {
+          const count = projects.filter(p => p.category === category).length;
+          return (
+            <button
+              key={category}
+              onClick={() => setActiveCategory(category)}
+              className={`px-4 py-2 rounded-lg transition-colors ${
+                activeCategory === category
+                  ? 'bg-primary-100 text-primary-700 border border-primary-200'
+                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              }`}
+            >
+              {category} ({count})
+            </button>
+          );
+        })}
+      </div>
+
       {/* Projects Grid */}
-      {projects.length > 0 ? (
+      {filteredProjects.length > 0 ? (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {projects.map((project, index) => (
+          {filteredProjects.map((project, index) => (
             <motion.div
               key={project.id}
               initial={{ opacity: 0, y: 20 }}
@@ -427,15 +518,56 @@ export default function ProjectsManagement() {
                     <label className="block text-sm font-medium text-gray-700 mb-1">
                       Category
                     </label>
-                    <select
-                      value={editingProject.category}
-                      onChange={(e) => updateEditingProject('category', e.target.value)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
-                    >
-                      {categories.map(cat => (
-                        <option key={cat.id} value={cat.id}>{cat.name}</option>
-                      ))}
-                    </select>
+                    <div className="space-y-2">
+                      {!showCustomCategory ? (
+                        <div className="space-y-2">
+                          <select
+                            value={editingProject.category}
+                            onChange={(e) => {
+                              if (e.target.value === 'custom') {
+                                setShowCustomCategory(true);
+                                updateEditingProject('category', '');
+                              } else {
+                                updateEditingProject('category', e.target.value);
+                              }
+                            }}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                          >
+                            <option value="">Select a category</option>
+                            {/* Predefined categories */}
+                            {categories.map(cat => (
+                              <option key={cat.id} value={cat.id}>{cat.name}</option>
+                            ))}
+                            {/* Custom categories */}
+                            {customCategories.map(cat => (
+                              <option key={cat} value={cat}>{cat}</option>
+                            ))}
+                            <option value="custom">+ Add Custom Category</option>
+                          </select>
+                        </div>
+                      ) : (
+                        <div className="flex space-x-2">
+                          <input
+                            type="text"
+                            value={editingProject.category}
+                            onChange={(e) => updateEditingProject('category', e.target.value)}
+                            placeholder="Enter custom category name"
+                            className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setShowCustomCategory(false);
+                              updateEditingProject('category', 'web');
+                            }}
+                            className="px-3 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                            title="Use predefined categories"
+                          >
+                            <X size={16} />
+                          </button>
+                        </div>
+                      )}
+                    </div>
                   </div>
 
                   <div>
@@ -689,6 +821,19 @@ export default function ProjectsManagement() {
           </div>
         </div>
       )}
+
+      {/* Custom Confirmation Dialog */}
+      <ConfirmDialog
+        isOpen={showConfirmDialog}
+        onClose={closeConfirmDialog}
+        onConfirm={confirmDelete}
+        title="Delete Project"
+        message="Are you sure you want to delete this project? This action cannot be undone and will permanently remove the project from your portfolio."
+        confirmText="Delete Project"
+        cancelText="Cancel"
+        type="danger"
+        loading={isDeleting}
+      />
     </div>
   );
 }

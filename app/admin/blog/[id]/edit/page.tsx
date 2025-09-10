@@ -5,6 +5,7 @@ import { useRouter, useParams } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowLeft, Save, Eye, Trash2 } from 'lucide-react'
 import toast from 'react-hot-toast'
+import ConfirmDialog from '../../../../../components/ConfirmDialog'
 import RichTextEditor from '@/components/RichTextEditor'
 import FileUpload from '@/components/FileUpload'
 import { getAdminSecret } from '@/lib/admin-config'
@@ -31,6 +32,10 @@ export default function EditBlogPostPage() {
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [deleting, setDeleting] = useState(false)
+  
+  // Confirmation dialog state
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false)
+  
   const [formData, setFormData] = useState<BlogFormData>({
     title: '',
     slug: '',
@@ -152,10 +157,10 @@ export default function EditBlogPostPage() {
   }
 
   const handleDelete = async () => {
-    if (!confirm('Are you sure you want to delete this post? This action cannot be undone.')) {
-      return
-    }
+    setShowConfirmDialog(true)
+  }
 
+  const confirmDelete = async () => {
     setDeleting(true)
     const toastId = toast.loading('Deleting blog post...')
 
@@ -180,7 +185,12 @@ export default function EditBlogPostPage() {
       toast.error('Error deleting post. Please try again.', { id: toastId })
     } finally {
       setDeleting(false)
+      setShowConfirmDialog(false)
     }
+  }
+
+  const closeConfirmDialog = () => {
+    setShowConfirmDialog(false)
   }
 
   const handlePreview = () => {
@@ -432,6 +442,19 @@ export default function EditBlogPostPage() {
           </button>
         </div>
       </form>
+
+      {/* Custom Confirmation Dialog */}
+      <ConfirmDialog
+        isOpen={showConfirmDialog}
+        onClose={closeConfirmDialog}
+        onConfirm={confirmDelete}
+        title="Delete Blog Post"
+        message="Are you sure you want to delete this blog post? This action cannot be undone and will permanently remove the post from your blog."
+        confirmText="Delete Post"
+        cancelText="Cancel"
+        type="danger"
+        loading={deleting}
+      />
     </div>
   )
 }

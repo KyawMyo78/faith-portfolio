@@ -16,6 +16,7 @@ import {
   Star
 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import ConfirmDialog from '../../../components/ConfirmDialog';
 
 interface Achievement {
   id?: string;
@@ -44,6 +45,11 @@ export default function AchievementsManagement() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingAchievement, setEditingAchievement] = useState<Achievement | null>(null);
   const [isSaving, setIsSaving] = useState(false);
+  
+  // Confirmation dialog state
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const [achievementToDelete, setAchievementToDelete] = useState<string | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     loadAchievements();
@@ -149,23 +155,39 @@ export default function AchievementsManagement() {
   };
 
   const handleDelete = async (achievementId: string) => {
-    if (!confirm('Are you sure you want to delete this achievement?')) return;
+    setAchievementToDelete(achievementId);
+    setShowConfirmDialog(true);
+  };
+
+  const confirmDelete = async () => {
+    if (!achievementToDelete) return;
 
     try {
-      const response = await fetch(`/api/portfolio/achievements/${achievementId}`, {
+      setIsDeleting(true);
+      const response = await fetch(`/api/portfolio/achievements/${achievementToDelete}`, {
         method: 'DELETE'
       });
       
       const result = await response.json();
       if (result.success) {
-        setAchievements(prev => prev.filter(achievement => achievement.id !== achievementId));
+        setAchievements(prev => prev.filter(achievement => achievement.id !== achievementToDelete));
         toast.success('Achievement deleted successfully');
       } else {
         toast.error('Error deleting achievement');
       }
     } catch (error) {
       toast.error('Error deleting achievement');
+    } finally {
+      setIsDeleting(false);
+      setShowConfirmDialog(false);
+      setAchievementToDelete(null);
     }
+  };
+
+  const closeConfirmDialog = () => {
+    setShowConfirmDialog(false);
+    setAchievementToDelete(null);
+    setIsDeleting(false);
   };
 
   const updateEditingAchievement = (field: keyof Achievement, value: any) => {
@@ -475,6 +497,19 @@ export default function AchievementsManagement() {
           </div>
         </div>
       )}
+
+      {/* Custom Confirmation Dialog */}
+      <ConfirmDialog
+        isOpen={showConfirmDialog}
+        onClose={closeConfirmDialog}
+        onConfirm={confirmDelete}
+        title="Delete Achievement"
+        message="Are you sure you want to delete this achievement? This action cannot be undone and will permanently remove the achievement from your portfolio."
+        confirmText="Delete Achievement"
+        cancelText="Cancel"
+        type="danger"
+        loading={isDeleting}
+      />
     </div>
   );
 }

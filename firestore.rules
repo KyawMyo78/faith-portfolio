@@ -1,0 +1,138 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isAdmin() {
+      return isAuthenticated() && 
+             request.auth.token.email == resource.data.adminEmail;
+    }
+    
+    function isValidEmail(email) {
+      return email is string && 
+             email.matches('.*@.*\\..*');
+    }
+    
+    function isValidString(field, minLength, maxLength) {
+      return field is string && 
+             field.size() >= minLength && 
+             field.size() <= maxLength;
+    }
+    
+    function isValidUrl(url) {
+      return url is string && 
+             (url.matches('https://.*') || url.matches('http://localhost.*'));
+    }
+    
+    // Public portfolio data - read only for everyone
+    match /portfolio/{document} {
+      allow read: if true;
+      allow write: if false; // Use admin API endpoints instead
+    }
+    
+    // Profile data - read only for public, write only through admin API
+    match /profile/{userId} {
+      allow read: if true;
+      allow write: if false; // Use admin API endpoints instead
+    }
+    
+    // Projects - read only for public
+    match /projects/{projectId} {
+      allow read: if true;
+      allow write: if false; // Use admin API endpoints instead
+      
+      // Validate project data structure when writing through admin API
+      allow create, update: if isAdmin() &&
+        isValidString(resource.data.title, 1, 100) &&
+        isValidString(resource.data.description, 1, 1000) &&
+        isValidString(resource.data.category, 1, 50) &&
+        resource.data.technologies is list &&
+        resource.data.technologies.size() <= 20 &&
+        (resource.data.get('imageUrl', '') == '' || isValidUrl(resource.data.imageUrl)) &&
+        (resource.data.get('demoUrl', '') == '' || isValidUrl(resource.data.demoUrl)) &&
+        (resource.data.get('githubUrl', '') == '' || isValidUrl(resource.data.githubUrl));
+      
+      allow delete: if isAdmin();
+    }
+    
+    // Skills - read only for public
+    match /skills/{skillId} {
+      allow read: if true;
+      allow write: if false; // Use admin API endpoints instead
+      
+      // Validate skill data when writing through admin API
+      allow create, update: if isAdmin() &&
+        isValidString(resource.data.name, 1, 50) &&
+        resource.data.level is number &&
+        resource.data.level >= 0 &&
+        resource.data.level <= 100 &&
+        isValidString(resource.data.category, 1, 50);
+      
+      allow delete: if isAdmin();
+    }
+    
+    // Experience - read only for public
+    match /experience/{experienceId} {
+      allow read: if true;
+      allow write: if false; // Use admin API endpoints instead
+      
+      // Validate experience data when writing through admin API
+      allow create, update: if isAdmin() &&
+        isValidString(resource.data.company, 1, 100) &&
+        isValidString(resource.data.position, 1, 100) &&
+        isValidString(resource.data.description, 1, 2000) &&
+        resource.data.startDate is string &&
+        (resource.data.get('endDate', '') == '' || resource.data.endDate is string) &&
+        (resource.data.get('location', '') == '' || isValidString(resource.data.location, 1, 100));
+      
+      allow delete: if isAdmin();
+    }
+    
+    // Achievements - read only for public
+    match /achievements/{achievementId} {
+      allow read: if true;
+      allow write: if false; // Use admin API endpoints instead
+      
+      // Validate achievement data when writing through admin API
+      allow create, update: if isAdmin() &&
+        isValidString(resource.data.title, 1, 100) &&
+        isValidString(resource.data.description, 1, 500) &&
+        resource.data.date is string &&
+        (resource.data.get('imageUrl', '') == '' || isValidUrl(resource.data.imageUrl));
+      
+      allow delete: if isAdmin();
+    }
+    
+    // Contact form submissions - write only (no read access)
+    match /contacts/{contactId} {
+      allow read: if false; // Only admin can read through API
+      allow create: if isValidString(resource.data.name, 1, 100) &&
+                   isValidEmail(resource.data.email) &&
+                   isValidString(resource.data.subject, 1, 200) &&
+                   isValidString(resource.data.message, 1, 2000) &&
+                   resource.data.timestamp is timestamp &&
+                   resource.data.status == 'unread';
+      allow update, delete: if false; // Only admin through API
+    }
+    
+    // Admin-only collections
+    match /admin/{document=**} {
+      allow read, write: if isAdmin();
+    }
+    
+    // Site settings - read only for public, write only for admin
+    match /settings/{settingId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    
+    // Block all other paths
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
