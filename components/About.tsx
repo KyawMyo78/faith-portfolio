@@ -43,7 +43,7 @@ export default function About({ profile }: Props) {
           <div>
             <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} transition={{ duration: 0.6 }}>
               {description.split('\n\n').map((p: string, i: number) => (
-                <p key={i} className="text-gray-700 mb-4">{p}</p>
+                <p key={i} className="text-gray-700 mb-4 text-justify">{p}</p>
               ))}
 
               <div className="mt-6 flex flex-wrap gap-4 items-center">
@@ -76,11 +76,10 @@ export default function About({ profile }: Props) {
                       </div>
                       <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
                         <motion.div
-                          className="h-full bg-primary"
+                          className="h-full bg-primary-500 rounded-full"
                           initial={{ width: 0 }}
                           animate={{ width: `${s.level}%` }}
                           transition={{ duration: 0.8, delay: idx * 0.08 }}
-                          style={{ backgroundColor: '#0ea5e9' }}
                         />
                       </div>
                     </div>

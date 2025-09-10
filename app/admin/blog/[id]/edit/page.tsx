@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { ArrowLeft, Save, Eye, Trash2 } from 'lucide-react'
 import toast from 'react-hot-toast'
 import RichTextEditor from '@/components/RichTextEditor'
+import FileUpload from '@/components/FileUpload'
 
 interface BlogFormData {
   title: string
@@ -102,6 +103,11 @@ export default function EditBlogPostPage() {
         .replace(/-+/g, '-')
       setFormData(prev => ({ ...prev, slug }))
     }
+  }
+
+  const handleImageUpload = (url: string, fileName: string) => {
+    setFormData(prev => ({ ...prev, featuredImage: url }))
+    toast.success('Featured image uploaded successfully!')
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -378,16 +384,21 @@ export default function EditBlogPostPage() {
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Featured Image URL
+                Featured Image
               </label>
-              <input
-                type="url"
-                name="featuredImage"
-                value={formData.featuredImage}
-                onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                placeholder="https://example.com/image.jpg"
+              <FileUpload
+                uploadType="project"
+                onUploadComplete={handleImageUpload}
+                currentImage={formData.featuredImage}
+                acceptedTypes="image/*"
+                maxSize={5}
+                className="w-full"
               />
+              {formData.featuredImage && (
+                <p className="text-sm text-green-600 mt-2">
+                  ✓ Featured image uploaded
+                </p>
+              )}
             </div>
           </div>
 

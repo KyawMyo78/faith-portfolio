@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Download, Mail, Github, Linkedin, MapPin, Code2 } from 'lucide-react';
+import { Download, Mail, Github, Linkedin, MapPin, Code2, Briefcase } from 'lucide-react';
 import Image from 'next/image';
 import { useState, useEffect, useRef } from 'react';
 import { getSocialIcon, SocialLink } from '../lib/socialIcons';
@@ -112,6 +112,11 @@ export default function Hero({ profile: serverProfile, siteSettings: serverSetti
   const handleContactClick = () => {
     // Navigate to contact page since we're now using multi-page layout
     window.location.href = '/contact';
+  };
+
+  const handleWorksClick = () => {
+    // Navigate to projects page
+    window.location.href = '/projects';
   };
 
   const handleResumeDownload = () => {
@@ -288,6 +293,13 @@ export default function Hero({ profile: serverProfile, siteSettings: serverSetti
               >
                 <Mail size={20} className="mr-2 group-hover:rotate-12 transition-transform" />
                 {siteSettings?.hero?.contactButtonText || profile?.contactButtonText || 'Get In Touch'}
+              </button>
+              <button
+                onClick={handleWorksClick}
+                className="btn-secondary group"
+              >
+                <Briefcase size={20} className="mr-2 group-hover:scale-110 transition-transform" />
+                View My Projects
               </button>
               <button
                 onClick={handleResumeDownload}

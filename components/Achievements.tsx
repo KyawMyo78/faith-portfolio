@@ -49,18 +49,23 @@ export default function Achievements() {
         <h3 className="text-2xl font-semibold mb-4">Achievements</h3>
         <div className="grid md:grid-cols-2 gap-4">
           {items.map((a) => (
-            <div key={a.id} className="p-4 border rounded-lg bg-white">
+            <motion.div 
+              key={a.id} 
+              className="p-4 border rounded-lg bg-white hover:shadow-lg transition-all duration-300"
+              whileHover={{ y: -4, scale: 1.02 }}
+              transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+            >
               <div className="flex items-start justify-between">
                 <div>
                   <h4 className="font-medium text-gray-900">{a.title}</h4>
                   <div className="text-sm text-gray-600">{a.issuer || ''} • {new Date(a.date).getFullYear()}</div>
                 </div>
                 {a.credentialUrl && (
-                  <a href={a.credentialUrl} target="_blank" rel="noreferrer" className="text-primary-600 text-sm">View</a>
+                  <a href={a.credentialUrl} target="_blank" rel="noreferrer" className="text-primary-600 text-sm hover:text-primary-700 transition-colors">View</a>
                 )}
               </div>
               {a.description && <p className="mt-2 text-gray-600 text-sm">{a.description}</p>}
-            </div>
+            </motion.div>
           ))}
         </div>
       </motion.div>
