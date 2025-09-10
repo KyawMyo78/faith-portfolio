@@ -15,7 +15,8 @@ import {
   X,
   Home,
   ChevronLeft,
-  Settings
+  Settings,
+  BookOpen
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
@@ -40,6 +41,7 @@ export default function AdminLayout({
     { id: 'projects', label: 'Projects', icon: FolderOpen, path: '/admin/projects' },
     { id: 'experience', label: 'Experience', icon: Briefcase, path: '/admin/experience' },
     { id: 'skills', label: 'Skills', icon: Code, path: '/admin/skills' },
+    { id: 'blog', label: 'Blog', icon: BookOpen, path: '/admin/blog' },
     { id: 'contacts', label: 'Messages', icon: Mail, path: '/admin/contacts' },
     { id: 'achievements', label: 'Achievements', icon: Award, path: '/admin/achievements' },
     { id: 'settings', label: 'Site Settings', icon: Settings, path: '/admin/site-settings' },

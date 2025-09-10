@@ -107,6 +107,49 @@ export interface Contact {
   createdAt: Date;
 }
 
+export interface BlogPost {
+  id?: string;
+  title: string;
+  slug: string;
+  excerpt: string;
+  content: string;
+  featuredImage?: string;
+  category: string;
+  tags: string[];
+  status: 'draft' | 'published' | 'archived';
+  publishedAt?: Date;
+  author: string;
+  readTime: number; // in minutes
+  views: number;
+  featured: boolean;
+  seoTitle?: string;
+  seoDescription?: string;
+  order: number;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+export interface BlogCategory {
+  id?: string;
+  name: string;
+  slug: string;
+  description?: string;
+  color?: string;
+  postCount?: number;
+  order: number;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+export interface BlogTag {
+  id?: string;
+  name: string;
+  slug: string;
+  postCount?: number;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
 // Admin Types
 export interface AdminUser {
   id: string;

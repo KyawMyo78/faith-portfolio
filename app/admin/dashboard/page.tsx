@@ -9,7 +9,8 @@ import {
   Code, 
   FolderOpen, 
   Mail,
-  Plus
+  Plus,
+  BookOpen
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
@@ -18,6 +19,7 @@ interface DashboardData {
   skills?: any[];
   experience?: any[];
   contacts?: any[];
+  blogs?: any[];
 }
 
 export default function AdminDashboard() {
@@ -36,31 +38,36 @@ export default function AdminDashboard() {
         projectsRes,
         skillsRes,
         experienceRes,
-        contactsRes
+        contactsRes,
+        blogsRes
       ] = await Promise.all([
         fetch('/api/portfolio/projects'),
         fetch('/api/portfolio/skills'),
         fetch('/api/portfolio/experience'),
-        fetch('/api/portfolio/contacts')
+        fetch('/api/portfolio/contacts'),
+        fetch('/api/admin/blog')
       ]);
 
       const [
         projectsData,
         skillsData,
         experienceData,
-        contactsData
+        contactsData,
+        blogsData
       ] = await Promise.all([
         projectsRes.json(),
         skillsRes.json(),
         experienceRes.json(),
-        contactsRes.json()
+        contactsRes.json(),
+        blogsRes.json()
       ]);
 
       setData({
         projects: projectsData.data || [],
         skills: skillsData.data || [],
         experience: experienceData.data || [],
-        contacts: contactsData.data || []
+        contacts: contactsData.data || [],
+        blogs: blogsData.data || []
       });
     } catch (error) {
       toast.error('Failed to load data');
@@ -127,7 +134,7 @@ export default function AdminDashboard() {
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
         <StatCard
           title="Total Projects"
           value={data.projects?.length || 0}
@@ -145,6 +152,12 @@ export default function AdminDashboard() {
           value={data.skills?.length || 0}
           icon={Code}
           color="bg-purple-500"
+        />
+        <StatCard
+          title="Blog Posts"
+          value={data.blogs?.length || 0}
+          icon={BookOpen}
+          color="bg-indigo-500"
         />
         <StatCard
           title="Messages"
@@ -175,6 +188,12 @@ export default function AdminDashboard() {
             description="Update your skill set"
             icon={Code}
             onClick={() => router.push('/admin/skills')}
+          />
+          <QuickActionCard
+            title="Manage Blog"
+            description="Create and edit blog posts"
+            icon={BookOpen}
+            onClick={() => router.push('/admin/blog')}
           />
           <QuickActionCard
             title="View Messages"

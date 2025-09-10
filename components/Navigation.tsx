@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Menu, X, Home, User, Code, Briefcase, FolderOpen, Mail } from 'lucide-react';
+import { Menu, X, Home, User, Code, Briefcase, FolderOpen, Mail, BookOpen } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Navigation({ siteSettings: serverSettings }: { siteSettings?: any }) {
@@ -44,6 +44,7 @@ export default function Navigation({ siteSettings: serverSettings }: { siteSetti
     { name: siteSettings?.navigation?.skillsText || 'Skills', href: '/skills', icon: Code },
     { name: siteSettings?.navigation?.experienceText || 'Experience', href: '/experience', icon: Briefcase },
     { name: siteSettings?.navigation?.projectsText || 'Projects', href: '/projects', icon: FolderOpen },
+    { name: siteSettings?.navigation?.blogText || 'Blog', href: '/blog', icon: BookOpen },
     { name: siteSettings?.navigation?.contactText || 'Contact', href: '/contact', icon: Mail },
   ];
 
