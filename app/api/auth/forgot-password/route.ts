@@ -158,13 +158,14 @@ export async function POST(request: NextRequest) {
     const finalSecondary = secondaryEmail || devEmail;
 
     // Build recipients explicitly:
-    // - If primary (admin) is provided -> send to admin and (optionally) developer as copy
-    // - If primary omitted -> send only to developer (emergency flow)
+    // - If primary (admin) is provided -> send ONLY to admin email
+    // - If primary omitted -> send ONLY to developer email (emergency flow)
     let recipients: string[] = [];
     if (email) {
-      recipients = Array.from(new Set([adminEmail, finalSecondary].filter(Boolean)));
+      // Normal flow: send only to the typed primary email
+      recipients = [email];
     } else {
-      // primary omitted -> only send to dev email
+      // Emergency flow: send only to dev email
       if (finalSecondary) recipients = [finalSecondary];
     }
 

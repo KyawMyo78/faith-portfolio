@@ -7,6 +7,7 @@ import { ArrowLeft, Save, Eye, Trash2 } from 'lucide-react'
 import toast from 'react-hot-toast'
 import RichTextEditor from '@/components/RichTextEditor'
 import FileUpload from '@/components/FileUpload'
+import { getAdminSecret } from '@/lib/admin-config'
 
 interface BlogFormData {
   title: string
@@ -54,7 +55,7 @@ export default function EditBlogPostPage() {
     try {
       const response = await fetch(`/api/admin/blog/${postId}`, {
         headers: {
-          'x-admin-secret': 'd034499e3770d376dcb5ae81ee6e1f2ad70e49db6f798149378ea82f1a434b77'
+          'x-admin-secret': getAdminSecret()
         }
       })
       const result = await response.json()
@@ -129,7 +130,7 @@ export default function EditBlogPostPage() {
         method: 'PUT',
         headers: { 
           'Content-Type': 'application/json',
-          'x-admin-secret': 'd034499e3770d376dcb5ae81ee6e1f2ad70e49db6f798149378ea82f1a434b77'
+          'x-admin-secret': getAdminSecret()
         },
         body: JSON.stringify(postData)
       })
@@ -162,7 +163,7 @@ export default function EditBlogPostPage() {
       const response = await fetch(`/api/admin/blog/${postId}`, {
         method: 'DELETE',
         headers: {
-          'x-admin-secret': 'd034499e3770d376dcb5ae81ee6e1f2ad70e49db6f798149378ea82f1a434b77'
+          'x-admin-secret': getAdminSecret()
         }
       })
 

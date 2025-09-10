@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { Plus, Edit, Trash2, Eye, Calendar, Clock, Search, RefreshCw } from 'lucide-react'
 import toast from 'react-hot-toast'
+import { getAdminSecret } from '@/lib/admin-config'
 
 interface BlogPost {
   id: string
@@ -49,7 +50,7 @@ export default function AdminBlogPage() {
     try {
       const response = await fetch('/api/admin/blog', {
         headers: {
-          'x-admin-secret': 'd034499e3770d376dcb5ae81ee6e1f2ad70e49db6f798149378ea82f1a434b77'
+          'x-admin-secret': getAdminSecret()
         }
       })
       const result = await response.json()
@@ -76,7 +77,7 @@ export default function AdminBlogPage() {
       const response = await fetch(`/api/admin/blog/${id}`, {
         method: 'DELETE',
         headers: {
-          'x-admin-secret': 'd034499e3770d376dcb5ae81ee6e1f2ad70e49db6f798149378ea82f1a434b77'
+          'x-admin-secret': getAdminSecret()
         }
       })
       
@@ -100,7 +101,7 @@ export default function AdminBlogPage() {
         method: 'PATCH',
         headers: { 
           'Content-Type': 'application/json',
-          'x-admin-secret': 'd034499e3770d376dcb5ae81ee6e1f2ad70e49db6f798149378ea82f1a434b77'
+          'x-admin-secret': getAdminSecret()
         },
         body: JSON.stringify({ status })
       })

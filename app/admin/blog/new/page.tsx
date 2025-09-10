@@ -7,6 +7,7 @@ import { ArrowLeft, Save, Eye } from 'lucide-react'
 import toast from 'react-hot-toast'
 import RichTextEditor from '@/components/RichTextEditor'
 import FileUpload from '@/components/FileUpload'
+import { getAdminSecret } from '@/lib/admin-config'
 
 interface BlogFormData {
   title: string
@@ -81,7 +82,7 @@ export default function NewBlogPostPage() {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
-          'x-admin-secret': 'd034499e3770d376dcb5ae81ee6e1f2ad70e49db6f798149378ea82f1a434b77'
+          'x-admin-secret': getAdminSecret()
         },
         body: JSON.stringify(postData)
       })

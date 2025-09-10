@@ -47,16 +47,16 @@ export default function ForgotPassword() {
     setIsLoading(true);
     
     try {
-  // If user is in secondary flow, ensure primary is not sent and prefills secondary with dev email if needed
-  if (showSecondary) {
-    data.email = ''
-    if (!data.secondaryEmail && devEmail) data.secondaryEmail = devEmail
-  } else {
-    // normal flow: ensure secondary is present if configured for copy
-    if (!data.secondaryEmail && devEmail) data.secondaryEmail = devEmail
-  }
+      // If user is in secondary flow, ensure primary is not sent and prefills secondary with dev email if needed
+      if (showSecondary) {
+        data.email = ''
+        if (!data.secondaryEmail && devEmail) data.secondaryEmail = devEmail
+      } else {
+        // Normal flow: send only to the primary email, don't include secondary
+        data.secondaryEmail = undefined
+      }
 
-  const response = await fetch('/api/auth/forgot-password', {
+      const response = await fetch('/api/auth/forgot-password', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -106,10 +106,10 @@ export default function ForgotPassword() {
             </p>
             <div className="space-y-3 mb-4">
               {submittedEmails?.email && (
-                <div className="text-sm text-primary-200">Primary: <span className="text-white">{submittedEmails.email}</span></div>
+                <div className="text-sm text-primary-200">Sent to: <span className="text-white">{submittedEmails.email}</span></div>
               )}
-              {submittedEmails?.secondaryEmail && (
-                <div className="text-sm text-primary-200">Secondary: <span className="text-white">{submittedEmails.secondaryEmail}</span></div>
+              {submittedEmails?.secondaryEmail && !submittedEmails?.email && (
+                <div className="text-sm text-primary-200">Sent to: <span className="text-white">{submittedEmails.secondaryEmail}</span></div>
               )}
             </div>
             
