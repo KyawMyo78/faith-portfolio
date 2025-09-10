@@ -1,11 +1,6 @@
-# Phillip Portfolio
+# Portfolio Template
 
-A modern, minimalist portfolio website for Kyaw Myo Khant (Phillip), built with Ne6. **Run the development server**
-   ```bash
-   npm run dev
-   ```
-
-7. **Open your browser**14, TypeScript, Tailwind CSS, and Firebase.
+A modern, minimalist portfolio website template built with Next.js 14, TypeScript, Tailwind CSS, and Firebase.
 
 ## Features
 
@@ -16,84 +11,38 @@ A modern, minimalist portfolio website for Kyaw Myo Khant (Phillip), built with 
   - Hero/Home - Introduction with profile image and key information
   - About - Personal background, education, and achievements
   - Skills - Technical skills organized by categories
-  - Experience - Work experience and tutoring background
+  - Experience - Work experience and background
   - Projects - Showcase of personal and academic projects
   - Contact - Contact form and social links
 
 ### Admin Panel (Protected)
 - **Secure Authentication**: JWT-based authentication system
-- **Content Management**: 
+- **Content Management**:
   - Add, edit, and delete projects
   - Manage skills and experience entries
   - Upload and manage achievements
   - Handle contact form submissions
+  - Site settings configuration
 - **Image Upload**: Firebase Storage integration for media management
 - **Dashboard**: Overview of portfolio statistics and recent activities
 
-## App structure
+## Quick Start
 
-Below is the current repository layout with the most relevant folders and files. Use this as a map when navigating the codebase.
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/KyawMyo78/portfolio-template.git
+   cd portfolio-template
+   ```
 
-```
-potfolio_template/
-├── app/                        # Next.js App Router pages and routes
-│   ├── admin/                  # Admin dashboard and sub-pages (protected)
-│   │   ├── achievements/       # Admin CRUD for achievements
-│   │   ├── contacts/           # Admin contacts UI
-│   │   ├── dashboard/          # Admin dashboard overview
-│   │   ├── experience/         # Admin experience entries
-│   │   ├── forgot-password/    # Admin forgot-password UI
-│   │   ├── login/              # Admin login page
-│   │   ├── profile/            # Admin profile editor
-│   │   ├── projects/           # Admin projects editor
-│   │   ├── reset-password/     # Admin reset-password UI
-+│   │   ├── site-settings/      # Site-wide settings editor
-│   │   └── skills/             # Admin skills editor
-│   ├── api/                    # API routes (server-side)
-│   │   ├── auth/               # Authentication endpoints (login/forgot/reset)
-│   │   ├── contact/            # Public contact form endpoint
-│   │   ├── debug/              # Dev-only debug endpoints (test-email)
-│   │   ├── delete-file/        # File deletion helpers
-│   │   ├── firebase-debug/     # Firebase helper API (dev)
-│   │   ├── og/                 # Open Graph image generator route
-│   │   ├── portfolio/          # Public portfolio data endpoints
-│   │   ├── profile/            # Public profile endpoint
-│   │   └── upload/             # File upload endpoint
-│   ├── globals.css             # Global styles
-│   ├── layout.tsx              # Root layout
-│   └── page.tsx                # Public home page
-├── components/                 # Reusable React components
-│   ├── About.tsx
-│   ├── Achievements.tsx
-│   ├── Contact.tsx
-│   ├── Experience.tsx
-│   ├── Footer.tsx
-│   ├── Hero.tsx
-│   ├── IconPicker.tsx         # Icon picker modal used in admin UI
-│   ├── IconPreview.tsx
-│   ├── Navigation.tsx
-│   └── Projects.tsx
-├── lib/                        # Helpers for external services
-│   ├── firebase.ts             # Firebase client initialization
-│   ├── firebase-admin.ts       # Firebase Admin (server-side)
-│   └── analytics.ts            # Analytics helper
-├── data/                       # Seed/sample JSON used by the template
-├── docs/                       # Documentation and guides
-├── hooks/                      # Custom React hooks
-├── public/                     # Static assets (images, uploads)
-├── scripts/                    # Utility scripts (data population, generators)
-├── types/                      # Shared TypeScript types
-├── utils/                      # Small utility helpers
-├── app/api/debug/              # Dev-only endpoints (test email sender)
-├── package.json
-├── README.md
-└── .env.example                # Example environment variables
-```
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
 
-Tip: most of the admin UI lives under `app/admin/*` and the server logic is in `app/api/*`. Core integrations (Firebase, email transporter) live in `lib/` and are picked up by the API routes.
+3. **Set up environment variables**
    Create a `.env.local` file in the root directory:
    ```env
-   # Firebase Configuration
+   # Firebase Configuration (Client-side)
    NEXT_PUBLIC_FIREBASE_API_KEY=your_firebase_api_key
    NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
    NEXT_PUBLIC_FIREBASE_PROJECT_ID=your_project_id
@@ -111,15 +60,22 @@ Tip: most of the admin UI lives under `app/admin/*` and the server logic is in `
    NEXTAUTH_SECRET=your_nextauth_secret_key_here
 
    # Admin Credentials
-   ADMIN_EMAIL=phillip@example.com
+   ADMIN_EMAIL=admin@example.com
    ADMIN_PASSWORD_HASH=$2a$12$hashed_password_here
+
+   # Email Configuration (for password reset)
+   EMAIL_HOST=smtp.gmail.com
+   EMAIL_PORT=587
+   EMAIL_USER=your-email@gmail.com
+   EMAIL_PASS=your_app_password
+   EMAIL_FROM="Portfolio Admin <your-email@gmail.com>"
+
+   # Site Configuration
+   SITE_URL=http://localhost:3000
+   SITE_NAME="Your Portfolio"
 
    # Google Analytics (Optional)
    NEXT_PUBLIC_GA_ID=G-XXXXXXXXXX
-
-   # Site Configuration
-   SITE_URL=https://kyawmyokhant.com
-   SITE_NAME="Phillip - Portfolio"
    ```
 
 4. **Set up Firebase**
@@ -129,58 +85,71 @@ Tip: most of the admin UI lives under `app/admin/*` and the server logic is in `
    - Create a service account and download the credentials
    - Update the environment variables with your Firebase config
 
-5. **Set up Google Analytics (Optional)**
-   - Go to [Google Analytics](https://analytics.google.com/)
-   - Create a new property for your website
-   - Get your Measurement ID (format: G-XXXXXXXXXX)
-   - Add it to your `.env.local` as `NEXT_PUBLIC_GA_ID`
-
-6. **Run the development server**
+5. **Run the development server**
    ```bash
    npm run dev
    ```
 
 6. **Open your browser**
-   
    Navigate to [http://localhost:3000](http://localhost:3000)
 
 ## Project Structure
 
 ```
-my_portfolio/
-├── app/
-│   ├── admin/
-│   │   ├── dashboard/
-│   │   ├── login/
-│   │   └── layout.tsx
-│   ├── api/
-│   │   ├── auth/
-│   │   ├── projects/
-│   │   ├── skills/
-│   │   └── contact/
-│   ├── globals.css
-│   ├── layout.tsx
-│   └── page.tsx
-├── components/
-│   ├── Navigation.tsx
-│   ├── Hero.tsx
+portfolio-template/
+├── app/                        # Next.js App Router pages and routes
+│   ├── admin/                  # Admin dashboard and sub-pages (protected)
+│   │   ├── achievements/       # Admin CRUD for achievements
+│   │   ├── contacts/           # Admin contacts UI
+│   │   ├── dashboard/          # Admin dashboard overview
+│   │   ├── experience/         # Admin experience entries
+│   │   ├── forgot-password/    # Admin forgot-password UI
+│   │   ├── login/              # Admin login page
+│   │   ├── profile/            # Admin profile editor
+│   │   ├── projects/           # Admin projects editor
+│   │   ├── reset-password/     # Admin reset-password UI
+│   │   ├── site-settings/      # Site-wide settings editor
+│   │   └── skills/             # Admin skills editor
+│   ├── api/                    # API routes (server-side)
+│   │   ├── auth/               # Authentication endpoints
+│   │   ├── contact/            # Public contact form endpoint
+│   │   ├── portfolio/          # Public portfolio data endpoints
+│   │   ├── profile/            # Public profile endpoint
+│   │   └── upload/             # File upload endpoint
+│   ├── about/                  # About page
+│   ├── contact/                # Contact page
+│   ├── experience/             # Experience page
+│   ├── projects/               # Projects page
+│   ├── skills/                 # Skills page
+│   ├── globals.css             # Global styles
+│   ├── layout.tsx              # Root layout
+│   └── page.tsx                # Public home page
+├── components/                 # Reusable React components
 │   ├── About.tsx
-│   ├── Skills.tsx
-│   ├── Experience.tsx
-│   ├── Projects.tsx
+│   ├── Achievements.tsx
 │   ├── Contact.tsx
-│   └── admin/
-├── lib/
-│   ├── firebase.ts
-│   ├── firebase-admin.ts
-│   └── auth.ts
-├── types/
-│   └── index.ts
-└── utils/
-    └── helpers.ts
+│   ├── Experience.tsx
+│   ├── Footer.tsx
+│   ├── Hero.tsx
+│   ├── Navigation.tsx
+│   ├── Projects.tsx
+│   └── Skills.tsx
+├── lib/                        # Helpers for external services
+│   ├── firebase.ts             # Firebase client initialization
+│   └── firebase-admin.ts       # Firebase Admin (server-side)
+├── types/                      # Shared TypeScript types
+├── utils/                      # Small utility helpers
+└── public/                     # Static assets
 ```
 
-## Key Features Implemented
+## Admin Panel Access
+
+To access the admin panel:
+1. Navigate to `/admin/login`
+2. Use the credentials configured in your environment variables
+3. Manage portfolio content through the dashboard
+
+## Key Features
 
 ### 🎨 Design System
 - Custom Tailwind CSS configuration
@@ -192,7 +161,6 @@ my_portfolio/
 - Secure admin authentication
 - Protected API routes
 - Input validation and sanitization
-- CORS configuration
 
 ### 📱 Performance
 - Next.js 14 App Router
@@ -206,41 +174,27 @@ my_portfolio/
 - Interactive hover effects
 - Loading states
 
-### 📊 Analytics & Tracking
+### 📊 Analytics
 - Google Analytics 4 integration
-- Custom event tracking for user interactions
+- Custom event tracking
 - Contact form conversion tracking
-- Project engagement metrics
-- Scroll depth and time on site tracking
-- Admin dashboard usage analytics
-
-## Admin Panel Access
-
-To access the admin panel:
-
-1. Navigate to `/admin/login`
-2. Use the credentials configured in your environment variables
-3. Manage portfolio content through the dashboard
 
 ## Deployment
 
 ### Vercel (Recommended)
 1. Push your code to GitHub
 2. Connect your repository to Vercel
-3. **Add environment variables in Vercel dashboard:**
-   - Go to your project settings in Vercel
-   - Navigate to "Environment Variables"
-   - Add all the variables from your `.env.local` file
-   - **Important:** Set `SITE_URL` to your actual domain (e.g., `https://kyawmyokhant.com`)
-   - Set `NEXTAUTH_URL` to your production URL
-4. Deploy
+3. Add environment variables in Vercel dashboard
+4. Set `SITE_URL` and `NEXTAUTH_URL` to your production URL
+5. Deploy
 
-**Note:** Make sure to set the correct `SITE_URL` in Vercel environment variables to fix social media link previews.
-
-### Azure Static Web Apps
-1. Configure GitHub Actions for deployment
-2. Set up environment variables
-3. Deploy to Azure
+### Other Platforms
+The template works with any platform that supports Next.js:
+- Netlify
+- Azure Static Web Apps
+- AWS Amplify
+- Railway
+- Render
 
 ## Environment Variables
 
@@ -259,79 +213,26 @@ To access the admin panel:
 | `NEXTAUTH_SECRET` | NextAuth Secret | Yes |
 | `ADMIN_EMAIL` | Admin Login Email | Yes |
 | `ADMIN_PASSWORD_HASH` | Hashed Admin Password | Yes |
-| `NEXT_PUBLIC_GA_ID` | Google Analytics Tracking ID | No |
+| `EMAIL_HOST` | SMTP Host | Yes |
+| `EMAIL_PORT` | SMTP Port | Yes |
+| `EMAIL_USER` | SMTP Username | Yes |
+| `EMAIL_PASS` | SMTP Password | Yes |
+| `EMAIL_FROM` | From Email Address | Yes |
 | `SITE_URL` | Your website's production URL | Yes |
 | `SITE_NAME` | Your website's name | No |
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test thoroughly
-5. Submit a pull request
+| `NEXT_PUBLIC_GA_ID` | Google Analytics Tracking ID | No |
 
 ## License
 
-This project is for personal portfolio use. Feel free to use it as inspiration for your own portfolio.
+This project is open source and available under the [MIT License](LICENSE).
 
 ## Support
 
-For any questions or issues, please contact:
-- Email: [Admin Email from Environment]
-- GitHub: [Your GitHub Profile]
-
-## Developer Notes (recent updates)
-
-These notes summarize recent changes made to the admin forgot-password flow, email sending, and developer debug utilities. Follow these when testing locally or preparing for deployment.
-
-- Added a dev-only debug endpoint: `GET /api/debug/send-test-email` — sends a test email to `DEV_EMAIL` (disabled in production).
-- Forgot-password flow improvements:
-   - Primary admin email is validated against `ADMIN_EMAIL`.
-   - Secondary (developer) email is supported as an emergency recipient when the admin email is inaccessible.
-   - Secondary-only requests (when primary omitted) will send the reset link only to `DEV_EMAIL` to avoid sending to arbitrary addresses.
-   - Client-side form validation updated to allow secondary-only submissions and to clear primary validation errors when the secondary flow is used.
-- Email sending behavior:
-   - Default in development: reset links are logged to the server console for easy testing.
-   - To enable real email sending in development, add `SEND_EMAILS_IN_DEV=true` to `.env.local` (restart dev server required).
-   - Mail headers improved for deliverability: `EMAIL_FROM` should be a valid address (e.g., `"Portfolio Admin <no-reply@yourdomain.com>"`), `envelope.from` is set to `EMAIL_USER`, and a plain-text fallback is included.
-
-Important environment variables added or used by these features:
-
-```env
-# Developer / emergency email (receives reset copies)
-DEV_EMAIL=dev@example.com
-
-# Allow sending real emails in development when testing (default: off)
-SEND_EMAILS_IN_DEV=false
-
-# Email (SMTP) configuration - server-side only
-EMAIL_HOST=smtp.gmail.com
-EMAIL_PORT=587
-EMAIL_USER=your-sender@gmail.com
-EMAIL_PASS=<your-16-char-app-password>
-EMAIL_FROM="Portfolio Admin <no-reply@yourdomain.com>"
-```
-
-Testing locally
-- Start dev server: `npm run dev`
-- Send a test SMTP email: open `http://localhost:3000/api/debug/send-test-email` (returns JSON with `ok` and `recipient`).
-- Test the forgot-password flows:
-   - Normal: enter the admin email at `/admin/forgot-password` and submit; in dev you will see the reset link logged, or receive an email if `SEND_EMAILS_IN_DEV=true`.
-   - Emergency: click "My email is not accessible", submit (leave secondary blank to use `DEV_EMAIL`) and the reset link will be sent to the developer address.
-
-Deployment checklist
-- Before production deployment:
-   - Remove or guard debug endpoints (they return 403 in production by default) and ensure `SEND_EMAILS_IN_DEV` is not set.
-   - Move secrets (EMAIL_PASS, OAuth creds) into your host's secret manager (Vercel Environment Variables, Render secrets, Azure Key Vault).
-   - Set `NEXTAUTH_URL` and `SITE_URL` to your production URL (e.g., `https://your-app.vercel.app`).
-   - Consider switching to a transactional email provider (SendGrid/Postmark/SES) and configure SPF/DKIM for best deliverability.
-
-If you need help moving env variables to Vercel or replacing Gmail with a provider API, I can generate the exact commands and settings to use.
+For questions or issues:
+- Create an issue on GitHub
+- Check the documentation
+- Review the example configuration
 
 ---
 
-**Built with ❤️ by Kyaw Myo Khant (Phillip)**
-#   A n a l y t i c s   c o n f i g u r e d   o n   0 8 / 0 2 / 2 0 2 5   2 1 : 1 4 : 3 8 
- 
- 
+**Built with ❤️ using Next.js, TypeScript, and Firebase**
