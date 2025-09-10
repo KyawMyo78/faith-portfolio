@@ -31,6 +31,7 @@ export default function AdminLayout({
   }>({ path: null, node: null });
   const snapshotRef = useRef<NodeJS.Timeout | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [siteSettings, setSiteSettings] = useState<any>(null);
   const router = useRouter();
   const pathname = usePathname();
   const pageCacheRef = useRef<Map<string, React.ReactNode>>(new Map());
@@ -61,6 +62,45 @@ export default function AdminLayout({
     router.push(path);
     setIsMobileMenuOpen(false);
   };
+
+  // Fetch site settings for admin title
+  useEffect(() => {
+    const fetchSiteSettings = async () => {
+      try {
+        const response = await fetch('/api/site-settings');
+        if (response.ok) {
+          const result = await response.json();
+          if (result.success && result.data) {
+            setSiteSettings(result.data);
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching site settings:', error);
+      }
+    };
+
+    fetchSiteSettings();
+  }, []);
+
+  // Set document title for admin pages
+  useEffect(() => {
+    const siteName = siteSettings?.general?.siteTitle || siteSettings?.navigation?.siteName || 'Portfolio';
+    
+    // Get page-specific title based on pathname
+    let pageType = 'Admin';
+    if (pathname.includes('/dashboard')) pageType = 'Admin Dashboard';
+    else if (pathname.includes('/profile')) pageType = 'Admin Profile';
+    else if (pathname.includes('/projects')) pageType = 'Admin Projects';
+    else if (pathname.includes('/experience')) pageType = 'Admin Experience';
+    else if (pathname.includes('/skills')) pageType = 'Admin Skills';
+    else if (pathname.includes('/blog')) pageType = 'Admin Blog';
+    else if (pathname.includes('/contacts')) pageType = 'Admin Messages';
+    else if (pathname.includes('/achievements')) pageType = 'Admin Achievements';
+    else if (pathname.includes('/site-settings')) pageType = 'Admin Settings';
+    
+    const pageTitle = `${siteName} | ${pageType}`;
+    document.title = pageTitle;
+  }, [siteSettings, pathname]);
 
   // Prefetch admin pages to speed up client-side navigation
   useEffect(() => {

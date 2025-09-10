@@ -7,7 +7,7 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const title = searchParams.get('title') || 'Portfolio Project';
-  const description = searchParams.get('description') || 'Check out this project from Your Name\'s portfolio';
+  const description = searchParams.get('description') || 'Check out this project from my portfolio';
 
     return new ImageResponse(
       (
@@ -88,7 +88,7 @@ export async function GET(request: NextRequest) {
               >
                 KM
               </div>
-              Your Name Portfolio
+              Portfolio
             </div>
           </div>
         </div>

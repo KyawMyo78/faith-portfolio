@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { Mail, Lock, LogIn, Eye, EyeOff } from 'lucide-react';
@@ -19,6 +19,29 @@ export default function AdminLogin() {
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
   const { register, handleSubmit, formState: { errors } } = useForm<LoginForm>();
+
+  // Set document title for admin login
+  useEffect(() => {
+    const fetchSiteNameAndSetTitle = async () => {
+      try {
+        const response = await fetch('/api/site-settings');
+        if (response.ok) {
+          const result = await response.json();
+          if (result.success && result.data) {
+            const siteName = result.data?.general?.siteTitle || result.data?.navigation?.siteName || 'Portfolio';
+            document.title = `${siteName} | Admin Login`;
+            return;
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching site name:', error);
+      }
+      // Fallback title
+      document.title = 'Portfolio | Admin Login';
+    };
+
+    fetchSiteNameAndSetTitle();
+  }, []);
 
   const onSubmit = async (data: LoginForm) => {
     setIsLoading(true);

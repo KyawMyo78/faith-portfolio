@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useParams, useRouter } from 'next/navigation'
+import { useParams } from 'next/navigation'
 import Link from 'next/link'
 import { Calendar, Clock, ArrowLeft, Tag, Share2, Check } from 'lucide-react'
 import toast from 'react-hot-toast'
@@ -29,7 +29,6 @@ interface BlogPost {
 
 export default function BlogPostPage() {
   const params = useParams()
-  const router = useRouter()
   const [post, setPost] = useState<BlogPost | null>(null)
   const [loading, setLoading] = useState(true)
   const [notFound, setNotFound] = useState(false)
@@ -68,6 +67,8 @@ export default function BlogPostPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ views: (post?.views || 0) + 1 })
       })
+      // Update local state to reflect new view count
+      setPost(prev => prev ? ({ ...prev, views: (prev.views || 0) + 1 }) : prev)
     } catch (error) {
       console.error('Error incrementing views:', error)
     }

@@ -75,7 +75,7 @@ export default function Navigation({ siteSettings: serverSettings }: { siteSetti
               onClick={handleNavClick}
               className="text-2xl font-bold text-gradient"
             >
-              {siteSettings?.navigation?.siteName || siteSettings?.profile?.name || 'Your Name'}
+              {siteSettings?.general?.siteTitle || siteSettings?.navigation?.siteName || siteSettings?.profile?.name || 'Your Name'}
             </Link>
           </motion.div>
 

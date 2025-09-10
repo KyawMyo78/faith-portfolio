@@ -28,6 +28,29 @@ export default function ResetPassword() {
   const { register, handleSubmit, watch, formState: { errors } } = useForm<ResetPasswordForm>();
   const password = watch('password');
 
+  // Set document title for reset password page
+  useEffect(() => {
+    const fetchSiteNameAndSetTitle = async () => {
+      try {
+        const response = await fetch('/api/site-settings');
+        if (response.ok) {
+          const result = await response.json();
+          if (result.success && result.data) {
+            const siteName = result.data?.general?.siteTitle || result.data?.navigation?.siteName || 'Portfolio';
+            document.title = `${siteName} | Reset Password`;
+            return;
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching site name:', error);
+      }
+      // Fallback title
+      document.title = 'Portfolio | Reset Password';
+    };
+
+    fetchSiteNameAndSetTitle();
+  }, []);
+
   useEffect(() => {
     if (!token || !email) {
       setValidToken(false);

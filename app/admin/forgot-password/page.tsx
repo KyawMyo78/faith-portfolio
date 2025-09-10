@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Mail, ArrowLeft, Send, CheckCircle } from 'lucide-react';
 import { useForm } from 'react-hook-form';
@@ -19,6 +19,29 @@ export default function ForgotPassword() {
   const { register, handleSubmit, formState: { errors }, setValue, clearErrors, trigger } = useForm<ForgotPasswordForm>();
   const [showSecondary, setShowSecondary] = useState(false);
   const devEmail = typeof window !== 'undefined' ? (process.env.NEXT_PUBLIC_DEV_EMAIL || '') : '';
+
+  // Set document title for forgot password page
+  useEffect(() => {
+    const fetchSiteNameAndSetTitle = async () => {
+      try {
+        const response = await fetch('/api/site-settings');
+        if (response.ok) {
+          const result = await response.json();
+          if (result.success && result.data) {
+            const siteName = result.data?.general?.siteTitle || result.data?.navigation?.siteName || 'Portfolio';
+            document.title = `${siteName} | Forgot Password`;
+            return;
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching site name:', error);
+      }
+      // Fallback title
+      document.title = 'Portfolio | Forgot Password';
+    };
+
+    fetchSiteNameAndSetTitle();
+  }, []);
 
   const onSubmit = async (data: ForgotPasswordForm) => {
     setIsLoading(true);

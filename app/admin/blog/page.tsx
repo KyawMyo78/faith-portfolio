@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { Plus, Edit, Trash2, Eye, Calendar, Clock, Search } from 'lucide-react'
+import { Plus, Edit, Trash2, Eye, Calendar, Clock, Search, RefreshCw } from 'lucide-react'
 import toast from 'react-hot-toast'
 
 interface BlogPost {
@@ -30,9 +30,19 @@ export default function AdminBlogPage() {
   const [searchTerm, setSearchTerm] = useState('')
   const [statusFilter, setStatusFilter] = useState<string>('all')
   const [categoryFilter, setCategoryFilter] = useState<string>('all')
+  const [lastRefresh, setLastRefresh] = useState<Date | null>(null)
 
   useEffect(() => {
     fetchPosts()
+  }, [])
+
+  // Auto-refresh posts every 30 seconds to update view counts
+  useEffect(() => {
+    const interval = setInterval(() => {
+      fetchPosts()
+    }, 30000) // 30 seconds
+
+    return () => clearInterval(interval)
   }, [])
 
   const fetchPosts = async () => {
@@ -45,6 +55,7 @@ export default function AdminBlogPage() {
       const result = await response.json()
       if (result.success) {
         setPosts(result.data || [])
+        setLastRefresh(new Date())
       } else {
         toast.error('Failed to fetch blog posts')
       }
@@ -141,15 +152,33 @@ export default function AdminBlogPage() {
       <div className="flex justify-between items-center mb-8">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Blog Management</h1>
-          <p className="text-gray-600 mt-2">Create and manage your blog posts</p>
+          <p className="text-gray-600 mt-2">
+            Create and manage your blog posts
+            {lastRefresh && (
+              <span className="text-sm ml-2">
+                • Last updated: {lastRefresh.toLocaleTimeString()}
+              </span>
+            )}
+          </p>
         </div>
-        <Link
-          href="/admin/blog/new"
-          className="inline-flex items-center px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
-        >
-          <Plus size={20} className="mr-2" />
-          New Post
-        </Link>
+        <div className="flex items-center space-x-3">
+          <button
+            onClick={fetchPosts}
+            disabled={loading}
+            className="inline-flex items-center px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            title="Refresh blog posts"
+          >
+            <RefreshCw size={20} className={`mr-2 ${loading ? 'animate-spin' : ''}`} />
+            {loading ? 'Refreshing...' : 'Refresh'}
+          </button>
+          <Link
+            href="/admin/blog/new"
+            className="inline-flex items-center px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
+          >
+            <Plus size={20} className="mr-2" />
+            New Post
+          </Link>
+        </div>
       </div>
 
       {/* Filters */}

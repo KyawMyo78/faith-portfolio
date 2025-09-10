@@ -10,12 +10,12 @@ const inter = Inter({ subsets: ['latin'] })
 
 const defaultMetadata: Metadata = {
   metadataBase: new URL(process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : process.env.SITE_URL || 'https://example.com'),
-  title: 'Your Name - Portfolio',
+  title: 'Portfolio',
   description: 'Portfolio website showcasing projects, skills, and contact information.',
   keywords: ['portfolio', 'developer', 'programming', 'web development'],
-  authors: [{ name: 'Your Name' }],
+  authors: [{ name: 'Portfolio Owner' }],
   openGraph: {
-    title: 'Your Name - Portfolio',
+    title: 'Portfolio',
     description: 'Portfolio website showcasing projects and skills in programming and web development.',
     url: '/',
     siteName: 'Portfolio',
@@ -32,7 +32,7 @@ const defaultMetadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-  title: 'Your Name - Portfolio',
+  title: 'Portfolio',
   description: 'Portfolio website showcasing projects and skills in programming and web development.',
     images: ['/og-image.jpg'],
   },
