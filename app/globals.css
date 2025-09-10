@@ -10,7 +10,7 @@
   }
   
   body {
-    @apply bg-white text-primary-900 antialiased;
+  @apply bg-white text-primary-800 antialiased;
   }
 
   * {
@@ -20,11 +20,11 @@
 
 @layer components {
   .btn-primary {
-    @apply inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-lg text-white bg-primary-900 hover:bg-primary-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-all duration-200 ease-in-out transform hover:scale-105;
+  @apply inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-lg text-white bg-primary-600 hover:bg-primary-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-300 transition-all duration-200 ease-in-out transform hover:scale-105;
   }
 
   .btn-secondary {
-    @apply inline-flex items-center justify-center px-6 py-3 border border-primary-300 text-base font-medium rounded-lg text-primary-700 bg-white hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-all duration-200 ease-in-out;
+  @apply inline-flex items-center justify-center px-6 py-3 border border-primary-200 text-base font-medium rounded-lg text-primary-600 bg-white hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-300 transition-all duration-200 ease-in-out;
   }
 
   .section-padding {
@@ -36,7 +36,7 @@
   }
 
   .glass-effect {
-    @apply bg-white/80 backdrop-blur-sm border border-primary-200/50;
+  @apply bg-white/90 backdrop-blur-sm border border-primary-100/30;
   }
 
   .skill-card {
@@ -49,11 +49,13 @@
 }
 
 @layer utilities {
-  .text-gradient {
-    @apply bg-gradient-to-r from-primary-900 to-primary-600 bg-clip-text text-transparent;
+  /* Legacy name kept for compatibility but now uses a solid brand color */
+  .text-gradient, .text-brand {
+  @apply text-primary-800;
+  text-shadow: none;
   }
 
   .bg-gradient-primary {
-    @apply bg-gradient-to-r from-primary-900 via-primary-800 to-primary-700;
+  @apply bg-gradient-to-r from-primary-600 via-primary-500 to-primary-400;
   }
 }

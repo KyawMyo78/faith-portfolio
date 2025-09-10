@@ -1,8 +1,8 @@
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Projects | Kyaw Myo Khant Portfolio',
-  description: 'Explore the portfolio projects by Kyaw Myo Khant',
+  title: 'Projects | Your Name Portfolio',
+  description: 'Explore the portfolio projects by Your Name',
 };
 
 export default function ProjectsLayout({

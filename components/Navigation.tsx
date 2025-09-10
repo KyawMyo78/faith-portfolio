@@ -2,53 +2,53 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { Menu, X, Home, User, Code, Briefcase, FolderOpen, Mail } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const navItems = [
-  { name: 'Home', href: '#home', icon: Home },
-  { name: 'About', href: '#about', icon: User },
-  { name: 'Skills', href: '#skills', icon: Code },
-  { name: 'Experience', href: '#experience', icon: Briefcase },
-  { name: 'Projects', href: '#projects', icon: FolderOpen },
-  { name: 'Contact', href: '#contact', icon: Mail },
-];
-
-export default function Navigation() {
+export default function Navigation({ siteSettings: serverSettings }: { siteSettings?: any }) {
   const [isOpen, setIsOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState('home');
   const [isScrolled, setIsScrolled] = useState(false);
+  const [siteSettings, setSiteSettings] = useState<any>(serverSettings || null);
+  const pathname = usePathname();
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
+    const handleScroll = () => setIsScrolled(window.scrollY > 50);
 
-      // Update active section based on scroll position
-      const sections = navItems.map(item => item.href.substring(1));
-      const currentSection = sections.find(section => {
-        const element = document.getElementById(section);
-        if (element) {
-          const rect = element.getBoundingClientRect();
-          return rect.top <= 100 && rect.bottom >= 100;
-        }
-        return false;
-      });
+    if (serverSettings) {
+      window.addEventListener('scroll', handleScroll);
+      return () => window.removeEventListener('scroll', handleScroll);
+    }
 
-      if (currentSection) {
-        setActiveSection(currentSection);
+    const fetchSettings = async () => {
+      try {
+        const timestamp = new Date().getTime();
+        const response = await fetch(`/api/site-settings?t=${timestamp}`);
+        const result = await response.json();
+        if (result.success) setSiteSettings(result.data);
+      } catch (error) {
+        console.error('Error fetching site settings:', error);
       }
     };
 
     window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+    fetchSettings();
 
-  const handleNavClick = (href: string) => {
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [serverSettings]);
+
+  // Dynamic navigation items based on site settings
+  const navItems = [
+    { name: siteSettings?.navigation?.homeText || 'Home', href: '/', icon: Home },
+    { name: siteSettings?.navigation?.aboutText || 'About', href: '/about', icon: User },
+    { name: siteSettings?.navigation?.skillsText || 'Skills', href: '/skills', icon: Code },
+    { name: siteSettings?.navigation?.experienceText || 'Experience', href: '/experience', icon: Briefcase },
+    { name: siteSettings?.navigation?.projectsText || 'Projects', href: '/projects', icon: FolderOpen },
+    { name: siteSettings?.navigation?.contactText || 'Contact', href: '/contact', icon: Mail },
+  ];
+
+  const handleNavClick = () => {
     setIsOpen(false);
-    const element = document.getElementById(href.substring(1));
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
   };
 
   return (
@@ -70,11 +70,11 @@ export default function Navigation() {
             transition={{ delay: 0.2 }}
           >
             <Link
-              href="#home"
-              onClick={() => handleNavClick('#home')}
+              href="/"
+              onClick={handleNavClick}
               className="text-2xl font-bold text-gradient"
             >
-              Phillip
+              {siteSettings?.navigation?.siteName || siteSettings?.profile?.name || 'Your Name'}
             </Link>
           </motion.div>
 
@@ -87,17 +87,18 @@ export default function Navigation() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 * index }}
               >
-                <button
-                  onClick={() => handleNavClick(item.href)}
+                <Link
+                  href={item.href}
+                  onClick={handleNavClick}
                   className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition-all duration-200 ${
-                    activeSection === item.href.substring(1)
+                    pathname === item.href
                       ? 'text-primary-900 bg-primary-100'
                       : 'text-primary-600 hover:text-primary-900 hover:bg-primary-50'
                   }`}
                 >
                   <item.icon size={18} />
                   <span className="font-medium">{item.name}</span>
-                </button>
+                </Link>
               </motion.div>
             ))}
           </div>
@@ -127,18 +128,19 @@ export default function Navigation() {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
               <div className="flex flex-col space-y-2">
                 {navItems.map((item) => (
-                  <button
+                  <Link
                     key={item.name}
-                    onClick={() => handleNavClick(item.href)}
+                    href={item.href}
+                    onClick={handleNavClick}
                     className={`flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-all duration-200 ${
-                      activeSection === item.href.substring(1)
+                      pathname === item.href
                         ? 'text-primary-900 bg-primary-100'
                         : 'text-primary-600 hover:text-primary-900 hover:bg-primary-50'
                     }`}
                   >
                     <item.icon size={20} />
                     <span className="font-medium">{item.name}</span>
-                  </button>
+                  </Link>
                 ))}
               </div>
             </div>

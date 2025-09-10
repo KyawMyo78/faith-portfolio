@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { 
@@ -14,7 +14,8 @@ import {
   Menu,
   X,
   Home,
-  ChevronLeft
+  ChevronLeft,
+  Settings
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
@@ -23,9 +24,15 @@ export default function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const [prevSnapshot, setPrevSnapshot] = useState<{
+    path: string | null;
+    node: React.ReactNode | null;
+  }>({ path: null, node: null });
+  const snapshotRef = useRef<NodeJS.Timeout | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
+  const pageCacheRef = useRef<Map<string, React.ReactNode>>(new Map());
 
   const navigationItems = [
     { id: 'overview', label: 'Dashboard', icon: Home, path: '/admin/dashboard' },
@@ -35,6 +42,7 @@ export default function AdminLayout({
     { id: 'skills', label: 'Skills', icon: Code, path: '/admin/skills' },
     { id: 'contacts', label: 'Messages', icon: Mail, path: '/admin/contacts' },
     { id: 'achievements', label: 'Achievements', icon: Award, path: '/admin/achievements' },
+    { id: 'settings', label: 'Site Settings', icon: Settings, path: '/admin/site-settings' },
   ];
 
   const handleLogout = async () => {
@@ -52,8 +60,52 @@ export default function AdminLayout({
     setIsMobileMenuOpen(false);
   };
 
+  // Prefetch admin pages to speed up client-side navigation
+  useEffect(() => {
+    // Prefetch in background after mount
+    navigationItems.forEach((item) => {
+      try {
+        // router.prefetch is available in next/navigation client router
+        // It's a void-returning call in this runtime; wrap in try/catch to avoid uncaught exceptions
+        router.prefetch?.(item.path as any);
+      } catch (e) {
+        // ignore prefetch errors
+      }
+    });
+  }, []); // run once on mount
+
+  // Keep previous children mounted briefly during route transitions to avoid blanking
+  useEffect(() => {
+    // store previous children snapshot
+    setPrevSnapshot((s) => ({ path: s.path ?? pathname, node: s.node ?? children }));
+    // clear any existing timeout
+    if (snapshotRef.current) {
+      clearTimeout(snapshotRef.current as unknown as number);
+    }
+    // keep previous content for 300ms to allow new route to hydrate
+    snapshotRef.current = setTimeout(() => {
+      setPrevSnapshot({ path: null, node: null });
+      snapshotRef.current = null;
+    }, 300);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathname]);
+
+  // Cache rendered admin pages client-side so revisiting a page is instant
+  useEffect(() => {
+    try {
+      pageCacheRef.current.set(pathname, children);
+    } catch (e) {
+      // ignore caching errors
+    }
+  }, [pathname, children]);
+
   // Don't show layout on login page
-  if (pathname === '/admin/login') {
+  // Don't show layout on login, forgot-password, or reset-password pages
+  if (
+    pathname === '/admin/login' ||
+    pathname === '/admin/forgot-password' ||
+    pathname === '/admin/reset-password'
+  ) {
     return <>{children}</>;
   }
 
@@ -77,7 +129,7 @@ export default function AdminLayout({
               <h1 className="text-xl font-semibold text-gray-900">
                 {currentPage?.label || 'Admin Panel'}
               </h1>
-              <span className="hidden sm:block text-sm text-gray-500">Welcome back, Phillip!</span>
+              <span className="hidden sm:block text-sm text-gray-500">Welcome back!</span>
             </div>
             
             <div className="flex items-center space-x-4">
@@ -113,6 +165,7 @@ export default function AdminLayout({
                 <button
                   key={item.id}
                   onClick={() => handleNavigation(item.path)}
+                  onMouseEnter={() => { try { router.prefetch?.(item.path as any); } catch(e){} }}
                   className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-all ${
                     isActive
                       ? 'bg-primary-600 text-white shadow-lg'
@@ -160,6 +213,7 @@ export default function AdminLayout({
                       <button
                         key={item.id}
                         onClick={() => handleNavigation(item.path)}
+                        onMouseEnter={() => { try { router.prefetch?.(item.path as any); } catch(e){} }}
                         className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-all ${
                           isActive
                             ? 'bg-primary-600 text-white shadow-lg'
@@ -177,13 +231,22 @@ export default function AdminLayout({
           )}
 
           {/* Main Content */}
-          <main className="flex-1">
+          <main className="flex-1 relative">
+            {/* previous snapshot sits underneath until cleared */}
+            {prevSnapshot.node && (
+              <div className="absolute inset-0">
+                <div className="h-full w-full">{prevSnapshot.node}</div>
+              </div>
+            )}
+
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3 }}
+              transition={{ duration: 0.25 }}
+              className="relative"
             >
-              {children}
+              {/* Render cached page if available to avoid remounting heavy client bundles */}
+              {(pageCacheRef.current.get(pathname) as React.ReactNode) ?? children}
             </motion.div>
           </main>
         </div>

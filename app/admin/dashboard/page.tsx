@@ -122,7 +122,7 @@ export default function AdminDashboard() {
     <div className="space-y-6">
       {/* Welcome Section */}
       <div className="bg-gradient-to-r from-primary-600 to-primary-700 rounded-xl text-white p-6">
-        <h1 className="text-2xl font-bold mb-2">Welcome back, Phillip! 👋</h1>
+        <h1 className="text-2xl font-bold mb-2">Welcome back! 👋</h1>
         <p className="text-primary-100">Manage your portfolio content and track your progress.</p>
       </div>
 

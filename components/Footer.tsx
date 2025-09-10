@@ -1,34 +1,58 @@
-'use client';
+ 'use client';
 
 import { motion } from 'framer-motion';
 import { Heart, Github, Linkedin, Mail, ArrowUp } from 'lucide-react';
 import { useState, useEffect } from 'react';
+import { useRouter, usePathname } from 'next/navigation';
 import { getSocialIcon, SocialLink } from '../lib/socialIcons';
 
 interface ProfileData {
   email: string;
   github: string;
   linkedin: string;
+  name?: string;
+  nickname?: string;
+  description?: string;
   socialLinks?: SocialLink[];
 }
 
 const quickLinks = [
-  { name: 'About', href: '#about' },
-  { name: 'Skills', href: '#skills' },
-  { name: 'Experience', href: '#experience' },
-  { name: 'Projects', href: '#projects' },
-  { name: 'Contact', href: '#contact' }
+  { name: 'About', path: '/about' },
+  { name: 'Skills', path: '/skills' },
+  { name: 'Experience', path: '/experience' },
+  { name: 'Projects', path: '/projects' },
+  { name: 'Contact', path: '/contact' }
 ];
 
-export default function Footer() {
+export default function Footer({ profile: serverProfile }: { profile?: any }) {
   const [showScrollTop, setShowScrollTop] = useState(false);
+  const router = useRouter();
+  const pathname = usePathname();
   const [profile, setProfile] = useState<ProfileData>({
-    email: 'kyawmk787@gmail.com',
-    github: 'https://github.com/KyawMyo78',
-    linkedin: 'https://linkedin.com'
+  email: 'you@example.com',
+  github: 'https://github.com/your-username',
+  linkedin: 'https://linkedin.com/in/your-profile',
+  name: 'Your Name',
+  nickname: 'Your Nickname',
+  description: 'A brief description about you, your skills, and what you build.'
   });
+  const [siteSettings, setSiteSettings] = useState<any | null>(null);
 
   useEffect(() => {
+    // If server provided profile, use it immediately and skip fetch
+    if (serverProfile) {
+      setProfile({
+        email: serverProfile.email || 'you@example.com',
+        github: serverProfile.github || 'https://github.com/your-username',
+        linkedin: serverProfile.linkedin || 'https://linkedin.com/in/your-profile',
+        socialLinks: serverProfile.socialLinks || [],
+        name: serverProfile.name || 'Your Name',
+        nickname: serverProfile.nickname || 'Your Nickname',
+        description: serverProfile.description || 'A brief description about you, your skills, and what you build.'
+      });
+      return;
+    }
+
     const fetchProfile = async () => {
       try {
         // Add cache busting parameter
@@ -37,14 +61,28 @@ export default function Footer() {
         const result = await response.json();
         if (result.success) {
           setProfile({
-            email: result.data.email || 'kyawmk787@gmail.com',
-            github: result.data.github || 'https://github.com/KyawMyo78',
-            linkedin: result.data.linkedin || 'https://linkedin.com/in/kyaw-myo-khant',
-            socialLinks: result.data.socialLinks || []
+            email: result.data.email || 'you@example.com',
+            github: result.data.github || 'https://github.com/your-username',
+            linkedin: result.data.linkedin || 'https://linkedin.com/in/your-profile',
+            socialLinks: result.data.socialLinks || [],
+            name: result.data.name || 'Your Name',
+            nickname: result.data.nickname || 'Your Nickname',
+            description: result.data.description || 'A brief description about you, your skills, and what you build.'
           });
         }
       } catch (error) {
         console.error('Error fetching profile:', error);
+        // Fetch site settings for footer text
+        const fetchSettings = async () => {
+          try {
+            const res = await fetch('/api/site-settings');
+            const body = await res.json();
+            if (body?.success && body.data) setSiteSettings(body.data);
+          } catch (e) {
+            // ignore
+          }
+        };
+        fetchSettings();
       }
     };
 
@@ -114,9 +152,28 @@ export default function Footer() {
   };
 
   const handleNavClick = (href: string) => {
-    const element = document.getElementById(href.substring(1));
+    // Normalize to id (strip leading # if present)
+    const id = href.startsWith('#') ? href.substring(1) : href;
+
+    // If the element exists on the current page, smooth-scroll to it
+    const element = document.getElementById(id);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
+      return;
+    }
+
+    // Otherwise, navigate to the home page with the hash so server-rendered page lands at the section
+    const target = `/#${id}`;
+    // Use location.assign to add a navigation entry
+    if (window.location.pathname === '/' || window.location.pathname === '') {
+      // If already on home but element wasn't found (maybe not rendered yet), update hash and try again after a short delay
+      window.location.hash = `#${id}`;
+      setTimeout(() => {
+        const el = document.getElementById(id);
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+      }, 250);
+    } else {
+      window.location.href = target;
     }
   };
 
@@ -141,10 +198,9 @@ export default function Footer() {
               transition={{ duration: 0.6 }}
               className="lg:col-span-2"
             >
-              <h3 className="text-2xl font-bold mb-4">Kyaw Myo Khant (Phillip)</h3>
+              <h3 className="text-2xl font-bold mb-4">{profile.name || 'Your Name'}{profile.nickname ? ` (${profile.nickname})` : ''}</h3>
               <p className="text-primary-200 mb-6 leading-relaxed max-w-md text-justify">
-                A passionate IT student and developer from Myanmar, specializing in 
-                embedded systems, mobile development, and innovative technology solutions.
+                {profile.description || 'A brief description about you, your skills, and what you build.'}
               </p>
               <div className="flex space-x-4">
                 {socialLinks.map((link) => {
@@ -178,12 +234,16 @@ export default function Footer() {
               <ul className="space-y-3">
                 {quickLinks.map((link) => (
                   <li key={link.name}>
-                    <button
-                      onClick={() => handleNavClick(link.href)}
+                    <a
+                      href={link.path}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        router.push(link.path);
+                      }}
                       className="text-primary-200 hover:text-white transition-colors"
                     >
                       {link.name}
-                    </button>
+                    </a>
                   </li>
                 ))}
               </ul>
@@ -200,10 +260,10 @@ export default function Footer() {
               <div className="space-y-3 text-primary-200">
                 <p>Thailand</p>
                 <a 
-                  href="mailto:kyawmk787@gmail.com"
+                  href={`mailto:${profile.email || 'you@example.com'}`}
                   className="block hover:text-white transition-colors"
                 >
-                  kyawmk787@gmail.com
+                  {profile.email || 'you@example.com'}
                 </a>
                 <p className="text-sm">
                   Available for freelance projects and collaborations
@@ -224,9 +284,7 @@ export default function Footer() {
                 transition={{ duration: 0.6 }}
                 className="flex items-center space-x-2 text-primary-200"
               >
-                <span>© 2024 Kyaw Myo Khant (Phillip). Made with</span>
-                <Heart className="w-4 h-4 text-red-400 fill-current" />
-                <span>and lots of ☕</span>
+                <span>{(siteSettings?.footer?.copyrightText) || `© 2025 ${profile.name || 'Your Name'}  All Rights Reserved`}</span>
               </motion.div>
               
               <motion.div
@@ -237,6 +295,11 @@ export default function Footer() {
                 className="text-primary-200 text-sm"
               >
                 Built with Next.js, TypeScript & Tailwind CSS
+                <div className="mt-1">
+                  <a href="https://www.kyawmyokhant.com" target="_blank" rel="noopener noreferrer" className="text-primary-200 hover:text-white underline text-sm">
+                    Contact the developer
+                  </a>
+                </div>
               </motion.div>
             </div>
           </div>

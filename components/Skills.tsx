@@ -200,10 +200,10 @@ export default function Skills() {
               My <span className="text-gradient">Skills</span>
             </h2>
             <div className="w-24 h-1 bg-gradient-primary mx-auto mb-6"></div>
-            <p className="text-xl text-primary-600 max-w-3xl mx-auto mb-8 text-justify">
-              Constantly learning and evolving in the world of technology.
+            <p className="text-xl text-primary-600 max-w-3xl mx-auto mb-8 text-center">
+              Constantly learning and evolving.
             </p>
-            <div className="text-center py-12">
+            <div className="text-center py-24">
               <div className="text-6xl mb-4">🛠️</div>
               <h3 className="text-xl font-semibold text-gray-900 mb-2">Skills Coming Soon</h3>
               <p className="text-gray-600">Check back to see my technical expertise and capabilities.</p>

@@ -1,159 +1,124 @@
-'use client';
+// Clean About component following the user's example structure.
+// Uses profile data when available. Minimal dependencies.
 
+ 'use client';
+
+import React from 'react';
 import { motion } from 'framer-motion';
-import { GraduationCap, Award, Globe, BookOpen, Target, Heart } from 'lucide-react';
+import { Download, MapPin } from 'lucide-react';
+import IconPreview from './IconPreview';
+import Achievements from './Achievements';
 
-const stats = [
-  { label: 'Years of Programming', value: '4+', icon: BookOpen },
-  { label: 'GPA', value: '3.8/4.0', icon: GraduationCap },
-  { label: 'Languages Spoken', value: '4', icon: Globe },
-  { label: 'IELTS Score', value: '6.5', icon: Award },
-];
+type Props = { profile?: any };
 
-const highlights = [
-  {
-    icon: GraduationCap,
-    title: 'Academic Excellence',
-    description: 'Bachelor\'s in Information Technology with a 3.8 GPA and a 4-year academic scholarship.',
-  },
-  {
-    icon: Target,
-    title: 'Programming Expertise',
-    description: 'Proficient in multiple programming languages including Python, C++, Java, JavaScript, and mobile development frameworks.',
-  },
-  {
-    icon: Heart,
-    title: 'Passion for Teaching',
-    description: 'Experienced programming tutor specializing in C++ and Arduino, helping students succeed in tech competitions.',
-  },
-];
+export default function About({ profile }: Props) {
+  const description = profile?.aboutDescription || profile?.description || 'Write a short about description in the admin panel.';
 
-export default function About() {
+  const skills = profile?.skills || [
+    { name: 'React/Next.js', level: 90 },
+    { name: 'TypeScript', level: 85 },
+    { name: 'Node.js', level: 80 },
+  ];
+
+  const interests = profile?.interests || [
+    { icon: 'code', label: 'Coding', description: 'Building useful apps' },
+    { icon: 'coffee', label: 'Coffee', description: 'Keeps me going' },
+    { icon: 'music', label: 'Music', description: 'Piano & guitar' },
+    { icon: 'heart', label: 'Mentoring', description: 'Helping others grow' },
+  ];
+
+  // IconPreview will dynamically import lucide-react icons by key
+
   return (
-    <section id="about" className="section-padding bg-white">
-      <div className="container-width">
-        {/* Section Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16"
-        >
-          <h2 className="text-4xl md:text-5xl font-bold mb-4">
-            About <span className="text-gradient">Me</span>
-          </h2>
-          <div className="w-24 h-1 bg-gradient-primary mx-auto mb-6"></div>
-          <p className="text-xl text-primary-600 max-w-3xl mx-auto">
-            Discover my journey as a passionate IT student and developer from Myanmar, 
-            currently studying in Thailand and building innovative solutions.
-          </p>
+    <section id="about" className="py-16 bg-white">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Header */}
+        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="text-center mb-12">
+          <h2 className="text-4xl font-bold">About Me</h2>
+          <p className="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">{profile?.subtitle || 'A short subtitle goes here.'}</p>
         </motion.div>
 
-        <div className="grid lg:grid-cols-2 gap-16 items-center mb-20">
-          {/* Content */}
-          <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
-            <h3 className="text-2xl font-bold text-primary-900 mb-6">
-              Hello! I'm Kyaw Myo Khant (Phillip)
-            </h3>
-            <div className="space-y-4 text-primary-600 leading-relaxed text-justify">
-              <p>
-                I'm a 23-year-old Myanmar student passionate about technology and innovation. 
-                Currently pursuing my Bachelor's in Information Technology in Thailand, 
-                I've maintained a strong academic record with a 3.8 GPA while being 
-                supported by a prestigious 4-year academic scholarship.
-              </p>
-              <p>
-                My journey in programming began over four years ago, and since then, 
-                I've developed expertise in multiple languages and frameworks. From 
-                embedded systems with Arduino and Raspberry Pi to mobile applications 
-                with Flutter and React Native, I love exploring different facets of technology.
-              </p>
-              <p>
-                As a programming tutor from 2020 to 2023, I've had the privilege of 
-                mentoring students in C++ and Arduino, leading project teams, and 
-                helping participants succeed in tech competitions. Teaching has not only 
-                reinforced my own knowledge but also ignited my passion for sharing 
-                knowledge with others.
-              </p>
-              <p>
-                When I'm not coding, you'll find me exploring new technologies, 
-                working on embedded systems projects, or researching optimization 
-                algorithms like PSO and ACO for robotics applications.
-              </p>
-            </div>
+        <div className="grid lg:grid-cols-2 gap-10 items-start">
+          {/* Left: description + meta */}
+          <div>
+            <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} transition={{ duration: 0.6 }}>
+              {description.split('\n\n').map((p: string, i: number) => (
+                <p key={i} className="text-gray-700 mb-4">{p}</p>
+              ))}
 
-            {/* Languages */}
-            <div className="mt-8">
-              <h4 className="text-lg font-semibold text-primary-900 mb-4">Languages I Speak</h4>
-              <div className="flex flex-wrap gap-3">
-                {['English', 'Burmese (Native)', 'Thai (Basic)', 'Chinese (Basic)'].map((language) => (
-                  <span
-                    key={language}
-                    className="px-4 py-2 bg-primary-100 text-primary-700 rounded-full text-sm font-medium"
-                  >
-                    {language}
-                  </span>
-                ))}
+              <div className="mt-6 flex flex-wrap gap-4 items-center">
+                <a href={profile?.cvUrl || '#'} target="_blank" rel="noreferrer" className="inline-flex items-center px-4 py-2 bg-primary text-white rounded-md">
+                  <Download className="w-4 h-4 mr-2" />
+                  Resume
+                </a>
+
+                <div className="flex items-center text-sm text-gray-600">
+                  <MapPin className="w-4 h-4 mr-2" />
+                  <span>{profile?.location || 'Location'}</span>
+                </div>
               </div>
-            </div>
-          </motion.div>
-
-          {/* Stats */}
-          <motion.div
-            initial={{ opacity: 0, x: 50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="grid grid-cols-2 gap-6"
-          >
-            {stats.map((stat, index) => (
-              <motion.div
-                key={stat.label}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                className="bg-gradient-to-br from-primary-50 to-primary-100 p-6 rounded-xl text-center border border-primary-200 hover:shadow-lg transition-all duration-300"
-              >
-                <stat.icon className="w-8 h-8 text-primary-600 mx-auto mb-3" />
-                <div className="text-3xl font-bold text-primary-900 mb-2">{stat.value}</div>
-                <div className="text-sm text-primary-600 font-medium">{stat.label}</div>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
-
-        {/* Highlights */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="grid md:grid-cols-3 gap-8"
-        >
-          {highlights.map((highlight, index) => (
-            <motion.div
-              key={highlight.title}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
-              className="text-center p-6 rounded-xl border border-primary-200 hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
-            >
-              <div className="w-16 h-16 bg-gradient-primary rounded-full flex items-center justify-center mx-auto mb-4">
-                <highlight.icon className="w-8 h-8 text-white" />
-              </div>
-              <h4 className="text-xl font-bold text-primary-900 mb-3">{highlight.title}</h4>
-              <p className="text-primary-600 leading-relaxed text-justify">{highlight.description}</p>
+              {/* Achievements inserted under the main about description */}
+              <Achievements />
             </motion.div>
-          ))}
-        </motion.div>
+          </div>
+
+          {/* Right: skills & interests */}
+          <div>
+            <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} transition={{ duration: 0.6 }}>
+              <div className="mb-6">
+                <h3 className="text-2xl font-semibold mb-4">Skills</h3>
+                <div className="space-y-4">
+                  {skills.map((s: any, idx: number) => (
+                    <div key={s.name}>
+                      <div className="flex justify-between text-sm text-gray-700 mb-1">
+                        <span>{s.name}</span>
+                        <span>{s.level}%</span>
+                      </div>
+                      <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+                        <motion.div
+                          className="h-full bg-primary"
+                          initial={{ width: 0 }}
+                          animate={{ width: `${s.level}%` }}
+                          transition={{ duration: 0.8, delay: idx * 0.08 }}
+                          style={{ backgroundColor: '#0ea5e9' }}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <h3 className="text-2xl font-semibold mb-4">Interests</h3>
+                <div className="grid grid-cols-2 gap-4">
+                  {interests.map((it: any) => {
+                    return (
+                      <motion.div
+                        key={it.label}
+                        className="p-4 border rounded-lg flex gap-3 items-center bg-white"
+                        whileHover={{ y: -6 }}
+                        transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+                      >
+                        <div className="transition-colors duration-200 text-primary group-hover:text-primary-600">
+                          {typeof it.icon === 'string' ? (
+                            <IconPreview name={it.icon} className="w-6 h-6 text-primary" />
+                          ) : (
+                            // if icon is already a component
+                            React.isValidElement(it.icon) ? it.icon : <div className="w-6 h-6" />
+                          )}
+                        </div>
+                        <div>
+                          <div className="font-medium">{it.label}</div>
+                          <div className="text-sm text-gray-600">{it.description}</div>
+                        </div>
+                      </motion.div>
+                    );
+                  })}
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        </div>
       </div>
     </section>
   );

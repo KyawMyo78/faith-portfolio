@@ -1,13 +1,13 @@
 'use server';
 
 import Navigation from '@/components/Navigation'
-import Hero from '@/components/Hero'
+import About from '@/components/About'
 import Footer from '@/components/Footer'
 import { initializeApp, getApps, cert } from 'firebase-admin/app'
 import { getFirestore } from 'firebase-admin/firestore'
 import { getCached, setCached } from '@/lib/server-cache'
 
-// Initialize Firebase Admin SDK for server-side fetches
+// Initialize Firebase Admin SDK for server-side fetches (reuse pattern from other pages)
 if (!getApps().length) {
   initializeApp({
     credential: cert({
@@ -29,6 +29,7 @@ async function getProfileServer() {
     const doc = await db.collection('profile').doc('main').get();
     if (doc.exists) {
       const data = doc.data();
+      // cache profile for 10 seconds to reduce repeated reads during navigation
       setCached(cacheKey, data, 10 * 1000);
       return data;
     }
@@ -38,34 +39,28 @@ async function getProfileServer() {
   return null;
 }
 
-async function getSiteSettingsServer() {
-  try {
-    const cacheKey = 'siteSettings:main';
-    const cached = getCached(cacheKey);
-    if (cached) return cached;
+export default async function AboutPage() {
+  let profile = await getProfileServer();
 
-    const doc = await db.collection('siteSettings').doc('main').get();
-    if (doc.exists) {
-      const data = doc.data();
-      setCached(cacheKey, data, 30 * 1000);
-      return data;
+  // Fallback: if server SDK fetch failed (null), call the internal API route
+  if (!profile) {
+    try {
+      const res = await fetch('/api/profile', { cache: 'no-store' });
+      const json = await res.json();
+      if (json && json.success) {
+        profile = json.data;
+      }
+    } catch (e) {
+      console.error('Fallback fetch to /api/profile failed', e);
     }
-  } catch (e) {
-    console.error('Server getSiteSettings error', e);
   }
-  return null;
-}
-
-export default async function HomePage() {
-  const [profile, siteSettings] = await Promise.all([
-    getProfileServer(),
-    getSiteSettingsServer(),
-  ]);
 
   return (
     <main className="min-h-screen">
-      <Navigation siteSettings={siteSettings} />
-      <Hero profile={profile} siteSettings={siteSettings} />
+      <Navigation siteSettings={null} />
+      <div className="pt-20">
+        <About profile={profile} />
+      </div>
       <Footer profile={profile} />
     </main>
   )

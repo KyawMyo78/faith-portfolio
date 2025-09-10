@@ -25,11 +25,14 @@ interface ProfileData {
 
 export default function Contact() {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const fallbackEmail = process.env.NEXT_PUBLIC_ADMIN_EMAIL || 'contact@example.com';
+  const fallbackPhone = process.env.NEXT_PUBLIC_ADMIN_PHONE || '+0000000000';
   const [profile, setProfile] = useState<ProfileData>({
-    email: 'kyawmk787@gmail.com',
-    phone: '+66628602714',
+    email: fallbackEmail,
+    phone: fallbackPhone,
     location: 'Thailand'
   });
+  const [siteSettings, setSiteSettings] = useState<any | null>(null);
   const { register, handleSubmit, reset, formState: { errors } } = useForm<ContactForm>();
 
   useEffect(() => {
@@ -41,8 +44,8 @@ export default function Contact() {
         const result = await response.json();
         if (result.success) {
           setProfile({
-            email: result.data.email || 'kyawmk787@gmail.com',
-            phone: result.data.phone || '+66628602714',
+            email: result.data.email || 'example@example.com',
+            phone: result.data.phone || '+123456789',
             location: result.data.location || 'Thailand',
             socialLinks: result.data.socialLinks || []
           });
@@ -53,6 +56,30 @@ export default function Contact() {
     };
 
     fetchProfile();
+    const fetchSettings = async () => {
+      try {
+        const response = await fetch('/api/site-settings');
+        const result = await response.json();
+        if (result.success && result.data) {
+          const incoming = { ...result.data } as any;
+          if (incoming.contact && incoming.contact.whyWorkWithMe) {
+            if (typeof incoming.contact.whyWorkWithMe === 'string') {
+              incoming.contact.whyWorkWithMe = incoming.contact.whyWorkWithMe
+                .split(/\r?\n|\n|\r/)
+                .map((s: string) => s.trim())
+                .filter((s: string) => s.length > 0);
+            } else if (!Array.isArray(incoming.contact.whyWorkWithMe)) {
+              incoming.contact.whyWorkWithMe = [String(incoming.contact.whyWorkWithMe)];
+            }
+          }
+          setSiteSettings(incoming);
+        }
+      } catch (err) {
+        console.error('Failed to load site settings', err);
+      }
+    };
+
+    fetchSettings();
   }, []);
 
   const getContactInfo = () => {
@@ -60,25 +87,25 @@ export default function Contact() {
       {
         icon: Mail,
         title: 'Email',
-        value: profile.email,
-        link: `mailto:${profile.email}`
+  value: siteSettings?.contact?.primaryEmail || profile.email,
+  link: `mailto:${siteSettings?.contact?.primaryEmail || profile.email}`
       },
       {
         icon: Phone,
         title: 'Phone',
-        value: profile.phone || '+66628602714',
-        link: `tel:${profile.phone || '+66628602714'}`
+  value: siteSettings?.contact?.primaryPhone || profile.phone || '+123456789',
+  link: `tel:${siteSettings?.contact?.primaryPhone || profile.phone || '+123456789'}`
       },
       {
         icon: MapPin,
         title: 'Location',
-        value: profile.location,
+  value: siteSettings?.contact?.location || profile.location,
         link: null
       },
       {
         icon: Clock,
         title: 'Response Time',
-        value: 'Within 24 hours',
+  value: siteSettings?.contact?.responseTime || 'Within 24 hours',
         link: null
       }
     ];
@@ -132,11 +159,11 @@ export default function Contact() {
           className="text-center mb-16"
         >
           <h2 className="text-4xl md:text-5xl font-bold mb-4">
-            Let's <span className="text-gradient">Connect</span>
+            {siteSettings?.contact?.connectTitle?.split(' ')[0] ?? "Let's"} <span className="text-gradient">{siteSettings?.contact?.connectTitle?.split(' ').slice(1).join(' ') ?? 'Connect'}</span>
           </h2>
           <div className="w-24 h-1 bg-gradient-primary mx-auto mb-6"></div>
           <p className="text-xl text-primary-600 max-w-3xl mx-auto">
-            Ready to bring your ideas to life? Let's discuss your next project and explore how we can work together.
+            {siteSettings?.contact?.connectIntro ?? 'Ready to bring your ideas to life? Let\'s discuss your next project and explore how we can work together.'}
           </p>
         </motion.div>
 
@@ -172,11 +199,7 @@ export default function Contact() {
                   }`}
                   placeholder="Your full name"
                 />
-                {errors.name && (
-                  <p className="mt-1 text-sm text-red-600">{errors.name.message}</p>
-                )}
-              </div>
-
+                </div>
               {/* Email */}
               <div>
                 <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-2">
@@ -195,7 +218,7 @@ export default function Contact() {
                   className={`w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 transition-colors ${
                     errors.email ? 'border-red-500' : 'border-gray-300'
                   }`}
-                  placeholder="kyawmk787@gmail.com"
+                  placeholder="example@example.com"
                 />
                 {errors.email && (
                   <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>
@@ -213,7 +236,7 @@ export default function Contact() {
                     id="phone"
                     {...register('phone')}
                     className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 transition-colors"
-                    placeholder="+66628602714"
+                    placeholder="+123456789"
                   />
                 </div>
 
@@ -341,12 +364,12 @@ export default function Contact() {
             >
               <h4 className="font-bold text-primary-800 mb-4">Why Work With Me?</h4>
               <div className="space-y-2">
-                {[
+                {(siteSettings?.contact?.whyWorkWithMe && Array.isArray(siteSettings.contact.whyWorkWithMe) ? siteSettings.contact.whyWorkWithMe : [
                   'Dedicated to delivering high-quality solutions',
                   'Strong communication throughout the project',
                   'Experienced in both hardware and software development',
                   'Passionate about turning ideas into reality'
-                ].map((point, index) => (
+                ]).map((point: string, index: number) => (
                   <div key={index} className="flex items-start">
                     <CheckCircle className="w-5 h-5 text-primary-600 mr-2 mt-0.5 flex-shrink-0" />
                     <span className="text-primary-700">{point}</span>
@@ -408,24 +431,24 @@ export default function Contact() {
               <h4 className="text-lg font-semibold text-gray-900 mb-4">Quick Contact</h4>
               <div className="space-y-3">
                 <a
-                  href="mailto:kyawmk787@gmail.com"
+                  href={`mailto:${siteSettings?.contact?.quickContactEmail ?? profile.email}`}
                   className="flex items-center p-3 rounded-lg border border-gray-200 hover:border-primary-300 hover:bg-primary-50 transition-all group"
                 >
                   <Mail className="w-5 h-5 text-primary-600 mr-3" />
                   <div>
-                    <span className="font-medium text-gray-900 group-hover:text-primary-600">Email Me</span>
-                    <p className="text-sm text-gray-600">kyawmk787@gmail.com</p>
+                    <span className="font-medium text-gray-900 group-hover:text-primary-600">{siteSettings?.contact?.readyToStartEmailText ?? 'Email Me'}</span>
+                    <p className="text-sm text-gray-600">{siteSettings?.contact?.quickContactEmail ?? profile.email}</p>
                   </div>
                 </a>
                 
                 <a
-                  href="tel:+66628602714"
+                  href={`tel:${siteSettings?.contact?.quickContactPhone ?? profile.phone}`}
                   className="flex items-center p-3 rounded-lg border border-gray-200 hover:border-primary-300 hover:bg-primary-50 transition-all group"
                 >
                   <Phone className="w-5 h-5 text-primary-600 mr-3" />
                   <div>
-                    <span className="font-medium text-gray-900 group-hover:text-primary-600">Call Me</span>
-                    <p className="text-sm text-gray-600">+66628602714</p>
+                    <span className="font-medium text-gray-900 group-hover:text-primary-600">{siteSettings?.contact?.readyToStartCallText ?? 'Call Me'}</span>
+                    <p className="text-sm text-gray-600">{siteSettings?.contact?.quickContactPhone ?? profile.phone}</p>
                   </div>
                 </a>
               </div>
@@ -447,7 +470,7 @@ export default function Contact() {
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <a
-              href="mailto:kyawmk787@gmail.com"
+              href={`mailto:${siteSettings?.contact?.primaryEmail ?? profile.email}`}
               className="bg-white text-primary-600 px-6 py-3 rounded-xl font-semibold hover:bg-primary-50 transition-colors"
             >
               Email Me Directly

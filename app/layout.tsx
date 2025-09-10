@@ -3,20 +3,22 @@ import { Inter } from 'next/font/google'
 import './globals.css'
 import { Toaster } from 'react-hot-toast'
 import { GoogleAnalytics } from '@next/third-parties/google'
+import { adminDb } from '../lib/firebase-admin';
+import { getCached, setCached } from '../lib/server-cache';
 
 const inter = Inter({ subsets: ['latin'] })
 
-export const metadata: Metadata = {
-  metadataBase: new URL(process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : process.env.SITE_URL || 'https://kyawmyokhant.com'),
-  title: 'Kyaw Myo Khant (Phillip) - Portfolio',
-  description: 'Portfolio website of Kyaw Myo Khant (Phillip), a 23-year-old Myanmar student studying IT in Thailand. Specializing in programming, embedded systems, and mobile development.',
-  keywords: ['portfolio', 'developer', 'programming', 'embedded systems', 'mobile development', 'web development', 'Myanmar', 'Thailand', 'IT student'],
-  authors: [{ name: 'Kyaw Myo Khant (Phillip)' }],
+const defaultMetadata: Metadata = {
+  metadataBase: new URL(process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : process.env.SITE_URL || 'https://example.com'),
+  title: 'Your Name - Portfolio',
+  description: 'Portfolio website showcasing projects, skills, and contact information.',
+  keywords: ['portfolio', 'developer', 'programming', 'web development'],
+  authors: [{ name: 'Your Name' }],
   openGraph: {
-    title: 'Kyaw Myo Khant (Phillip) - Portfolio',
-    description: 'Portfolio website showcasing projects and skills in programming, embedded systems, and mobile development.',
+    title: 'Your Name - Portfolio',
+    description: 'Portfolio website showcasing projects and skills in programming and web development.',
     url: '/',
-    siteName: 'Phillip Portfolio',
+    siteName: 'Portfolio',
     locale: 'en_US',
     type: 'website',
     images: [
@@ -24,20 +26,69 @@ export const metadata: Metadata = {
         url: '/og-image.jpg', // You'll need to add this image
         width: 1200,
         height: 630,
-        alt: 'Kyaw Myo Khant (Phillip) - Portfolio',
+        alt: 'Portfolio Open Graph Image',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Kyaw Myo Khant (Phillip) - Portfolio',
-    description: 'Portfolio website showcasing projects and skills in programming, embedded systems, and mobile development.',
+  title: 'Your Name - Portfolio',
+  description: 'Portfolio website showcasing projects and skills in programming and web development.',
     images: ['/og-image.jpg'],
   },
   robots: {
     index: true,
     follow: true,
   },
+}
+
+// Server-side metadata generator using Firestore site settings
+export async function generateMetadata(): Promise<Metadata> {
+  try {
+    // Try in-memory server cache first
+    const cacheKey = 'siteSettings:main';
+    let s: any = getCached(cacheKey);
+    if (!s) {
+      const doc = await adminDb.collection('siteSettings').doc('main').get();
+      s = doc.exists ? doc.data() : {};
+      // cache for 30 seconds
+      setCached(cacheKey, s, 30 * 1000);
+    }
+
+    const siteTitle = s?.general?.siteTitle || defaultMetadata.title;
+    const siteDescription = s?.general?.siteDescription || defaultMetadata.description;
+    const siteKeywords = Array.isArray(s?.general?.siteKeywords) && s.general.siteKeywords.length > 0 ? s.general.siteKeywords : defaultMetadata.keywords;
+    let defaultAuthorName: string | undefined = undefined;
+    if (Array.isArray(defaultMetadata.authors)) {
+      defaultAuthorName = (defaultMetadata.authors[0] as any)?.name;
+    } else if (defaultMetadata.authors) {
+      defaultAuthorName = (defaultMetadata.authors as any).name;
+    }
+    const authorName = s?.general?.authorName || defaultAuthorName;
+    const ogSiteName = s?.navigation?.siteName || defaultMetadata.openGraph?.siteName;
+
+    return {
+      ...defaultMetadata,
+      title: siteTitle,
+      description: siteDescription,
+      keywords: siteKeywords,
+      authors: authorName ? [{ name: authorName }] : defaultMetadata.authors,
+      openGraph: {
+        ...(defaultMetadata.openGraph || {}),
+        title: siteTitle,
+        description: siteDescription,
+        siteName: ogSiteName,
+      },
+      twitter: {
+        ...(defaultMetadata.twitter || {}),
+        title: siteTitle,
+        description: siteDescription,
+      },
+    } as Metadata;
+  } catch (error) {
+    console.error('generateMetadata error:', error);
+  return defaultMetadata;
+  }
 }
 
 export default function RootLayout({

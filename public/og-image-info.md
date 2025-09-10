@@ -17,7 +17,7 @@ To fix social media link previews, you need to create an `og-image.jpg` file in 
 
 ### Option 2: Create a simple design
 - Background color matching your website theme
-- Your name: "Kyaw Myo Khant (Phillip)"
+- Your name: "Your Name (Your Nickname)"
 - Subtitle: "Full Stack Developer & IT Student"
 - Optional: Add some tech icons or patterns
 

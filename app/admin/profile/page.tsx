@@ -2,6 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import { User, Camera, Save, Eye, FileText, Plus, X, ExternalLink } from 'lucide-react';
+import IconPicker from '../../../components/IconPicker';
+import IconPickerModal from '../../../components/IconPickerModal';
+import IconPreview from '../../../components/IconPreview';
 import FileUpload from '../../../components/FileUpload';
 import { socialIcons, getSocialIcon, SocialLink } from '../../../lib/socialIcons';
 
@@ -11,6 +14,7 @@ interface ProfileData {
   title: string;
   specialization: string;
   description: string;
+  subtitle?: string;
   location: string;
   email: string;
   phone: string;
@@ -19,6 +23,9 @@ interface ProfileData {
   profileImage: string;
   cvUrl: string;
   socialLinks?: SocialLink[];
+  aboutDescription?: string;
+  skills?: Array<{ name: string; level: number }>;
+  interests?: Array<{ label: string; description: string; icon?: string }>;
 }
 
 export default function ProfileManager() {
@@ -28,6 +35,16 @@ export default function ProfileManager() {
     title: 'Software Engineer',
     specialization: 'Frontend & Backend Development',
     description: 'Experienced developer with a passion for building scalable web applications and mentoring junior engineers.',
+  aboutDescription: 'A longer About Me description for the About page. Use this to add more depth, stories, and project summaries.',
+  subtitle: 'A short subtitle about you',
+  skills: [
+    { name: 'React/Next.js', level: 90 },
+    { name: 'TypeScript', level: 85 },
+  ],
+  interests: [
+    { label: 'Coding', description: 'Building useful apps', icon: 'code' },
+    { label: 'Coffee', description: 'Keeps me going', icon: 'coffee' },
+  ],
     location: 'San Francisco, CA',
     email: 'john.doe@example.com',
     phone: '+1 (555) 987-6543',
@@ -60,6 +77,11 @@ export default function ProfileManager() {
     url: '',
     icon: 'external'
   });
+
+  // About section editable lists
+  // new inputs for skills and interests
+  const [newSkill, setNewSkill] = useState({ name: '', level: 50 });
+  const [newInterest, setNewInterest] = useState({ label: '', description: '', icon: 'heart' });
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -107,6 +129,36 @@ export default function ProfileManager() {
       setNewSocialLink({ id: '', name: '', url: '', icon: 'external' });
     }
   };
+
+  const handleAddSkill = () => {
+    if (newSkill.name) {
+      setProfile(prev => ({ ...prev, skills: [...(prev.skills || []), { ...newSkill }] }));
+      setNewSkill({ name: '', level: 50 });
+    }
+  };
+
+  const handleRemoveSkill = (name: string) => {
+    setProfile(prev => ({ ...prev, skills: prev.skills?.filter(s => s.name !== name) || [] }));
+  };
+
+  const handleAddInterest = () => {
+    if (newInterest.label) {
+      setProfile(prev => ({ ...prev, interests: [...(prev.interests || []), { ...newInterest }] }));
+      setNewInterest({ label: '', description: '', icon: 'heart' });
+    }
+  };
+
+  const handleRemoveInterest = (label: string) => {
+    setProfile(prev => ({ ...prev, interests: prev.interests?.filter(i => i.label !== label) || [] }));
+  };
+
+  // Remove by index to avoid relying on mutable labels as identifiers
+  const handleRemoveInterestByIndex = (index: number) => {
+    setProfile(prev => ({ ...prev, interests: (prev.interests || []).filter((_, i) => i !== index) }));
+  };
+
+  // stats removed - using highlights only
+
 
   const handleRemoveSocialLink = (id: string) => {
     setProfile(prev => ({
@@ -248,6 +300,7 @@ export default function ProfileManager() {
                 name="name"
                 value={profile.name}
                 onChange={handleInputChange}
+                placeholder="Full name (e.g., Jane Doe)"
                 className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
             </div>
@@ -261,6 +314,7 @@ export default function ProfileManager() {
                 name="nickname"
                 value={profile.nickname}
                 onChange={handleInputChange}
+                placeholder="Nickname (optional)"
                 className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
             </div>
@@ -274,6 +328,7 @@ export default function ProfileManager() {
                 name="title"
                 value={profile.title}
                 onChange={handleInputChange}
+                placeholder="Professional title (e.g., Senior Frontend Engineer)"
                 className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
             </div>
@@ -287,6 +342,7 @@ export default function ProfileManager() {
                 name="specialization"
                 value={profile.specialization}
                 onChange={handleInputChange}
+                placeholder="Primary skills or specialization (e.g., React, Embedded)"
                 className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
             </div>
@@ -300,6 +356,7 @@ export default function ProfileManager() {
                 name="location"
                 value={profile.location}
                 onChange={handleInputChange}
+                placeholder="City • Country or timezone (e.g., London, UK)"
                 className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
             </div>
@@ -313,6 +370,7 @@ export default function ProfileManager() {
                 name="email"
                 value={profile.email}
                 onChange={handleInputChange}
+                placeholder="example@example.com"
                 className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
             </div>
@@ -326,9 +384,98 @@ export default function ProfileManager() {
                 name="phone"
                 value={profile.phone}
                 onChange={handleInputChange}
-                placeholder="+66628602714"
+                placeholder="+123456789"
                 className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
+            </div>
+          </div>
+        </div>
+
+  {/* About Section Editor */}
+  <div className="bg-white p-6 rounded-lg shadow-md lg:col-span-2">
+          <h2 className="text-lg font-semibold text-gray-900 mb-4">About Section</h2>
+
+          {/* About content: subtitle, skills, interests */}
+          <div className="mb-6">
+
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Subtitle</label>
+                <input
+                  type="text"
+                  name="subtitle"
+                  value={(profile as any).subtitle || ''}
+                  onChange={handleInputChange}
+                  placeholder="Short subtitle (e.g., Passionate about building beautiful UIs)"
+                  className="w-full p-2 border border-gray-300 rounded-md"
+                />
+              </div>
+
+              {/* Skills editor */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Skills</label>
+                <div className="space-y-2">
+                  {(profile.skills || []).map((s: any) => (
+                    <div key={s.name} className="flex items-center space-x-2">
+                      <input
+                        className="p-2 border rounded flex-1"
+                        placeholder="Skill name"
+                        value={s.name}
+                        onChange={(e) => setProfile(prev => ({ ...prev, skills: (prev.skills || []).map((item: any) => item.name === s.name ? { ...item, name: e.target.value } : item) }))}
+                      />
+                      <input
+                        type="number"
+                        className="p-2 border rounded w-24"
+                        value={s.level}
+                        onChange={(e) => setProfile(prev => ({ ...prev, skills: (prev.skills || []).map((item: any) => item.name === s.name ? { ...item, level: Number(e.target.value) } : item) }))}
+                      />
+                      <button onClick={() => handleRemoveSkill(s.name)} className="bg-red-100 text-red-700 px-2 py-1 rounded hover:bg-red-200 transition-colors">Remove</button>
+                    </div>
+                  ))}
+
+                  <div className="flex items-center space-x-2 mt-2">
+                    <input value={newSkill.name} onChange={(e) => setNewSkill(prev => ({ ...prev, name: e.target.value }))} placeholder="Skill name" className="p-2 border rounded flex-1" />
+                    <input type="number" value={newSkill.level} onChange={(e) => setNewSkill(prev => ({ ...prev, level: Number(e.target.value) }))} className="p-2 border rounded w-24" />
+                    <button onClick={handleAddSkill} className="bg-blue-600 text-white px-3 py-1 rounded">Add</button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Interests editor */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Interests</label>
+                <div className="space-y-2">
+                  {(profile.interests || []).map((it: any, idx: number) => (
+                    <div key={idx} className="flex items-center space-x-2">
+                      <input placeholder="Interest" className="p-2 border rounded w-40" value={it.label} onChange={(e) => setProfile(prev => ({ ...prev, interests: (prev.interests || []).map((item: any, i: number) => i === idx ? { ...item, label: e.target.value } : item) }))} />
+                      <input placeholder="Short description" className="p-2 border rounded flex-1" value={it.description} onChange={(e) => setProfile(prev => ({ ...prev, interests: (prev.interests || []).map((item: any, i: number) => i === idx ? { ...item, description: e.target.value } : item) }))} />
+                      <div className="w-40 flex items-center gap-2">
+                        <div className="w-8 h-8 flex items-center justify-center bg-gray-100 rounded">
+                          <IconPreview name={it.icon || 'heart'} className="w-5 h-5 text-gray-700" />
+                        </div>
+                        <div>
+                          <IconPickerModal value={it.icon || 'heart'} onChange={(key: string) => setProfile(prev => ({ ...prev, interests: (prev.interests || []).map((item: any, i: number) => i === idx ? { ...item, icon: key } : item) }))} />
+                        </div>
+                      </div>
+                      <button onClick={() => handleRemoveInterestByIndex(idx)} className="bg-red-100 text-red-700 px-2 py-1 rounded hover:bg-red-200 transition-colors">Remove</button>
+                    </div>
+                  ))}
+
+                  <div className="flex items-center space-x-2 mt-2">
+                    <input value={newInterest.label} onChange={(e) => setNewInterest(prev => ({ ...prev, label: e.target.value }))} placeholder="Interest" className="p-2 border rounded w-40" />
+                    <input value={newInterest.description} onChange={(e) => setNewInterest(prev => ({ ...prev, description: e.target.value }))} placeholder="Description" className="p-2 border rounded flex-1" />
+                    <div className="w-40 flex items-center gap-2">
+                      <div className="w-8 h-8 flex items-center justify-center bg-gray-100 rounded">
+                        <IconPreview name={newInterest.icon || 'heart'} className="w-5 h-5 text-gray-700" />
+                      </div>
+                      <div>
+                        <IconPickerModal value={newInterest.icon} onChange={(key: string) => setNewInterest(prev => ({ ...prev, icon: key }))} />
+                      </div>
+                    </div>
+                    <button onClick={handleAddInterest} className="bg-blue-600 text-white px-3 py-1 rounded">Add</button>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -337,13 +484,24 @@ export default function ProfileManager() {
         <div className="bg-white p-6 rounded-lg shadow-md lg:col-span-2">
           <h2 className="text-lg font-semibold text-gray-900 mb-4">About Description</h2>
           
+          <label className="block text-sm font-medium text-gray-700 mb-2">Short Description (used on Home & Footer)</label>
           <textarea
             name="description"
             value={profile.description}
             onChange={handleInputChange}
-            rows={4}
+            rows={3}
+            className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent mb-4"
+            placeholder="Short description for home and footer..."
+          />
+
+          <label className="block text-sm font-medium text-gray-700 mb-2">Long About Description (used on About page)</label>
+          <textarea
+            name="aboutDescription"
+            value={(profile as any).aboutDescription || ''}
+            onChange={(e) => setProfile(prev => ({ ...prev, aboutDescription: e.target.value }))}
+            rows={6}
             className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            placeholder="Write about yourself..."
+            placeholder="Detailed About Me for About page..."
           />
         </div>
 

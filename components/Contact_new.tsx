@@ -25,9 +25,11 @@ interface ProfileData {
 
 export default function Contact() {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const fallbackEmail = process.env.NEXT_PUBLIC_ADMIN_EMAIL || 'contact@example.com';
+  const fallbackPhone = process.env.NEXT_PUBLIC_ADMIN_PHONE || '+0000000000';
   const [profile, setProfile] = useState<ProfileData>({
-    email: 'kyawmk787@gmail.com',
-    phone: '+66628602714',
+    email: fallbackEmail,
+    phone: fallbackPhone,
     location: 'Thailand'
   });
   const { register, handleSubmit, reset, formState: { errors } } = useForm<ContactForm>();
@@ -41,8 +43,8 @@ export default function Contact() {
         const result = await response.json();
         if (result.success) {
           setProfile({
-            email: result.data.email || 'kyawmk787@gmail.com',
-            phone: result.data.phone || '+66628602714',
+            email: result.data.email || fallbackEmail,
+            phone: result.data.phone || fallbackPhone,
             location: result.data.location || 'Thailand',
             socialLinks: result.data.socialLinks || []
           });
@@ -195,7 +197,7 @@ export default function Contact() {
                   className={`w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 transition-colors ${
                     errors.email ? 'border-red-500' : 'border-gray-300'
                   }`}
-                  placeholder="kyawmk787@gmail.com"
+                  placeholder={fallbackEmail}
                 />
                 {errors.email && (
                   <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>
@@ -408,13 +410,13 @@ export default function Contact() {
               <h4 className="text-lg font-semibold text-gray-900 mb-4">Quick Contact</h4>
               <div className="space-y-3">
                 <a
-                  href="mailto:kyawmk787@gmail.com"
+                  href={`mailto:${profile.email}`}
                   className="flex items-center p-3 rounded-lg border border-gray-200 hover:border-primary-300 hover:bg-primary-50 transition-all group"
                 >
                   <Mail className="w-5 h-5 text-primary-600 mr-3" />
                   <div>
                     <span className="font-medium text-gray-900 group-hover:text-primary-600">Email Me</span>
-                    <p className="text-sm text-gray-600">kyawmk787@gmail.com</p>
+                    <p className="text-sm text-gray-600">{profile.email}</p>
                   </div>
                 </a>
                 
@@ -446,10 +448,10 @@ export default function Contact() {
             From concept to completion, I'm here to help bring your vision to life with innovative solutions and expert craftsmanship.
           </p>
           <div className="flex flex-wrap justify-center gap-4">
-            <a
-              href="mailto:kyawmk787@gmail.com"
-              className="bg-white text-primary-600 px-6 py-3 rounded-xl font-semibold hover:bg-primary-50 transition-colors"
-            >
+                <a
+                  href={`mailto:${profile.email}`}
+                  className="bg-white text-primary-600 px-6 py-3 rounded-xl font-semibold hover:bg-primary-50 transition-colors"
+                >
               Email Me Directly
             </a>
             <a

@@ -1,7 +1,7 @@
 // Quick test of bcrypt with our exact password
 const bcrypt = require('bcryptjs');
 
-const password = 'kmk787067652';
+const password = 'password123';
 const newHash = bcrypt.hashSync(password, 12);
 console.log('Fresh hash:', newHash);
 console.log('Hash length:', newHash.length);

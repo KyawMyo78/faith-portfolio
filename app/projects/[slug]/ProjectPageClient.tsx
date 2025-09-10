@@ -78,7 +78,7 @@ export default function ProjectPage({ params }: PageProps) {
   fetchProject();
 }, [params.slug]);  // Function to update page metadata for social sharing
   const updatePageMetadata = (project: Project) => {
-    const title = `${project.title} | Kyaw Myo Khant Portfolio`;
+  const title = `${project.title} | Your Name Portfolio`;
     const description = project.description;
     const imageUrl = project.images && project.images[0] ? 
       (project.images[0].startsWith('http') ? project.images[0] : `${window.location.origin}${project.images[0]}`) : 
@@ -100,7 +100,7 @@ export default function ProjectPage({ params }: PageProps) {
       { property: 'og:image', content: imageUrl },
       { property: 'og:url', content: url },
       { property: 'og:type', content: 'article' },
-      { property: 'og:site_name', content: 'Kyaw Myo Khant Portfolio' },
+  { property: 'og:site_name', content: 'Your Name Portfolio' },
       { name: 'twitter:card', content: 'summary_large_image' },
       { name: 'twitter:title', content: title },
       { name: 'twitter:description', content: description },

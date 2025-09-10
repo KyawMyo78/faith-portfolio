@@ -41,8 +41,9 @@ async function sendResetEmail(email: string, resetToken: string) {
     
     const resetUrl = `${siteUrl}/admin/reset-password?token=${resetToken}&email=${encodeURIComponent(email)}`;
 
-    // Development mode: Just log the reset URL instead of sending email
-    if (process.env.NODE_ENV === 'development') {
+    // Development mode: by default only log the reset URL instead of sending email.
+    // To actually send emails in development set SEND_EMAILS_IN_DEV=true in your `.env.local`.
+    if (process.env.NODE_ENV === 'development' && process.env.SEND_EMAILS_IN_DEV !== 'true') {
       console.log('\n🔗 PASSWORD RESET LINK (DEVELOPMENT MODE):');
       console.log('📧 Email:', email);
       console.log('🔗 Reset URL:', resetUrl);
@@ -58,6 +59,7 @@ async function sendResetEmail(email: string, resetToken: string) {
       from: process.env.EMAIL_FROM,
       to: email,
       subject: 'Reset Your Admin Password',
+      text: `Reset your admin password using this link: ${resetUrl}`,
       html: `
         <div style="max-width: 600px; margin: 0 auto; font-family: Arial, sans-serif;">
           <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 30px; text-align: center;">
@@ -102,7 +104,14 @@ async function sendResetEmail(email: string, resetToken: string) {
       `,
     };
 
-    await transporter.sendMail(mailOptions);
+    // Ensure envelope.from is set to the authenticated user to avoid empty/invalid MAIL FROM
+    const envelope = {
+      from: process.env.EMAIL_USER,
+      to: email,
+    }
+
+    const info = await transporter.sendMail({ ...mailOptions, envelope, replyTo: process.env.EMAIL_FROM })
+    console.log('sendMail info:', info)
     return true;
   } catch (error) {
     console.error('Error sending reset email:', error);
@@ -112,22 +121,51 @@ async function sendResetEmail(email: string, resetToken: string) {
 
 export async function POST(request: NextRequest) {
   try {
-    const { email } = await request.json();
+  const { email, secondaryEmail } = await request.json();
 
-    if (!email) {
-      return NextResponse.json(
-        { success: false, error: 'Email is required' },
-        { status: 400 }
-      );
+    // Basic validation: allow two flows:
+    // 1) Primary email supplied: must match ADMIN_EMAIL (regular forgot-password)
+    // 2) Primary omitted: allowed only if secondaryEmail matches DEV_EMAIL (emergency/dev flow)
+
+    const adminEmail = process.env.ADMIN_EMAIL;
+    const devEmail = process.env.DEV_EMAIL;
+
+    if (!adminEmail) {
+      console.error('ADMIN_EMAIL is not set in environment');
+      return NextResponse.json({ success: false, error: 'Server misconfiguration' }, { status: 500 });
     }
 
-    // Verify this is the admin email
-    const adminEmail = process.env.ADMIN_EMAIL;
-    if (email !== adminEmail) {
-      return NextResponse.json(
-        { success: false, error: 'Email not found' },
-        { status: 404 }
-      );
+    // If primary email is provided, it must match adminEmail
+    if (email) {
+      if (email !== adminEmail) {
+        return NextResponse.json({ success: false, error: 'Email not found' }, { status: 404 });
+      }
+    }
+
+    // If primary not provided, require secondary to match DEV_EMAIL
+    if (!email) {
+      if (!secondaryEmail && !devEmail) {
+        return NextResponse.json({ success: false, error: 'Email is required' }, { status: 400 });
+      }
+      const finalSecondaryOnly = secondaryEmail || devEmail;
+      if (finalSecondaryOnly !== devEmail) {
+        // Reject attempts to request a reset to arbitrary addresses when primary is unknown
+        return NextResponse.json({ success: false, error: 'Unauthorized request' }, { status: 403 });
+      }
+    }
+
+    // Default secondary to developer email (if not provided)
+    const finalSecondary = secondaryEmail || devEmail;
+
+    // Build recipients explicitly:
+    // - If primary (admin) is provided -> send to admin and (optionally) developer as copy
+    // - If primary omitted -> send only to developer (emergency flow)
+    let recipients: string[] = [];
+    if (email) {
+      recipients = Array.from(new Set([adminEmail, finalSecondary].filter(Boolean)));
+    } else {
+      // primary omitted -> only send to dev email
+      if (finalSecondary) recipients = [finalSecondary];
     }
 
     // Generate reset token
@@ -135,8 +173,11 @@ export async function POST(request: NextRequest) {
     const expiresAt = new Date(Date.now() + 60 * 60 * 1000); // 1 hour from now
 
     // Store the token
-    const tokenStored = await storeResetToken(email, resetToken, expiresAt);
-    if (!tokenStored) {
+  // Store token for each recipient
+  const storePromises = recipients.map(addr => storeResetToken(addr, resetToken, expiresAt));
+  const storeResults = await Promise.all(storePromises);
+  const tokenStored = storeResults.every(r => r === true);
+  if (!tokenStored) {
       return NextResponse.json(
         { success: false, error: 'Failed to generate reset token' },
         { status: 500 }
@@ -144,13 +185,18 @@ export async function POST(request: NextRequest) {
     }
 
     // Send the reset email
-    const emailSent = await sendResetEmail(email, resetToken);
-    if (!emailSent) {
+  // Send to all provided addresses (avoid duplicates)
+  // Send to recipients
+  const sendResults = await Promise.all(recipients.map(addr => sendResetEmail(addr, resetToken)));
+  const emailSent = sendResults.every(r => r === true);
+  if (!emailSent) {
       return NextResponse.json(
         { success: false, error: 'Failed to send reset email' },
         { status: 500 }
       );
     }
+
+  console.log('Password reset sent to:', recipients);
 
     return NextResponse.json({
       success: true,
