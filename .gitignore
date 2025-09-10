@@ -26,6 +26,10 @@ yarn-error.log*
 .env*.local
 .env
 
+# Vercel setup scripts (contain API keys)
+setup-vercel-env.sh
+setup-vercel-env.bat
+
 # Vercel
 .vercel
 

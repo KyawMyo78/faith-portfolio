@@ -1,0 +1,9 @@
+{
+  "name": "portfolio-template",
+  "scripts": {
+    "deploy": "vercel --prod",
+    "deploy:preview": "vercel",
+    "setup:vercel": "setup-vercel-env.bat",
+    "setup:vercel:unix": "./setup-vercel-env.sh"
+  }
+}
