@@ -9,28 +9,28 @@ module.exports = {
     extend: {
       colors: {
         primary: {
-          50: '#fff8fb',
-          100: '#ffeff6',
-          200: '#ffdff0',
-          300: '#ffc0e6',
-          400: '#ff9fd7',
-          500: '#ff7fca',
-          600: '#ff5fb8',
-          700: '#ff3fa6',
-          800: '#ff2a92',
-          900: '#ff137f',
+          50: '#eff6ff',   // Very light blue
+          100: '#dbeafe',  // Light blue
+          200: '#bfdbfe',  // Lighter blue
+          300: '#93c5fd',  // Light royal blue
+          400: '#60a5fa',  // Royal blue light
+          500: '#3b82f6',  // Royal blue
+          600: '#2563eb',  // Royal blue dark
+          700: '#1d4ed8',  // Navy blue
+          800: '#1e40af',  // Dark navy blue
+          900: '#1e3a8a',  // Dark blue
         },
         accent: {
-          50: '#fff5f7',
-          100: '#ffeef4',
-          200: '#ffdce9',
-          300: '#ffc0dd',
-          400: '#ff9bc7',
-          500: '#ff74b2',
-          600: '#ff4f9c',
-          700: '#ff2a86',
-          800: '#ff1a72',
-          900: '#ff0b5e',
+          50: '#f0f9ff',   // Very light cyan-blue
+          100: '#e0f2fe',  // Light cyan-blue
+          200: '#bae6fd',  // Lighter cyan-blue
+          300: '#7dd3fc',  // Light sky blue
+          400: '#38bdf8',  // Sky blue
+          500: '#0ea5e9',  // Bright blue
+          600: '#0284c7',  // Deep sky blue
+          700: '#0369a1',  // Dark sky blue
+          800: '#075985',  // Deep blue
+          900: '#0c4a6e',  // Dark deep blue
         }
       },
       fontFamily: {

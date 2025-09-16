@@ -217,17 +217,17 @@ export default function ProfileManager() {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 sm:space-y-8 p-4 sm:p-0">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
         <div className="flex items-center space-x-3">
           <User className="h-6 w-6 text-blue-600" />
-          <h1 className="text-2xl font-bold text-gray-900">Profile Management</h1>
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Profile Management</h1>
         </div>
-        <div className="flex space-x-3">
+        <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3">
           <button
             onClick={handlePreview}
-            className="flex items-center space-x-2 px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+            className="flex items-center justify-center space-x-2 px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
           >
             <Eye size={16} />
             <span>Preview</span>
@@ -235,7 +235,7 @@ export default function ProfileManager() {
           <button
             onClick={handleSave}
             disabled={loading}
-            className="flex items-center space-x-2 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="flex items-center justify-center space-x-2 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             <Save size={16} />
             <span>{loading ? 'Saving...' : 'Save Changes'}</span>
@@ -255,9 +255,9 @@ export default function ProfileManager() {
         </div>
       )}
 
-      <div className="grid lg:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 lg:gap-8">
         {/* Profile Image Upload */}
-        <div className="bg-white p-6 rounded-lg shadow-md">
+        <div className="bg-white p-4 sm:p-6 rounded-lg shadow-md">
           <div className="flex items-center space-x-2 mb-4">
             <Camera className="h-5 w-5 text-gray-600" />
             <h2 className="text-lg font-semibold text-gray-900">Profile Picture</h2>
@@ -269,7 +269,7 @@ export default function ProfileManager() {
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Current Image
               </label>
-              <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-gray-200">
+              <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full overflow-hidden border-4 border-gray-200 mx-auto sm:mx-0">
                 <img
                   src={profile.profileImage}
                   alt="Current profile"
@@ -287,7 +287,7 @@ export default function ProfileManager() {
         </div>
 
         {/* Basic Information */}
-        <div className="bg-white p-6 rounded-lg shadow-md">
+        <div className="bg-white p-4 sm:p-6 rounded-lg shadow-md">
           <h2 className="text-lg font-semibold text-gray-900 mb-4">Basic Information</h2>
           
           <div className="space-y-4">
@@ -392,7 +392,7 @@ export default function ProfileManager() {
         </div>
 
   {/* About Section Editor */}
-  <div className="bg-white p-6 rounded-lg shadow-md lg:col-span-2">
+  <div className="bg-white p-4 sm:p-6 rounded-lg shadow-md col-span-1 xl:col-span-2">
           <h2 className="text-lg font-semibold text-gray-900 mb-4">About Section</h2>
 
           {/* About content: subtitle, skills, interests */}
@@ -414,29 +414,49 @@ export default function ProfileManager() {
               {/* Skills editor */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Skills</label>
-                <div className="space-y-2">
+                <div className="space-y-3">
                   {(profile.skills || []).map((s: any) => (
-                    <div key={s.name} className="flex items-center space-x-2">
+                    <div key={s.name} className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-2 p-3 bg-gray-50 rounded-lg">
                       <input
                         className="p-2 border rounded flex-1"
                         placeholder="Skill name"
                         value={s.name}
                         onChange={(e) => setProfile(prev => ({ ...prev, skills: (prev.skills || []).map((item: any) => item.name === s.name ? { ...item, name: e.target.value } : item) }))}
                       />
-                      <input
-                        type="number"
-                        className="p-2 border rounded w-24"
-                        value={s.level}
-                        onChange={(e) => setProfile(prev => ({ ...prev, skills: (prev.skills || []).map((item: any) => item.name === s.name ? { ...item, level: Number(e.target.value) } : item) }))}
-                      />
-                      <button onClick={() => handleRemoveSkill(s.name)} className="bg-red-100 text-red-700 px-2 py-1 rounded hover:bg-red-200 transition-colors">Remove</button>
+                      <div className="flex items-center space-x-2">
+                        <input
+                          type="number"
+                          className="p-2 border rounded w-20 sm:w-24"
+                          value={s.level}
+                          min="0"
+                          max="100"
+                          onChange={(e) => setProfile(prev => ({ ...prev, skills: (prev.skills || []).map((item: any) => item.name === s.name ? { ...item, level: Number(e.target.value) } : item) }))}
+                        />
+                        <span className="text-sm text-gray-500 hidden sm:inline">%</span>
+                        <button onClick={() => handleRemoveSkill(s.name)} className="bg-red-100 text-red-700 px-3 py-2 rounded hover:bg-red-200 transition-colors text-sm">Remove</button>
+                      </div>
                     </div>
                   ))}
 
-                  <div className="flex items-center space-x-2 mt-2">
-                    <input value={newSkill.name} onChange={(e) => setNewSkill(prev => ({ ...prev, name: e.target.value }))} placeholder="Skill name" className="p-2 border rounded flex-1" />
-                    <input type="number" value={newSkill.level} onChange={(e) => setNewSkill(prev => ({ ...prev, level: Number(e.target.value) }))} className="p-2 border rounded w-24" />
-                    <button onClick={handleAddSkill} className="bg-blue-600 text-white px-3 py-1 rounded">Add</button>
+                  <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-2 mt-3 p-3 bg-blue-50 rounded-lg">
+                    <input 
+                      value={newSkill.name} 
+                      onChange={(e) => setNewSkill(prev => ({ ...prev, name: e.target.value }))} 
+                      placeholder="New skill name" 
+                      className="p-2 border rounded flex-1" 
+                    />
+                    <div className="flex items-center space-x-2">
+                      <input 
+                        type="number" 
+                        value={newSkill.level} 
+                        min="0"
+                        max="100"
+                        onChange={(e) => setNewSkill(prev => ({ ...prev, level: Number(e.target.value) }))} 
+                        className="p-2 border rounded w-20 sm:w-24" 
+                      />
+                      <span className="text-sm text-gray-500 hidden sm:inline">%</span>
+                      <button onClick={handleAddSkill} className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors">Add</button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -444,35 +464,59 @@ export default function ProfileManager() {
               {/* Interests editor */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Interests</label>
-                <div className="space-y-2">
+                <div className="space-y-3">
                   {(profile.interests || []).map((it: any, idx: number) => (
-                    <div key={idx} className="flex items-center space-x-2">
-                      <input placeholder="Interest" className="p-2 border rounded w-40" value={it.label} onChange={(e) => setProfile(prev => ({ ...prev, interests: (prev.interests || []).map((item: any, i: number) => i === idx ? { ...item, label: e.target.value } : item) }))} />
-                      <input placeholder="Short description" className="p-2 border rounded flex-1" value={it.description} onChange={(e) => setProfile(prev => ({ ...prev, interests: (prev.interests || []).map((item: any, i: number) => i === idx ? { ...item, description: e.target.value } : item) }))} />
-                      <div className="w-40 flex items-center gap-2">
-                        <div className="w-8 h-8 flex items-center justify-center bg-gray-100 rounded">
-                          <IconPreview name={it.icon || 'heart'} className="w-5 h-5 text-gray-700" />
-                        </div>
-                        <div>
+                    <div key={idx} className="flex flex-col lg:flex-row lg:items-center space-y-2 lg:space-y-0 lg:space-x-2 p-3 bg-gray-50 rounded-lg">
+                      <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 flex-1">
+                        <input 
+                          placeholder="Interest" 
+                          className="p-2 border rounded sm:w-32 lg:w-40" 
+                          value={it.label} 
+                          onChange={(e) => setProfile(prev => ({ ...prev, interests: (prev.interests || []).map((item: any, i: number) => i === idx ? { ...item, label: e.target.value } : item) }))} 
+                        />
+                        <input 
+                          placeholder="Short description" 
+                          className="p-2 border rounded flex-1" 
+                          value={it.description} 
+                          onChange={(e) => setProfile(prev => ({ ...prev, interests: (prev.interests || []).map((item: any, i: number) => i === idx ? { ...item, description: e.target.value } : item) }))} 
+                        />
+                      </div>
+                      <div className="flex items-center justify-between lg:justify-start lg:space-x-2">
+                        <div className="flex items-center gap-2">
+                          <div className="w-8 h-8 flex items-center justify-center bg-white rounded border">
+                            <IconPreview name={it.icon || 'heart'} className="w-5 h-5 text-gray-700" />
+                          </div>
                           <IconPickerModal value={it.icon || 'heart'} onChange={(key: string) => setProfile(prev => ({ ...prev, interests: (prev.interests || []).map((item: any, i: number) => i === idx ? { ...item, icon: key } : item) }))} />
                         </div>
+                        <button onClick={() => handleRemoveInterestByIndex(idx)} className="bg-red-100 text-red-700 px-3 py-2 rounded hover:bg-red-200 transition-colors text-sm">Remove</button>
                       </div>
-                      <button onClick={() => handleRemoveInterestByIndex(idx)} className="bg-red-100 text-red-700 px-2 py-1 rounded hover:bg-red-200 transition-colors">Remove</button>
                     </div>
                   ))}
 
-                  <div className="flex items-center space-x-2 mt-2">
-                    <input value={newInterest.label} onChange={(e) => setNewInterest(prev => ({ ...prev, label: e.target.value }))} placeholder="Interest" className="p-2 border rounded w-40" />
-                    <input value={newInterest.description} onChange={(e) => setNewInterest(prev => ({ ...prev, description: e.target.value }))} placeholder="Description" className="p-2 border rounded flex-1" />
-                    <div className="w-40 flex items-center gap-2">
-                      <div className="w-8 h-8 flex items-center justify-center bg-gray-100 rounded">
-                        <IconPreview name={newInterest.icon || 'heart'} className="w-5 h-5 text-gray-700" />
-                      </div>
-                      <div>
+                  <div className="flex flex-col lg:flex-row lg:items-center space-y-2 lg:space-y-0 lg:space-x-2 mt-3 p-3 bg-blue-50 rounded-lg">
+                    <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 flex-1">
+                      <input 
+                        value={newInterest.label} 
+                        onChange={(e) => setNewInterest(prev => ({ ...prev, label: e.target.value }))} 
+                        placeholder="New interest" 
+                        className="p-2 border rounded sm:w-32 lg:w-40" 
+                      />
+                      <input 
+                        value={newInterest.description} 
+                        onChange={(e) => setNewInterest(prev => ({ ...prev, description: e.target.value }))} 
+                        placeholder="Description" 
+                        className="p-2 border rounded flex-1" 
+                      />
+                    </div>
+                    <div className="flex items-center justify-between lg:justify-start lg:space-x-2">
+                      <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 flex items-center justify-center bg-white rounded border">
+                          <IconPreview name={newInterest.icon || 'heart'} className="w-5 h-5 text-gray-700" />
+                        </div>
                         <IconPickerModal value={newInterest.icon} onChange={(key: string) => setNewInterest(prev => ({ ...prev, icon: key }))} />
                       </div>
+                      <button onClick={handleAddInterest} className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors">Add</button>
                     </div>
-                    <button onClick={handleAddInterest} className="bg-blue-600 text-white px-3 py-1 rounded">Add</button>
                   </div>
                 </div>
               </div>
@@ -481,7 +525,7 @@ export default function ProfileManager() {
         </div>
 
         {/* Description */}
-        <div className="bg-white p-6 rounded-lg shadow-md lg:col-span-2">
+        <div className="bg-white p-4 sm:p-6 rounded-lg shadow-md col-span-1 xl:col-span-2">
           <h2 className="text-lg font-semibold text-gray-900 mb-4">About Description</h2>
           
           <label className="block text-sm font-medium text-gray-700 mb-2">Short Description (used on Home & Footer)</label>
@@ -506,7 +550,7 @@ export default function ProfileManager() {
         </div>
 
         {/* Social Links */}
-        <div className="bg-white p-6 rounded-lg shadow-md lg:col-span-2">
+        <div className="bg-white p-4 sm:p-6 rounded-lg shadow-md col-span-1 xl:col-span-2">
           <div className="flex items-center space-x-2 mb-4">
             <ExternalLink className="h-5 w-5 text-gray-600" />
             <h2 className="text-lg font-semibold text-gray-900">Social & Contact Links</h2>
@@ -515,7 +559,7 @@ export default function ProfileManager() {
           <div className="space-y-4">
             {/* Add New Social Link */}
             <div className="grid grid-cols-1 gap-4 p-4 bg-gray-50 rounded-lg">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Platform Name
@@ -565,7 +609,7 @@ export default function ProfileManager() {
                   type="button"
                   onClick={handleAddSocialLink}
                   disabled={!newSocialLink.name || !newSocialLink.url}
-                  className="px-6 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
+                  className="w-full sm:w-auto px-6 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
                 >
                   <Plus className="h-4 w-4 mr-2" />
                   Add Link
@@ -581,17 +625,17 @@ export default function ProfileManager() {
                   const iconConfig = getSocialIcon(link.icon);
                   const IconComponent = iconConfig?.icon || ExternalLink;
                   return (
-                    <div key={link.id} className="flex items-center justify-between bg-white p-4 rounded-lg border border-gray-200">
-                      <div className="flex items-center space-x-4">
-                        <div className="p-2 bg-gray-100 rounded-lg">
+                    <div key={link.id} className="flex flex-col sm:flex-row sm:items-center sm:justify-between bg-white p-4 rounded-lg border border-gray-200 space-y-3 sm:space-y-0">
+                      <div className="flex items-center space-x-3 sm:space-x-4 min-w-0 flex-1">
+                        <div className="p-2 bg-gray-100 rounded-lg flex-shrink-0">
                           <IconComponent className="h-5 w-5 text-gray-600" />
                         </div>
-                        <div>
-                          <p className="font-medium text-gray-900">{link.name}</p>
-                          <p className="text-sm text-gray-600 truncate max-w-md">{link.url}</p>
+                        <div className="min-w-0 flex-1">
+                          <p className="font-medium text-gray-900 truncate">{link.name}</p>
+                          <p className="text-sm text-gray-600 break-all sm:truncate">{link.url}</p>
                         </div>
                       </div>
-                      <div className="flex items-center space-x-2">
+                      <div className="flex items-center justify-end space-x-2 flex-shrink-0">
                         <a
                           href={link.url}
                           target="_blank"
@@ -619,7 +663,7 @@ export default function ProfileManager() {
         </div>
 
         {/* CV Link */}
-        <div className="bg-white p-6 rounded-lg shadow-md lg:col-span-2">
+        <div className="bg-white p-4 sm:p-6 rounded-lg shadow-md col-span-1 xl:col-span-2">
           <div className="flex items-center space-x-2 mb-4">
             <FileText className="h-5 w-5 text-gray-600" />
             <h2 className="text-lg font-semibold text-gray-900">CV/Resume Link</h2>
@@ -642,20 +686,20 @@ export default function ProfileManager() {
             
             {profile.cvUrl && (
               <div className="p-4 bg-gray-50 rounded-lg">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
-                    <FileText className="h-8 w-8 text-blue-600" />
-                    <div>
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-3 sm:space-y-0">
+                  <div className="flex items-center space-x-3 min-w-0 flex-1">
+                    <FileText className="h-8 w-8 text-blue-600 flex-shrink-0" />
+                    <div className="min-w-0 flex-1">
                       <p className="text-sm font-medium text-gray-900">Current CV Link</p>
-                      <p className="text-xs text-gray-500 truncate max-w-md">{profile.cvUrl}</p>
+                      <p className="text-xs text-gray-500 break-all sm:truncate">{profile.cvUrl}</p>
                     </div>
                   </div>
-                  <div className="flex space-x-2">
+                  <div className="flex justify-end sm:justify-start">
                     <a
                       href={profile.cvUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center space-x-1 px-3 py-1 text-sm bg-blue-100 text-blue-700 rounded-md hover:bg-blue-200 transition-colors"
+                      className="flex items-center space-x-1 px-3 py-2 text-sm bg-blue-100 text-blue-700 rounded-md hover:bg-blue-200 transition-colors"
                     >
                       <Eye size={14} />
                       <span>Test Link</span>
