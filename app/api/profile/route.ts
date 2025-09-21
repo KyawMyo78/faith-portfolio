@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { initializeApp, getApps, cert } from 'firebase-admin/app';
 import { getFirestore } from 'firebase-admin/firestore';
 import { getCached, setCached, clearCached } from '@/lib/server-cache';
+import { revalidatePath, revalidateTag } from 'next/cache';
 
 // Initialize Firebase Admin SDK
 if (!getApps().length) {
@@ -59,7 +60,11 @@ async function getProfile() {
     const docRef = db.collection('profile').doc('main');
     const doc = await docRef.get();
     if (doc.exists) {
-      const data = doc.data();
+      let data = doc.data();
+      // Sanitize profileImage if it contains stray control characters
+      if (data && data.profileImage && typeof data.profileImage === 'string') {
+        data.profileImage = data.profileImage.replace(/[\t\n\r]/g, '').trim();
+      }
       setCached(cacheKey, data, 10 * 1000);
       return data;
     } else {
@@ -77,9 +82,22 @@ async function getProfile() {
 async function saveProfile(profileData: any) {
   try {
     const docRef = db.collection('profile').doc('main');
+    // Sanitize incoming profileImage URL to remove stray control characters
+    if (profileData && profileData.profileImage && typeof profileData.profileImage === 'string') {
+      profileData.profileImage = profileData.profileImage.replace(/[\t\n\r]/g, '').trim();
+    }
     await docRef.set(profileData, { merge: true });
   // Clear cache so subsequent GET returns fresh data
   clearCached('profile:main');
+    // Trigger Next.js to revalidate the main public pages that use this profile
+    try {
+      revalidatePath('/');
+      revalidatePath('/about');
+      // Also revalidate tag-based cache consumers if any pages use tags
+      try { revalidateTag('profile'); } catch (e) { /* ignore outside Next runtime */ }
+    } catch (e) {
+      console.warn('revalidatePath failed (this may happen outside Next runtime):', e);
+    }
     return true;
   } catch (error) {
     console.error('Error saving profile to Firestore:', error);

@@ -4,7 +4,10 @@ import { getStorage } from 'firebase-admin/storage';
 
 // Initialize Firebase Admin SDK
 if (!getApps().length) {
-  const storageBucket = process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET;
+  // Trim and remove control characters from the bucket env var to avoid accidental tabs/newlines
+  const storageBucket = process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET
+    ? process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET.replace(/[\t\n\r]/g, '').trim()
+    : undefined;
   
   initializeApp({
     credential: cert({
@@ -21,7 +24,10 @@ const storage = getStorage();
 
 export async function POST(request: NextRequest) {
   try {
-    const bucketName = process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET;
+    // Trim and remove control characters from the bucket env var to avoid accidental tabs/newlines
+    const bucketName = process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET
+      ? process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET.replace(/[\t\n\r]/g, '').trim()
+      : undefined;
     const data = await request.formData();
     const file: File | null = data.get('file') as unknown as File;
     const uploadType: string | null = data.get('uploadType') as string;
@@ -113,11 +119,30 @@ export async function POST(request: NextRequest) {
     }
     
     const fileRef = bucket.file(`${storagePath}/${finalFileName}`);
-    
-    // Upload the file
+    // If uploading a profile image, delete any existing profile.* files (different extensions)
+    if (uploadType === 'profile') {
+      try {
+        const [existingFiles] = await bucket.getFiles({ prefix: `${storagePath}/profile.` });
+        for (const f of existingFiles) {
+          // skip deleting the target filename if it somehow exists already
+          if (f.name === `${storagePath}/${finalFileName}`) continue;
+          try {
+            await f.delete();
+            console.log('Deleted old profile file:', f.name);
+          } catch (delErr) {
+            console.warn('Failed to delete old profile file', f.name, delErr);
+          }
+        }
+      } catch (listErr) {
+        console.warn('Could not list existing profile images for cleanup:', listErr);
+      }
+    }
+
+    // Upload the file with cache control to minimize CDN/browser staleness for profile images
     await fileRef.save(buffer, {
       metadata: {
         contentType: file.type,
+        cacheControl: uploadType === 'profile' ? 'public, max-age=0, s-maxage=60, must-revalidate' : 'public, max-age=31536000',
         metadata: {
           uploadType: uploadType,
           originalName: file.name,
@@ -130,8 +155,9 @@ export async function POST(request: NextRequest) {
     await fileRef.makePublic();
 
     // Get the public URL
-    const actualBucketName = bucket.name;
-    const publicUrl = `https://storage.googleapis.com/${actualBucketName}/${storagePath}/${finalFileName}`;
+  // Ensure bucket name doesn't accidentally include control characters
+  const actualBucketName = String(bucket.name).replace(/[\t\n\r]/g, '').trim();
+  const publicUrl = `https://storage.googleapis.com/${actualBucketName}/${storagePath}/${finalFileName}`;
 
     return NextResponse.json({ 
       success: true, 

@@ -29,6 +29,7 @@ interface ProfileData {
 export default function Hero({ profile: serverProfile, siteSettings: serverSettings }: { profile?: any; siteSettings?: any }) {
   const [profile, setProfile] = useState<ProfileData | null>(serverProfile || null);
   const [siteSettings, setSiteSettings] = useState<any>(serverSettings || null);
+  const [imageSrc, setImageSrc] = useState<string | null>(null);
 
   useEffect(() => {
     // If server props provided, skip client fetching
@@ -52,6 +53,31 @@ export default function Hero({ profile: serverProfile, siteSettings: serverSetti
 
     fetchData();
   }, [serverProfile, serverSettings]);
+
+  // derive a safe image src from profile when profile changes
+  useEffect(() => {
+    const raw = profile?.profileImage;
+    if (!raw) {
+      setImageSrc('/profile-placeholder.svg');
+      return;
+    }
+    try {
+      const cleaned = String(raw).replace(/[\t\n\r]/g, '').trim();
+      if (!cleaned) {
+        setImageSrc('/profile.jpg');
+        return;
+      }
+      // allow absolute URLs (http/https) or root-relative paths
+      if (/^https?:\/\//i.test(cleaned) || /^\//.test(cleaned)) {
+        setImageSrc(cleaned);
+      } else {
+        // if it's an odd value (contains spaces or control chars), fallback
+        setImageSrc('/profile.jpg');
+      }
+    } catch (e) {
+      setImageSrc('/profile.jpg');
+    }
+  }, [profile]);
 
   // Cursor-reactive motion: track normalized pointer and apply gentle offsets to firefly wrappers
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -191,15 +217,13 @@ export default function Hero({ profile: serverProfile, siteSettings: serverSetti
           >
             <div className="relative z-10 w-44 h-44 sm:w-56 sm:h-56 md:w-80 md:h-80 lg:w-[420px] lg:h-[420px] rounded-full overflow-hidden border-4 border-white shadow-2xl">
               <Image
-                src={profile?.profileImage || "/profile.jpg"}
+                src={imageSrc || '/profile.jpg'}
                 alt={`${profile?.name || 'Your Name'} (${profile?.nickname || 'Your Nickname'})`}
                 width={320}
                 height={320}
                 className="w-full h-full object-cover rounded-full"
                 priority
-                onError={(e) => {
-                  e.currentTarget.src = "/profile-placeholder.svg";
-                }}
+                onError={() => setImageSrc('/profile-placeholder.svg')}
               />
             </div>
           </motion.div>
