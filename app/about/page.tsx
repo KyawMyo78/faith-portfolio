@@ -1,17 +1,16 @@
 import Navigation from '@/components/Navigation'
 import About from '@/components/About'
 import Footer from '@/components/Footer'
+import { getProfile } from '@/lib/get-profile'
 
 export default async function AboutPage() {
-  // Fetch profile via internal API using a cache tag so that
-  // `revalidateTag('profile')` will update pages that used this tag.
+  // Read profile directly on the server to avoid internal HTTP fetches
+  // that can fail during SSR. The shared helper merges defaults and caches.
   let profile = null;
   try {
-    const res = await fetch('/api/profile', { next: { tags: ['profile'] } });
-    const json = await res.json();
-    if (json && json.success) profile = json.data;
+    profile = await getProfile();
   } catch (e) {
-    console.error('Failed to fetch profile via API:', e);
+    console.error('Failed to load profile for About page:', e);
   }
 
   return (

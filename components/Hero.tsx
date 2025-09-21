@@ -64,7 +64,7 @@ export default function Hero({ profile: serverProfile, siteSettings: serverSetti
     try {
       const cleaned = String(raw).replace(/[\t\n\r]/g, '').trim();
       if (!cleaned) {
-        setImageSrc('/profile.jpg');
+          setImageSrc('/profile-placeholder.svg');
         return;
       }
       // allow absolute URLs (http/https) or root-relative paths
@@ -72,10 +72,10 @@ export default function Hero({ profile: serverProfile, siteSettings: serverSetti
         setImageSrc(cleaned);
       } else {
         // if it's an odd value (contains spaces or control chars), fallback
-        setImageSrc('/profile.jpg');
+          setImageSrc('/profile-placeholder.svg');
       }
     } catch (e) {
-      setImageSrc('/profile.jpg');
+        setImageSrc('/profile-placeholder.svg');
     }
   }, [profile]);
 
@@ -217,7 +217,7 @@ export default function Hero({ profile: serverProfile, siteSettings: serverSetti
           >
             <div className="relative z-10 w-44 h-44 sm:w-56 sm:h-56 md:w-80 md:h-80 lg:w-[420px] lg:h-[420px] rounded-full overflow-hidden border-4 border-white shadow-2xl">
               <Image
-                src={imageSrc || '/profile.jpg'}
+                  src={imageSrc || '/profile-placeholder.svg'}
                 alt={`${profile?.name || 'Your Name'} (${profile?.nickname || 'Your Nickname'})`}
                 width={320}
                 height={320}

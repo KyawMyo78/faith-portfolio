@@ -3,7 +3,7 @@
 
  'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Download, MapPin } from 'lucide-react';
 import IconPreview from './IconPreview';
@@ -12,6 +12,13 @@ import Achievements from './Achievements';
 type Props = { profile?: any };
 
 export default function About({ profile }: Props) {
+  useEffect(() => {
+    // Debug: log the profile prop so we can confirm if the API fetch returned data
+    // or if the component is receiving `null`/`undefined` and falling back.
+    // Remove this after debugging.
+    // eslint-disable-next-line no-console
+    console.log('About component profile prop:', profile);
+  }, [profile]);
   const description = profile?.aboutDescription || profile?.description || 'Write a short about description in the admin panel.';
 
   const skills = profile?.skills || [
