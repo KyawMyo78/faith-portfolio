@@ -54,22 +54,27 @@ async function getProfile() {
   try {
     const cacheKey = 'profile:main';
     const cached = getCached(cacheKey);
-    if (cached) return cached;
+    if (cached) {
+      console.log('[profile API] returning cached profile');
+      return cached;
+    }
 
     const docRef = db.collection('profile').doc('main');
     const doc = await docRef.get();
     if (doc.exists) {
       const data = doc.data();
+      console.log('[profile API] fetched profile from Firestore');
       setCached(cacheKey, data, 10 * 1000);
       return data;
     } else {
       // Create the default profile if it doesn't exist
+      console.log('[profile API] profile doc missing — writing default');
       await docRef.set(defaultProfile);
       setCached(cacheKey, defaultProfile, 10 * 1000);
       return defaultProfile;
     }
   } catch (error) {
-    console.error('Error reading profile from Firestore:', error);
+    console.error('[profile API] Error reading profile from Firestore:', error);
     return defaultProfile;
   }
 }

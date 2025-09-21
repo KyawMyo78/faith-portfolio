@@ -1,4 +1,4 @@
-'use server';
+export const dynamic = 'force-dynamic';
 
 import Navigation from '@/components/Navigation'
 import About from '@/components/About'
