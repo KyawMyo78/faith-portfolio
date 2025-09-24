@@ -1,5 +1,4 @@
-'use server';
-
+export const dynamic = 'force-dynamic';
 import Navigation from '@/components/Navigation'
 import Hero from '@/components/Hero'
 import Footer from '@/components/Footer'
